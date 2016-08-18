@@ -6,72 +6,74 @@ var mongoose = require('../../common').mongoose,
     Schema = mongoose.Schema;
 
 var dataModel = {
-    name: {
+    "name": {
         type: String,
         required: true,
         unique: true
     },
-    type: {
+    "type": {
         type: String,
         reaquired: true
     },
-    definition: {
-        scheme: {
+    "definition": {
+        type: Object,
+        "scheme": {
             type: String
         },
-        uri: {
+        "uri": {
             type: String
         },
-        port: {
+        "port": {
             type: Number
         },
-        login: {
+        "login": {
             type: String
         },
-        password: {
+        "password": {
             type: String
         },
-        cameraId: {
+        "cameraId": {
             type: Schema.Types.ObjectId
         },
-        motion: {
-            id: {
+        "motion": {
+            type: Object,
+            "id": {
                 type: Number
             },
-            adminUri: {
+            "adminUri": {
                 type: String
             },
-            streamUri: {
+            "streamUri": {
                 type: String
             },
-            login: {
+            "login": {
                 type: String
             },
-            password: {
+            "password": {
                 type: String
             }
         },
-        filesDirectory: {
+        "filesDirectory": {
             type: String
         },
-        fileIntrustion: {
+        "fileIntrustion": {
             type: String
         }
     },
-    infos: {
-        state: {
+    "infos": {
+        "state": {
             type: String
         },
-        detectionState: {
+        "detectionState": {
             type: String
         },
-        lastDetection: {
+        "lastDetection": {
             type: Date
         },
-        startedAt: {
+        "startedAt": {
             type: Date
         },
-        lastRun: {
+        "lastRun": {
             type: Date
         }
     }

@@ -66,6 +66,7 @@ module.exports = function (params) {
             Middle.getOne(req, function (err, data) {
 
                 if (data.code === 200) {
+                    var isOk = false;
                     var item = data.res;
                     switch (item.type) {
                         case 'Local':
@@ -73,6 +74,7 @@ module.exports = function (params) {
                                 target: item.definition.motion.streamUri,
                                 auth: item.definition.motion.login + ':' + item.definition.motion.password
                             });
+                            isOk = true;
                             break;
                         case 'Net':
                             req.url = '';
@@ -81,11 +83,19 @@ module.exports = function (params) {
                                 target: target,
                                 auth: item.definition.login + ':' + item.definition.password
                             });
+                            isOk = true;
                             break;
                         default:
                             res.status(406).send({message: 'Bad camera type'}).end();
                             break;
                     }
+
+                    if( isOk ){
+                        apiProxy.on('error', function(err) {
+                            console.log(err);
+                        });
+                    }
+
                 } else {
                     res.status(data.code).send(data.res).end();
                 }

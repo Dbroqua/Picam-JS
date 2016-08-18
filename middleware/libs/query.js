@@ -634,6 +634,9 @@ var patchOne = function (params, req, callback) {
                             callback(null, {code: 406, res: {message: 'Bad camera type'}});
                     }
                 } else {
+                    delete req.body.created_at;
+                    delete req.body.updatedAt;
+                    delete req.body.timeout;
                     params.model.update({_id: req.params.id}, req.body, {upsert: true}, function (err) {
                         if (err) {
                             errors.errorCatcher(err, req, callback);

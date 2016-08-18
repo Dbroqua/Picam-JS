@@ -1,0 +1,59 @@
+<div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+    <table class="table table-striped table-bordered table-hover table-responsive col-xs-12">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>State</th>
+            <th>Detection state</th>
+            <th>started at</th>
+            <th>last detection</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="camera in Cameras">
+            <td>
+                <a href="javascript:void(0);" ng-click="viewCameraDetails(camera._id);">{{camera.name}} </a>
+            </td>
+            <td>
+                <span class='btn'
+                      ng-class="{'btn-success': camera.infos.state === 'Running', 'btn-danger': camera.infos.state === 'Stop'}"
+                      ng-click="patchCamera(camera._id,{infos: {state: (camera.infos.state === 'Running' ? 'Stop' : 'Running') }});">
+                     <span ng-if="camera.infos.state === 'Running'" class="glyphicon glyphicon-ok"
+                           aria-hidden="true"></span>
+                    <span ng-if="camera.infos.state === 'Stop'" class="glyphicon glyphicon-stop"
+                          aria-hidden="true"></span>
+                    <span ng-bind="camera.infos.state"></span>
+                </span>
+
+            </td>
+            <td>
+                <span class='btn'
+                      ng-class="{'btn-success': camera.infos.detectionState === 'Active', 'btn-warning': camera.infos.detectionState === 'Pause'}"
+                      ng-click="patchCamera(camera._id,{infos: {detectionState: (camera.infos.detectionState === 'Active' ? 'Pause' : 'Active') }});">
+                    <span ng-if="camera.infos.detectionState === 'Active'" class="glyphicon glyphicon-play"
+                          aria-hidden="true"></span>
+                    <span ng-if="camera.infos.detectionState === 'Pause'" class="glyphicon glyphicon-pause"
+                          aria-hidden="true"></span>
+                    <span ng-bind="camera.infos.detectionState"></span>
+                </span>
+            </td>
+            <td>
+                <span ng-if="camera.infos.state === 'Running'"
+                      ng-bind="camera.infos.startedAt | date : 'medium'"></span>
+            </td>
+            <td ng-bind="camera.infos.lastDetection | date : 'medium'"></td>
+            <td ng-bind="camera.infos.lastRun | date : 'medium'"></td>
+        </tr>
+        <tr ng-if="!loadingList && camera.length <= 0">
+            <td colspan="6" class="emptyRow">No camera found</td>
+        </tr>
+        <tr ng-if="loadingList">
+            <td colspan="6" class="loaderRow text-center">
+                <img src="/resources/img/loader.gif"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <pagination></pagination>
+</div>

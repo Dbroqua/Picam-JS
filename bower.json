@@ -1,0 +1,24 @@
+{
+  "name": "PiCam",
+  "description": "Simple web interface for Motion on Raspberry",
+  "main": "index.html",
+  "license": "LGPL-3.0",
+  "homepage": "https://github.com/Dbroqua/Picam-JS",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.8",
+    "bootstrap": "^3.3.7",
+    "angular-toastr": "^2.0.0",
+    "jquery": "^3.1.0",
+    "angular-route": "^1.5.8",
+    "angular-base64": "^2.0.5",
+    "angular-cookies": "^1.5.8",
+    "ngBootbox": "^0.1.3"
+  }
+}

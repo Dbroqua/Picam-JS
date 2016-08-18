@@ -65,6 +65,7 @@ if (app.get('env') === 'development') {
  */
 app.use(express.static(path.join(__dirname, 'app')));
 app.use('/resources', express.static(path.join(__dirname, 'resources')));
+app.use('/bower_components', express.static(path.join(__dirname, 'bower_components')));
 app.use(favicon(path.join(__dirname, 'resources', 'favicon.png')));
 
 /**
@@ -104,6 +105,7 @@ var params = {
 /**
  * List of routes
  */
+require('./routes/')(params);
 require('./routes/v1/cameras')(params);
 require('./routes/install')(params);
 //----------------------------------------------------------------------------------------------------------------------

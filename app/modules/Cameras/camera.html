@@ -1,0 +1,151 @@
+<div class="col-xs-12 text-center">
+    <h1 ng-if="Camera.name.length > 0 ">{{Camera.name}} <sup><span class="glyphicon glyphicon-pencil small link" ng-click="showForm();"></span></sup></h1>
+</div>
+<div class="col-xs-12 col-md-6 pull-right text-center" ng-if="Camera.infos.state === 'Running'">
+    <img ng-src="{{SERVER_PATH + 'cameras/' + cameraId + '/stream?apikey=' + apikey}}" alt="Stream"
+         class="img-responsive"/>
+</div>
+<div class="col-xs-12 col-md-6">
+    <form novalidate>
+        <table class="table table-striped table-bordered table-hover table-responsive">
+            <tfoot ng-if="showEditableValues">
+            <tr>
+                <td colspan="2" class="text-center">
+                    <button type="submit" class="btn btn-primary" ng-click="updateCamera()" ng-bind="cameraId !== null ? 'Update' : 'Create'"></button>
+                </td>
+            </tr>
+            </tfoot>
+            <tbody>
+            <tr>
+                <td>State</td>
+                <td>
+                <span class='btn'
+                      ng-class="{'btn-success': Camera.infos.state === 'Running', 'btn-danger': Camera.infos.state === 'Stop'}"
+                      ng-click="patchCamera(cameraId,{infos: {state: (Camera.infos.state === 'Running' ? 'Stop' : 'Running') }});">
+                     <span ng-if="Camera.infos.state === 'Running'" class="glyphicon glyphicon-ok"
+                           aria-hidden="true"></span>
+                    <span ng-if="Camera.infos.state === 'Stop'" class="glyphicon glyphicon-stop"
+                          aria-hidden="true"></span>
+                    <span ng-bind="Camera.infos.state"></span>
+                </span>
+                </td>
+            </tr>
+            <tr>
+                <td>Detection state</td>
+                <td>
+                <span class='btn'
+                      ng-class="{'btn-success': Camera.infos.detectionState === 'Active', 'btn-warning': Camera.infos.detectionState === 'Pause'}"
+                      ng-click="patchCamera(cameraId,{infos: {detectionState: (Camera.infos.detectionState === 'Active' ? 'Pause' : 'Active') }});">
+                    <span ng-if="Camera.infos.detectionState === 'Active'" class="glyphicon glyphicon-play"
+                          aria-hidden="true"></span>
+                    <span ng-if="Camera.infos.detectionState === 'Pause'" class="glyphicon glyphicon-pause"
+                          aria-hidden="true"></span>
+                    <span ng-bind="Camera.infos.detectionState"></span>
+                </span>
+                </td>
+            </tr>
+            <tr>
+                <td>started at</td>
+                <td>
+                <span ng-if="Camera.infos.state === 'Running'"
+                      ng-bind="Camera.infos.startedAt | date : 'medium'"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>last detection</td>
+                <td ng-bind="Camera.infos.lastDetection | date : 'medium'"></td>
+            </tr>
+            <tr>
+                <td>Date</td>
+                <td ng-bind="Camera.infos.lastRun | date : 'medium'"></td>
+            </tr>
+
+            <tr ng-if="showEditableValues">
+                <td><label for="name">Name</label></td>
+                <td><input type="text" class="form-control" name="name" ng-model="updatedValues.name" id="name"></td>
+            </tr>
+            <tr ng-if="showEditableValues">
+                <td><label for="type">Type</label></td>
+                <td>
+                    <select class="form-control" ng-model="updatedValues.type" id="type">
+                        <option>Local</option>
+                        <option>Net</option>
+                    </select>
+                </td>
+            </tr>
+            <tr ng-if="showEditableValues && updatedValues.type === 'Local'">
+                <td><label for="fileIntrustion">File intrusion</label></td>
+                <td><input type="text" class="form-control" name="fileIntrustion"
+                           ng-model="updatedValues.definition.fileIntrustion" id="fileIntrustion"></td>
+            </tr>
+            <tr ng-if="showEditableValues && updatedValues.type === 'Local'">
+                <td><label for="filesDirectory">Files directory</label></td>
+                <td><input type="text" class="form-control" name="filesDirectory"
+                           ng-model="updatedValues.definition.filesDirectory" id="filesDirectory"></td>
+            </tr>
+            <tr ng-if="showEditableValues && updatedValues.type === 'Local'">
+                <td><label for="id">Motion id</label></td>
+                <td><input type="text" class="form-control" name="id" ng-model="updatedValues.definition.motion.id"
+                           id="id"></td>
+            </tr>
+            <tr ng-if="showEditableValues && updatedValues.type === 'Local'">
+                <td><label for="adminUri">Motion admin url</label></td>
+                <td><input type="text" class="form-control" name="adminUri"
+                           ng-model="updatedValues.definition.motion.adminUri" id="adminUri"></td>
+            </tr>
+            <tr ng-if="showEditableValues && updatedValues.type === 'Local'">
+                <td><label for="streamUri">Motion stream url</label></td>
+                <td><input type="text" class="form-control" name="streamUri"
+                           ng-model="updatedValues.definition.motion.streamUri" id="streamUri"></td>
+            </tr>
+            <tr ng-if="showEditableValues && updatedValues.type === 'Local'">
+                <td><label for="motionLogin">Motion login</label></td>
+                <td><input type="text" class="form-control" name="motionLogin"
+                           ng-model="updatedValues.definition.motion.login" id="motionLogin"></td>
+            </tr>
+            <tr ng-if="showEditableValues && updatedValues.type === 'Local'">
+                <td><label for="motionPassword">Motion password</label></td>
+                <td><input type="password" class="form-control" name="motionPassword"
+                           ng-model="updatedValues.definition.motion.password" id="motionPassword"></td>
+            </tr>
+            <tr ng-if="showEditableValues && updatedValues.type === 'Net'">
+                <td><label for="scheme">Scheme</label></td>
+                <td>
+                    <select class="form-control" ng-model="updatedValues.definition.scheme" id="scheme">
+                        <option>http</option>
+                        <option>https</option>
+                    </select>
+                </td>
+            </tr>
+            <tr ng-if="showEditableValues && updatedValues.type === 'Net'">
+                <td><label for="uri">Uri</label></td>
+                <td><input type="text" class="form-control" name="uri" ng-model="updatedValues.definition.uri" id="uri">
+                </td>
+            </tr>
+            <tr ng-if="showEditableValues && updatedValues.type === 'Net'">
+                <td><label for="port">Port</label></td>
+                <td><input type="number" class="form-control" name="port" ng-model="updatedValues.definition.port"
+                           id="port"></td>
+            </tr>
+            <tr ng-if="showEditableValues && updatedValues.type === 'Net'">
+                <td><label for="login">Login</label></td>
+                <td><input type="text" class="form-control" name="login" ng-model="updatedValues.definition.login"
+                           id="login"></td>
+            </tr>
+            <tr ng-if="showEditableValues && updatedValues.type === 'Net'">
+                <td><label for="password">Password</label></td>
+                <td><input type="password" class="form-control" name="password"
+                           ng-model="updatedValues.definition.password" id="password"></td>
+            </tr>
+            <tr ng-if="showEditableValues && updatedValues.type === 'Net'">
+                <td><label for="cameraId">Camera id</label></td>
+                <td>
+                    <select class="form-control" ng-model="updatedValues.definition.cameraId" id="cameraId">
+                        <option ng-repeat="camera in remoteCameras" name="{{camera.name}}" value="{{camera._id}}">{{camera.name}}</option>
+                    </select>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
