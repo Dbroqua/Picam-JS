@@ -43,6 +43,7 @@ var _timeStampToDate = function (ts) {
 var _getCamerasInfos = function (data, req, callback) {
     var nbElt = data.length,
         currentElt = 0,
+        currentLocalIndex = 0,
         nbChecks = 2,
         currentCheckList = [];
 
@@ -60,7 +61,6 @@ var _getCamerasInfos = function (data, req, callback) {
     };
 
     data.forEach(function (item) {
-        var _currentEltIndex = currentElt;
         item.infos = {
             state: 'Unknown',
             detectionState: 'Unknown',
@@ -80,6 +80,8 @@ var _getCamerasInfos = function (data, req, callback) {
 
         switch (item.type) {
             case 'Local':
+                var _currentEltIndex = currentLocalIndex;
+                currentLocalIndex++;
                 currentCheckList[_currentEltIndex] = 0;
                 // Is running ?
                 fs.stat('/var/run/motion/motion.pid', function (err, stats) {
@@ -136,7 +138,8 @@ var _getCamerasInfos = function (data, req, callback) {
                     headers: {
                         'Authorization': 'Basic ' + new Buffer(item.definition.login + ':' + password).toString('base64'),
                         'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.52 Safari/537.17'
-                    }
+                    },
+                    timeout: 1500
                 };
 
                 request.get(options, function (err, res, body) {
@@ -599,7 +602,6 @@ var patchOne = function (params, req, callback) {
                                             if (err) {
                                                 errors.errorCatcher(err, req, callback);
                                             } else {
-                                                console.log('ici ?');
                                                 callback(null, {
                                                     code: res.statusCode,
                                                     res: ( res.statusCode === 200 ? req.body : '' )

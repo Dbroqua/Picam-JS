@@ -60,7 +60,7 @@ angular.module('Camera')
                     delete $scope.updatedValues.infos;
                     var preventEmptyPassword = false;
 
-                    var _runAction = function(){
+                    var _runAction = function () {
                         if ($routeParams.id !== 'add') {
                             // Update camera
                             HTTPService.patch('cameras', $scope.cameraId, $scope.updatedValues, function (response) {
@@ -74,11 +74,17 @@ angular.module('Camera')
                         } else {
                             // Create new camera
                             HTTPService.post('cameras', $scope.cameraId, $scope.updatedValues, function (response) {
-                                if (response.status === 200) {
+                                if (response.status === 201) {
                                     toastr.success('New camera created');
                                     $location.path('/cameras/' + response.data._id);
                                 } else {
-                                    toastr.error("Can't create new camera");
+                                    switch (response.status) {
+                                        case 409:
+                                            toastr.error("Can't create new camera because this name is already in use");
+                                            break;
+                                        default:
+                                            toastr.error("Can't create new camera");
+                                    }
                                 }
                             });
                         }
@@ -138,14 +144,14 @@ angular.module('Camera')
                             name: 'New camera',
                             type: 'Local',
                             definition: {
-                                "filesDirectory" : "/media/freebox",
-                                "fileIntrustion" : "/media/freebox/intrusion.date",
-                                "motion" : {
-                                    "id" : 0,
-                                    "adminUri" : "http://127.0.0.1:8081/0/detection/",
-                                    "streamUri" : "http://127.0.0.1:8082/",
-                                    "login" : "user",
-                                    "password" : "password"
+                                "filesDirectory": "/media/freebox",
+                                "fileIntrustion": "/media/freebox/intrusion.date",
+                                "motion": {
+                                    "id": 0,
+                                    "adminUri": "http://127.0.0.1:8081/0/detection/",
+                                    "streamUri": "http://127.0.0.1:8082/",
+                                    "login": "user",
+                                    "password": "password"
                                 }
                             }
                         };

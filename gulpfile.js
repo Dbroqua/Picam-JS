@@ -16,7 +16,7 @@ var gulp = require('gulp'),
  * NODE JS TASKS
  */
 gulp.task('lint', function () {
-    return gulp.src(['**/**.js', '!node_modules/**/*.js', '!gulpfile.js', '!app/**'])
+    return gulp.src(['**/**.js', '!node_modules/**/*.js', '!bower_components/**/*.js', '!gulpfile.js', '!app/**'])
         .pipe(jshint({
             "undef": true,
             "unused": true,

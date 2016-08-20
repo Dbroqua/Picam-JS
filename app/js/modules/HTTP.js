@@ -57,16 +57,11 @@ angular.module("Network", [])
             };
 
             http_service.patch = function (url, id, data, callback) {
-                var canceler = $q.defer();
-                if (!data || data === null) {
-                    data = {
-                        timeout: canceler.promise
-                    };
-                } else {
-                    data.timeout = canceler.promise;
-                }
                 $http.patch(SERVER_PATH + url + '/' + id, data).then(callback, callback);
-                return canceler;
+            };
+
+            http_service.post = function (url, id, data, callback) {
+                $http.post(SERVER_PATH + url + '/', data).then(callback, callback);
             };
 
 

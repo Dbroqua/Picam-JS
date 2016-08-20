@@ -1,11 +1,11 @@
 <div class="col-xs-12 text-center">
     <h1 ng-if="Camera.name.length > 0 ">{{Camera.name}} <sup><span class="glyphicon glyphicon-pencil small link" ng-click="showForm();"></span></sup></h1>
 </div>
-<div class="col-xs-12 col-md-6 pull-right text-center" ng-if="Camera.infos.state === 'Running'">
+<div class="col-xs-12 col-md-6 pull-right text-center" ng-if="cameraId !== null && Camera.infos.state === 'Running'">
     <img ng-src="{{SERVER_PATH + 'cameras/' + cameraId + '/stream?apikey=' + apikey}}" alt="Stream"
          class="img-responsive"/>
 </div>
-<div class="col-xs-12 col-md-6">
+<div class="col-xs-12 col-md-6" ng-class="{'col-md-offset-3': cameraId === null}">
     <form novalidate>
         <table class="table table-striped table-bordered table-hover table-responsive">
             <tfoot ng-if="showEditableValues">
@@ -16,7 +16,7 @@
             </tr>
             </tfoot>
             <tbody>
-            <tr>
+            <tr ng-if="cameraId !== null">
                 <td>State</td>
                 <td>
                 <span class='btn'
@@ -30,7 +30,7 @@
                 </span>
                 </td>
             </tr>
-            <tr>
+            <tr ng-if="cameraId !== null">
                 <td>Detection state</td>
                 <td>
                 <span class='btn'
@@ -44,18 +44,18 @@
                 </span>
                 </td>
             </tr>
-            <tr>
+            <tr ng-if="cameraId !== null">
                 <td>started at</td>
                 <td>
                 <span ng-if="Camera.infos.state === 'Running'"
                       ng-bind="Camera.infos.startedAt | date : 'medium'"></span>
                 </td>
             </tr>
-            <tr>
+            <tr ng-if="cameraId !== null">
                 <td>last detection</td>
                 <td ng-bind="Camera.infos.lastDetection | date : 'medium'"></td>
             </tr>
-            <tr>
+            <tr ng-if="cameraId !== null">
                 <td>Date</td>
                 <td ng-bind="Camera.infos.lastRun | date : 'medium'"></td>
             </tr>

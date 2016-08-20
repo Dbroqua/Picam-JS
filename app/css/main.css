@@ -42,7 +42,7 @@ body {
 body .link {
   cursor: pointer;
 }
-body .toast {
+body #toast-container {
   z-index: 2031 !important;
 }
 body footer.navbar {
