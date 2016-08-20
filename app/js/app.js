@@ -86,8 +86,8 @@ angular.module('PiCam',
                     $rootScope.isLogged = HTTPService.isLogged();
                     if ($rootScope.isLogged) {
                         HTTPService.initEnv();
-                        HTTPService.relogin(function(success){
-                            if (success !== true ){
+                        HTTPService.relogin(function(success,failure){
+                            if (failure){
                                 $rootScope.logOut();
                             }
                         });
