@@ -21,7 +21,7 @@ module.exports = function (params) {
     app.options(specificItem,
         function (req, res) {
             res.statusCode = 200;
-            res.json(['GET','PATCH']);
+            res.json(['GET','PATCH','DELETE']);
         });
     app.options(streamItem,
         function (req, res) {
@@ -55,6 +55,13 @@ module.exports = function (params) {
         passport.authenticate(['basic', 'api-key'], {session: false}),
         function (req, res) {
             Middle.patchOne(req, function (err, data) {
+                res.status(data.code).send(data.res).end();
+            });
+        });
+    app.delete(specificItem,
+        passport.authenticate(['basic', 'api-key'], {session: false}),
+        function (req, res) {
+            Middle.deleteOne(req, function (err, data) {
                 res.status(data.code).send(data.res).end();
             });
         });

@@ -73,7 +73,7 @@ angular.module('Camera')
                             });
                         } else {
                             // Create new camera
-                            HTTPService.post('cameras', $scope.cameraId, $scope.updatedValues, function (response) {
+                            HTTPService.post('cameras', $scope.updatedValues, function (response) {
                                 if (response.status === 201) {
                                     toastr.success('New camera created');
                                     $location.path('/cameras/' + response.data._id);
@@ -108,6 +108,17 @@ angular.module('Camera')
                                 console.log('Confirm dismissed!');
                             });
                     }
+                };
+
+                $scope.deleteCamera = function(){
+                    HTTPService.delete('cameras', $scope.cameraId, $scope.updatedValues, function (response) {
+                        if (response.status === 200) {
+                            toastr.success('Camera deleted');
+                            $location.path('/cameras/');
+                        } else {
+                            toastr.error("Can't remove this camera");
+                        }
+                    });
                 };
 
                 $scope.load = function () {

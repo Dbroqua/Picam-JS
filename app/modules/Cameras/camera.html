@@ -12,6 +12,7 @@
             <tr>
                 <td colspan="2" class="text-center">
                     <button type="submit" class="btn btn-primary" ng-click="updateCamera()" ng-bind="cameraId !== null ? 'Update' : 'Create'"></button>
+                    <button type="button" class="btn btn-danger" ng-click="deleteCamera()" ng-if="cameraId !== null">Delete</button>
                 </td>
             </tr>
             </tfoot>

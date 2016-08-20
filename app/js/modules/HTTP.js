@@ -3,8 +3,8 @@
  */
 
 angular.module("Network", [])
-    .factory('HTTPService', ['$rootScope', '$http', '$base64', '$cookies', '$q',
-        function ($rootScope, $http, $base64, $cookies, $q) {
+    .factory('HTTPService', ['$rootScope', '$http', '$base64', '$cookies', '$q', '$ngBootbox',
+        function ($rootScope, $http, $base64, $cookies, $q, $ngBootbox) {
             var http_service = {
                 authDatas: $cookies.get('AssetManager') || null,
                 userData: null,
@@ -60,8 +60,17 @@ angular.module("Network", [])
                 $http.patch(SERVER_PATH + url + '/' + id, data).then(callback, callback);
             };
 
-            http_service.post = function (url, id, data, callback) {
+            http_service.post = function (url, data, callback) {
                 $http.post(SERVER_PATH + url + '/', data).then(callback, callback);
+            };
+
+            http_service.delete = function (url, id, data, callback) {
+                $ngBootbox.confirm('Are you sure to want delete this element ?')
+                    .then(function () {
+                        $http.delete(SERVER_PATH + url + '/' + id, data).then(callback, callback);
+                    }, function () {
+                        console.log('Confirm dismissed!');
+                    });
             };
 
 
@@ -161,7 +170,7 @@ angular.module("Network", [])
                 http_service.getAll_cancel[route] = http_service.get(route + '?limit=' + limit + '&page=' + page + '&sort=' + sorting + '&' + http_service.parseFilters(filters), null, callback, http_service.getAll_cancel[route]);
             };
 
-            http_service.getAllRemote = function( params , identifier , callback ){
+            http_service.getAllRemote = function (params, identifier, callback) {
                 if (http_service.getAll_cancel[identifier]) {
                     http_service.getAll_cancel[identifier].resolve();
                     http_service.getAll_cancel[identifier] = undefined;
@@ -171,7 +180,7 @@ angular.module("Network", [])
                     sorting = '-' + sorting;
                 }
 
-                http_service.getAll_cancel[identifier] = http_service.getRemote(params.scheme+'://'+params.uri+':'+params.port+'/api/v1/cameras/' + '?sort=' + sorting , params, callback, http_service.getAll_cancel[identifier]);
+                http_service.getAll_cancel[identifier] = http_service.getRemote(params.scheme + '://' + params.uri + ':' + params.port + '/api/v1/cameras/' + '?sort=' + sorting, params, callback, http_service.getAll_cancel[identifier]);
             };
 
             http_service.getOne = function (route, id, params, callback) {
