@@ -15,7 +15,6 @@ module.exports = function (params) {
         model: users.model
     };
 
-
     app.options(basePath,
         function (req, res) {
             res.statusCode = 200;
@@ -31,11 +30,9 @@ module.exports = function (params) {
                         console.log(err, data);
                         res.status(data.code).send(data.res).end();
                     });
-                    // res.send('Install in progress');
                 }else{
                     res.status(406).send('406 not acceptable').end();
                 }
-                // res.send(data);*/
             });
         });
 };
