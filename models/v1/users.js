@@ -17,14 +17,16 @@ var dataModel = {
     },
     mail: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
         required: true
     },
     apikey: {
-        type: String
+        type: String,
+        unique: true
     },
     active: {
         type: Boolean,
@@ -68,5 +70,7 @@ schema.methods.comparePassword = function (candidatePassword, cb) {
 
 module.exports = {
     model: mongoose.model('users', schema),
-    dataModel: dataModel
+    dataModel: dataModel,
+    bcrypt: bcrypt,
+    SALT_WORK_FACTOR: SALT_WORK_FACTOR
 };

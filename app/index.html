@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/bower_components/angular-toastr/dist/angular-toastr.min.css">
+    <link rel="stylesheet" href="/bower_components/angular-bootstrap-pwgen/angular-bootstrap-pwgen.css">
 
     <link rel="stylesheet" href="css/main.css">
 </head>
@@ -39,6 +40,20 @@
                         <li><a href="javascript:void(0)" ng-click="changeRoute('cameras/add')"><i
                                 class="glyphicon glyphicon-plus"></i>Add</a></li>
                         <li><a href="javascript:void(0)" ng-click="changeRoute('cameras')"><i
+                                class="glyphicon glyphicon-list"></i>View</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown"
+                    ng-class="{'active': routeContains('administration')}">
+                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="false">Administration<span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-header">Users</li>
+                        <li><a href="javascript:void(0)" ng-click="changeRoute('administration/users/add')"><i
+                                class="glyphicon glyphicon-plus"></i>Add</a></li>
+                        <li><a href="javascript:void(0)" ng-click="changeRoute('administration/users')"><i
                                 class="glyphicon glyphicon-list"></i>View</a></li>
                     </ul>
                 </li>
@@ -79,6 +94,7 @@
 <script type="text/javascript" src="/bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
 <script type="text/javascript" src="/bower_components/angular-route/angular-route.min.js"></script>
 <script type="text/javascript" src="/bower_components/ngBootbox/dist/ngBootbox.min.js"></script>
+<script type="text/javascript" src="/bower_components/angular-bootstrap-pwgen/angular-bootstrap-pwgen.js"></script>
 
 <!-- APP Scripts -->
 <script src="js/env.js"></script>
@@ -90,6 +106,8 @@
 <script type="text/javascript" src="js/modules/HomePage.js"></script>
 <script type="text/javascript" src="js/modules/Cameras.js"></script>
 <script type="text/javascript" src="js/modules/Camera.js"></script>
+<script type="text/javascript" src="js/modules/Users.js"></script>
+<script type="text/javascript" src="js/modules/User.js"></script>
 
 </body>
 </html>

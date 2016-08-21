@@ -107,6 +107,7 @@ var params = {
  */
 require('./routes/')(params);
 require('./routes/v1/cameras')(params);
+require('./routes/v1/users')(params);
 require('./routes/install')(params);
 //----------------------------------------------------------------------------------------------------------------------
 

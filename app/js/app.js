@@ -7,6 +7,8 @@ angular.module('HomePage', []);
 angular.module('Authentication', []);
 angular.module('Cameras', []);
 angular.module('Camera', []);
+angular.module('Users', []);
+angular.module('User', []);
 
 //App
 angular.module('PiCam',
@@ -16,12 +18,15 @@ angular.module('PiCam',
         'ngCookies',
         'ngBootbox',
         'base64',
+        'ui.pwgen',
 
         'Network',
         'Authentication',
         'HomePage',
         'Cameras',
-        'Camera'
+        'Camera',
+        'Users',
+        'User'
     ])
 //Redirections
     .config([
@@ -40,6 +45,15 @@ angular.module('PiCam',
                 .when('/cameras/:id', {
                     templateUrl: 'modules/Cameras/camera.html',
                     controller: 'CameraController'
+                })
+
+                .when('/administration/users', {
+                    templateUrl: 'modules/Users/default.html',
+                    controller: 'UsersController'
+                })
+                .when('/administration/users/:id', {
+                    templateUrl: 'modules/Users/user.html',
+                    controller: 'UserController'
                 })
 
                 .when('/login', {
