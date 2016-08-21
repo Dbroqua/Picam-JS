@@ -91,14 +91,6 @@ angular.module('Camera')
                     };
 
                     if ($scope.updatedValues.type === 'Net' && $scope.updatedValues.definition !== undefined && ( $scope.updatedValues.definition.password === undefined || $scope.updatedValues.definition.password.length === 0 )) {
-                        preventEmptyPassword = true;
-                    }
-
-                    if ($scope.updatedValues.type === 'Local' && $scope.updatedValues.definition !== undefined && $scope.updatedValues.definition.motion !== undefined && ( $scope.updatedValues.definition.motion.password === undefined || $scope.updatedValues.definition.motion.password.length === 0 )) {
-                        preventEmptyPassword = true;
-                    }
-
-                    if (preventEmptyPassword === false) {
                         _runAction();
                     } else {
                         $ngBootbox.confirm('No password set, are you sure?')
@@ -110,7 +102,7 @@ angular.module('Camera')
                     }
                 };
 
-                $scope.deleteCamera = function(){
+                $scope.deleteCamera = function () {
                     HTTPService.delete('cameras', $scope.cameraId, $scope.updatedValues, function (response) {
                         if (response.status === 200) {
                             toastr.success('Camera deleted');

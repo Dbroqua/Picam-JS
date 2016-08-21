@@ -99,16 +99,6 @@
                 <td><input type="text" class="form-control" name="streamUri"
                            ng-model="updatedValues.definition.motion.streamUri" id="streamUri"></td>
             </tr>
-            <tr ng-if="showEditableValues && updatedValues.type === 'Local'">
-                <td><label for="motionLogin">Motion login</label></td>
-                <td><input type="text" class="form-control" name="motionLogin"
-                           ng-model="updatedValues.definition.motion.login" id="motionLogin"></td>
-            </tr>
-            <tr ng-if="showEditableValues && updatedValues.type === 'Local'">
-                <td><label for="motionPassword">Motion password</label></td>
-                <td><input type="password" class="form-control" name="motionPassword"
-                           ng-model="updatedValues.definition.motion.password" id="motionPassword"></td>
-            </tr>
             <tr ng-if="showEditableValues && updatedValues.type === 'Net'">
                 <td><label for="scheme">Scheme</label></td>
                 <td>

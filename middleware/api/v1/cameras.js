@@ -57,6 +57,10 @@ var _getCamerasInfos = function (data, req, callback) {
 
         var password = item.definition.password;
 
+        if (req.keepPasswords !== true) {
+            item.definition.password = undefined;
+        }
+
         switch (item.type) {
             case 'Local':
                 var _currentEltIndex = currentLocalIndex;

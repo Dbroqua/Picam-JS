@@ -8,7 +8,8 @@ module.exports = function (params) {
     var streamItem = specificItem + '/stream';
 
     var Middle = require('../../middleware/api/v1/cameras'),
-        apiProxy = require('http-proxy').createProxyServer();
+        apiProxy = require('http-proxy').createProxyServer(),
+        exec = require('child_process').exec;
 
     var app = params.app;
     var passport = params.passport;
@@ -71,17 +72,22 @@ module.exports = function (params) {
         function (req, res) {
             req.keepPasswords = true;
             Middle.getOne(req, function (err, data) {
-
                 if (data.code === 200) {
                     var isOk = false;
                     var item = data.res;
                     switch (item.type) {
                         case 'Local':
-                            apiProxy.web(req, res, {
-                                target: item.definition.motion.streamUri,
-                                auth: item.definition.motion.login + ':' + item.definition.motion.password
+                            exec('grep "stream_authentication" /etc/motion.conf|cut -d" " -f 2', function (err, stdout) {
+                                if (!err) {
+                                    apiProxy.web(req, res, {
+                                        target: item.definition.motion.streamUri,
+                                        auth: stdout.replace(/(\r\n|\n|\r)/gm, '')
+                                    });
+                                    isOk = true;
+                                } else {
+                                    res.status(500).send({message: 'Internal server error'}).end();
+                                }
                             });
-                            isOk = true;
                             break;
                         case 'Net':
                             req.url = '';

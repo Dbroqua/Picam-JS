@@ -45,12 +45,6 @@ var dataModel = {
             },
             "streamUri": {
                 type: String
-            },
-            "login": {
-                type: String
-            },
-            "password": {
-                type: String
             }
         },
         "filesDirectory": {
