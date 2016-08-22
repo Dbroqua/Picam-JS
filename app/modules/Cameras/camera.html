@@ -119,14 +119,9 @@
                            id="port"></td>
             </tr>
             <tr ng-if="showEditableValues && updatedValues.type === 'Net'">
-                <td><label for="login">Login</label></td>
-                <td><input type="text" class="form-control" name="login" ng-model="updatedValues.definition.login"
-                           id="login"></td>
-            </tr>
-            <tr ng-if="showEditableValues && updatedValues.type === 'Net'">
-                <td><label for="password">Password</label></td>
-                <td><input type="password" class="form-control" name="password"
-                           ng-model="updatedValues.definition.password" id="password"></td>
+                <td><label for="apikey">Apikey</label></td>
+                <td><input type="text" class="form-control" name="apikey"
+                           ng-model="updatedValues.definition.apikey" id="apikey"></td>
             </tr>
             <tr ng-if="showEditableValues && updatedValues.type === 'Net'">
                 <td><label for="cameraId">Camera id</label></td>

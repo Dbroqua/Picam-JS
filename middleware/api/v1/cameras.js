@@ -117,12 +117,8 @@ var _getCamerasInfos = function (data, req, callback) {
                 break;
             case 'Net':
                 var options = {
-                    url: item.definition.scheme + '://' + item.definition.uri + ':' + item.definition.port + '/api/v1/cameras/' + item.definition.cameraId,
-                    headers: {
-                        'Authorization': 'Basic ' + new Buffer(item.definition.login + ':' + password).toString('base64'),
-                        'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.52 Safari/537.17'
-                    },
-                    timeout: 1500
+                    url: item.definition.scheme + '://' + item.definition.uri + ':' + item.definition.port + '/api/v1/cameras/' + item.definition.cameraId + '?apikey=' + item.definition.apikey,
+                    timeout: 15000
                 };
 
                 request.get(options, function (err, res, body) {
@@ -246,11 +242,7 @@ exports.patchOne = function (req, callback) {
                             break;
                         case 'Net':
                             var options = {
-                                url: item.definition.scheme + '://' + item.definition.uri + ':' + item.definition.port + '/api/v1/cameras/' + item.definition.cameraId,
-                                headers: {
-                                    'Authorization': 'Basic ' + new Buffer(item.definition.login + ':' + item.definition.password).toString('base64'),
-                                    'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.52 Safari/537.17'
-                                },
+                                url: item.definition.scheme + '://' + item.definition.uri + ':' + item.definition.port + '/api/v1/cameras/' + item.definition.cameraId + '?apikey=' + item.definition.apikey,
                                 form: req.body
                             };
 

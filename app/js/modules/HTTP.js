@@ -46,9 +46,6 @@ angular.module("Network", [])
                 var req = {
                     method: 'GET',
                     url: url,
-                    headers: {
-                        'Authorization': 'Basic ' + this.generateAuthorizationHeader(data.login, data.password)
-                    },
                     data: data
                 };
 
@@ -180,7 +177,7 @@ angular.module("Network", [])
                     sorting = '-' + sorting;
                 }
 
-                http_service.getAll_cancel[identifier] = http_service.getRemote(params.scheme + '://' + params.uri + ':' + params.port + '/api/v1/cameras/' + '?sort=' + sorting, params, callback, http_service.getAll_cancel[identifier]);
+                http_service.getAll_cancel[identifier] = http_service.getRemote(params.scheme + '://' + params.uri + ':' + params.port + '/api/v1/cameras/' + '?apikey='+params.apikey+'&sort=' + sorting, params, callback, http_service.getAll_cancel[identifier]);
             };
 
             http_service.getOne = function (route, id, params, callback) {

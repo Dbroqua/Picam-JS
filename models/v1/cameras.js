@@ -26,10 +26,7 @@ var dataModel = {
         "port": {
             type: Number
         },
-        "login": {
-            type: String
-        },
-        "password": {
+        "apikey": {
             type: String
         },
         "cameraId": {

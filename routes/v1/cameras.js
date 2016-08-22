@@ -22,7 +22,7 @@ module.exports = function (params) {
     app.options(specificItem,
         function (req, res) {
             res.statusCode = 200;
-            res.json(['GET','PATCH','DELETE']);
+            res.json(['GET', 'PATCH', 'DELETE']);
         });
     app.options(streamItem,
         function (req, res) {
@@ -31,7 +31,7 @@ module.exports = function (params) {
         });
 
     app.get(basePath,
-        passport.authenticate(['basic'], {session: false}),
+        passport.authenticate(['basic', 'api-key'], {session: false}),
         function (req, res) {
             Middle.getAll(req, function (err, data) {
                 res.status(data.code).send(data.res).end();
@@ -75,6 +75,7 @@ module.exports = function (params) {
                 if (data.code === 200) {
                     var isOk = false;
                     var item = data.res;
+                    req.url = '';
                     switch (item.type) {
                         case 'Local':
                             exec('grep "stream_authentication" /etc/motion.conf|cut -d" " -f 2', function (err, stdout) {
@@ -90,11 +91,9 @@ module.exports = function (params) {
                             });
                             break;
                         case 'Net':
-                            req.url = '';
-                            var target = item.definition.scheme + '://' + item.definition.uri + ':' + item.definition.port + '/api/v1/cameras/' + item.definition.cameraId + '/stream/';
+                            var target = item.definition.scheme + '://' + item.definition.uri + ':' + item.definition.port + '/api/v1/cameras/' + item.definition.cameraId + '/stream/?apikey=' + item.definition.apikey;
                             apiProxy.web(req, res, {
-                                target: target,
-                                auth: item.definition.login + ':' + item.definition.password
+                                target: target
                             });
                             isOk = true;
                             break;
@@ -103,8 +102,8 @@ module.exports = function (params) {
                             break;
                     }
 
-                    if( isOk ){
-                        apiProxy.on('error', function(err) {
+                    if (isOk) {
+                        apiProxy.on('error', function (err) {
                             console.log(err);
                         });
                     }
