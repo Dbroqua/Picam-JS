@@ -3,53 +3,76 @@
         <thead>
         <tr>
             <th>Name</th>
-            <th>State</th>
-            <th>Detection state</th>
-            <th>started at</th>
-            <th>last detection</th>
-            <th>Date</th>
+            <th>States</th>
+            <th>Information</th>
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="camera in Cameras">
-            <td>
-                <a href="javascript:void(0);" ng-click="viewCameraDetails(camera._id);">{{camera.name}} </a>
+        <tr ng-repeat="camera in Cameras"
+            ng-class="{'success': camera.infos.state === 'Running' && camera.infos.detectionState === 'Active',
+                'warning': camera.infos.state === 'Running' && camera.infos.detectionState === 'Pause',
+                'danger': camera.infos.state === 'Stop'}">
+            <td ng-hide="camera.isLoading">
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        {{camera.name}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li ng-class="{'disabled': camera.infos.state === 'Running'}">
+                            <a href="javascript:void(0)"
+                               ng-click="patchCamera(camera._id,{infos: {state: 'Running'}});">
+                                Start motion
+                            </a>
+                        </li>
+                        <li ng-class="{'disabled': camera.infos.state === 'Stop'}">
+                            <a href="javascript:void(0)" ng-click="patchCamera(camera._id,{infos: {state: 'Stop' }});">
+                                Stop motion
+                            </a>
+                        </li>
+                        <li ng-class="{'disabled': camera.infos.detectionState === 'Active'}">
+                            <a href="javascript:void(0)"
+                               ng-click="patchCamera(camera._id,{infos: {detectionState: 'Active'}});">
+                                Start detection
+                            </a>
+                        </li>
+                        <li ng-class="{'disabled': camera.infos.detectionState === 'Pause'}">
+                            <a href="javascript:void(0)"
+                               ng-click="patchCamera(camera._id,{infos: {detectionState: 'Pause' }});">
+                                Pause detection
+                            </a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="javascript:void(0)" ng-click="viewCameraDetails(camera._id);">Edit camera</a></li>
+                        <li><a href="javascript:void(0)" ng-click="deleteCamera(camera._id);">Delete camera</a></li>
+                    </ul>
+                </div>
             </td>
-            <td>
-                <span class='btn'
-                      ng-class="{'btn-success': camera.infos.state === 'Running', 'btn-danger': camera.infos.state === 'Stop'}"
-                      ng-click="patchCamera(camera._id,{infos: {state: (camera.infos.state === 'Running' ? 'Stop' : 'Running') }});">
-                     <span ng-if="camera.infos.state === 'Running'" class="glyphicon glyphicon-ok"
-                           aria-hidden="true"></span>
-                    <span ng-if="camera.infos.state === 'Stop'" class="glyphicon glyphicon-stop"
-                          aria-hidden="true"></span>
-                    <span ng-bind="camera.infos.state"></span>
-                </span>
-
+            <td ng-hide="camera.isLoading">
+                <strong>Motion:</strong>
+                <span ng-bind="camera.infos.state"></span>
+                <br/>
+                <strong>Detection:</strong>
+                <span ng-bind="camera.infos.detectionState"></span>
             </td>
-            <td>
-                <span class='btn'
-                      ng-class="{'btn-success': camera.infos.detectionState === 'Active', 'btn-warning': camera.infos.detectionState === 'Pause'}"
-                      ng-click="patchCamera(camera._id,{infos: {detectionState: (camera.infos.detectionState === 'Active' ? 'Pause' : 'Active') }});">
-                    <span ng-if="camera.infos.detectionState === 'Active'" class="glyphicon glyphicon-play"
-                          aria-hidden="true"></span>
-                    <span ng-if="camera.infos.detectionState === 'Pause'" class="glyphicon glyphicon-pause"
-                          aria-hidden="true"></span>
-                    <span ng-bind="camera.infos.detectionState"></span>
-                </span>
-            </td>
-            <td>
+            <td ng-hide="camera.isLoading">
+                <strong>Started at:</strong>
                 <span ng-if="camera.infos.state === 'Running'"
                       ng-bind="camera.infos.startedAt | date : 'medium'"></span>
+                <br/>
+                <strong>Last detection:</strong>
+                <span ng-bind="camera.infos.lastDetection | date : 'medium'"></span>
             </td>
-            <td ng-bind="camera.infos.lastDetection | date : 'medium'"></td>
-            <td ng-bind="camera.infos.lastRun | date : 'medium'"></td>
+            <td ng-show="camera.isLoading" colspan="3" class="loaderRow text-center">
+                <img src="/resources/img/loader.gif"/>
+            </td>
         </tr>
         <tr ng-if="!loadingList && camera.length <= 0">
-            <td colspan="6" class="emptyRow">No camera found</td>
+            <td colspan="3" class="emptyRow">No camera found</td>
         </tr>
         <tr ng-if="loadingList">
-            <td colspan="6" class="loaderRow text-center">
+            <td colspan="3" class="loaderRow text-center">
                 <img src="/resources/img/loader.gif"/>
             </td>
         </tr>

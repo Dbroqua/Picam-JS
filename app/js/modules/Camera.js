@@ -124,7 +124,6 @@ angular.module('Camera')
                                 }
                             }
                         });
-
                     } else {
                         $scope.Camera = {
                             name: 'New camera',

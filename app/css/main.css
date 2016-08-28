@@ -50,3 +50,9 @@ body footer.navbar {
   min-height: 32px !important;
   line-height: 32px;
 }
+body .btn {
+  margin-bottom: 6px;
+}
+body .dropdown-menu {
+  z-index: 1032;
+}

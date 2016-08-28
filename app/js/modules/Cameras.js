@@ -14,12 +14,53 @@ angular.module('Cameras')
                 $scope.loadingList = false;
 
                 $scope.patchCamera = function(id, values){
+                    var cameraIndex = 0;
+                    var nbCams = $scope.Cameras.length;
+                    for( var i = 0 ; i < nbCams ; i++ ){
+                        if( $scope.Cameras[i]._id === id ){
+                            cameraIndex = i;
+                            $scope.Cameras[cameraIndex].isLoading = true;
+                            break;
+                        }
+                    }
+
                     HTTPService.patch('cameras', id, values, function (response) {
                         if (response.status === 200) {
                             toastr.success('Action completed');
-                            $scope.load($scope.currentPage);
+                            HTTPService.getOne('cameras', id, null, function (response) {
+                                $scope.Cameras[cameraIndex].isLoading = false;
+                                if (response.status === 200) {
+                                    $scope.Cameras[cameraIndex] = response.data;
+                                } else {
+                                    switch (response.status) {
+                                        case 401:
+                                            toastr.error('Not authorized');
+                                            break;
+                                        case 404:
+                                            toastr.error('Camera not found, wut ?');
+                                            break;
+                                        case 500:
+                                            toastr.error('Internal server error while trying reload camera details');
+                                            break;
+                                        default:
+                                            toastr.error('Can\'t reload details for this camera');
+                                    }
+                                }
+                            });
                         } else {
+                            $scope.Cameras[cameraIndex].isLoading = false;
                             toastr.error("Can't complete this operation");
+                        }
+                    });
+                };
+
+                $scope.deleteCamera = function (id) {
+                    HTTPService.delete('cameras', id, $scope.updatedValues, function (response) {
+                        if (response.status === 200) {
+                            $scope.load($scope.currentPage);
+                            toastr.success('Camera deleted');
+                        } else {
+                            toastr.error("Can't remove this camera");
                         }
                     });
                 };
