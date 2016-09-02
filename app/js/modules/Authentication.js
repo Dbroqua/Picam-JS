@@ -22,7 +22,7 @@ angular.module('Authentication')
                 if ($scope.username !== '' && $scope.password !== '') {
                     HTTPService.login($scope.username, $scope.password,
                         function () {
-                            $location.path('/Home/');
+                            $location.path('/cameras/');
                         }, function (error) {
                             if (error !== null && error.status !== undefined) {
                                 switch (error.status) {

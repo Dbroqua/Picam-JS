@@ -62,7 +62,7 @@ angular.module('PiCam',
                 })
 
                 .otherwise({
-                    redirectTo: '/Home/'
+                    redirectTo: '/cameras/'
                 });
         }])
     //RootScope control
