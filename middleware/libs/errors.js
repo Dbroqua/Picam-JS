@@ -4,9 +4,9 @@
 
 /**
  * Function for escape errors
- * @param err
- * @param req
- * @param callback
+ * @param {Object} err
+ * @param {Object} req
+ * @param {Function} callback
  */
 var errorCatcher = function (err, req, callback) {
     console.log(err);
@@ -15,8 +15,8 @@ var errorCatcher = function (err, req, callback) {
             case -1:
                 callback(err, {code: 406, res: {message: 'Id for ' + err.idType + ' is not valid'}});
                 break;
-            case 11000: // On insert
-            case 11001: // On update
+            case 11000: //On insert
+            case 11001: //On update
                 callback(err, {code: 409, res: {message: 'Duplicate'}});
                 break;
             case 406:

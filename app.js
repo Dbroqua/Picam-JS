@@ -2,10 +2,10 @@
  * Created by dbroqua on 8/16/16.
  */
 
-// Base url for REST API
+//Base url for REST API
 var baseUrl = '/api/v1/';
 
-// Declaration of requirement
+//Declaration of requirement
 var express = require('express'),
     path = require('path'),
     fs = require('fs'),
@@ -18,9 +18,7 @@ var express = require('express'),
     app = express(),
     env = require('./config'),
     passportStrategies = require('./middleware/libs/passport');
-
 /*--------------------------------------------------------------------------------------------------------------------*/
-
 
 /**
  * Init Passport
@@ -32,33 +30,30 @@ passport.serializeUser(function(user, done) {
 });
 //-- End of passport init ----------------------------------------------------------------------------------------------
 
-
 /**
  * Init app
  */
 app.set('env', env.env.env );
 
-
 /**
  * Logs
  */
 var logDirectory = __dirname + '/logs';
-// ensure log directory exists
-if( !fs.existsSync(logDirectory)){
+//Ensure log directory exists
+if (!fs.existsSync(logDirectory)) {
     fs.mkdirSync(logDirectory);
 }
-// create a rotating write stream
+//Create a rotating write stream
 var accessLogStream = FileStreamRotator.getStream({
     date_format: 'YYYYMMDD',
     filename: logDirectory + '/access-%DATE%.log',
     frequency: 'daily',
     verbose: true
 });
-app.use(morgan('combined', {stream: accessLogStream})); // Log file
+app.use(morgan('combined', {stream: accessLogStream})); //Log file
 if (app.get('env') === 'development') {
-    app.use(morgan('dev')); // Console log
+    app.use(morgan('dev')); //Console log
 }
-
 
 /**
  * Set public dir's
@@ -71,24 +66,32 @@ app.use(favicon(path.join(__dirname, 'resources', 'favicon.png')));
 /**
  * Define several stuff for application
  */
-app.use(bodyParser.json()); // parse application/json
-app.use(bodyParser.urlencoded({extended: true})); // parse application/x-www-form-urlencoded
-app.use(cookieParser()); // cookie parsing middleware
-app.use(passport.initialize()); // Initialize passport transaction
+app.use(bodyParser.json()); //Parse application/json
+app.use(bodyParser.urlencoded({extended: true})); //Parse application/x-www-form-urlencoded
+app.use(cookieParser()); //Cookie parsing middleware
+app.use(passport.initialize()); //Initialize passport transaction
 
 /**
  * Set defaults env for all routes
  */
-app.use('/', function(req, res, next) {
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    // Pass to next layer of middleware
-    next();
-});
+app.use('/',
+    /**
+     *
+     * @param {Object} req
+     * @param {Object} res
+     * @param {Function} next
+     */
+    function (req, res, next) {
+        //Website you wish to allow to connect
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        //Request methods you wish to allow
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        //Request headers you wish to allow
+        res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+        //Pass to next layer of middleware
+        next();
+    }
+);
 
 /**
  * Set params object passed for all routes
@@ -111,18 +114,22 @@ require('./routes/v1/users')(params);
 require('./routes/install')(params);
 //----------------------------------------------------------------------------------------------------------------------
 
-/**
- * catch 404 and forward to error handler
- */
-app.use(function(req, res, next) {
+app.use(
+    /**
+     * catch 404 and forward to error handler
+     * @param {Object} req
+     * @param {Object} res
+     * @param {Function} next
+     */
+    function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 
-// error handlers
-// development error handler
-// will print stacktrace
+//Error handlers
+//Development error handler
+//Will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function(err, req, res) {
         res.status(err.status || 500);
@@ -133,8 +140,8 @@ if (app.get('env') === 'development') {
     });
 }
 
-// production error handler
-// no stacktraces leaked to user
+//Production error handler
+//No stacktraces leaked to user
 app.use(function(err, req, res) {
     res.status(err.status || 500);
     res.render('error', {

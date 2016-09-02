@@ -2,6 +2,10 @@
  * Created by dbroqua on 8/16/16.
  */
 
+/**
+ * Route declaration for Install
+ * @param {Object} params
+ */
 module.exports = function (params) {
     var basePath = '/install';
     var app = params.app;
@@ -24,13 +28,13 @@ module.exports = function (params) {
     app.get(basePath,
         function (req, res) {
             libs.getAll(_params, req, function(err, data){
-                if( data.code === 204 && data.res.totalRows === 0 ){
+                if (data.code === 204 && data.res.totalRows === 0) {
                     req.body = firstUser.user;
                     libs.createOne(_params, req, function(err,data){
                         console.log(err, data);
                         res.status(data.code).send(data.res).end();
                     });
-                }else{
+                } else {
                     res.status(406).send('406 not acceptable').end();
                 }
             });

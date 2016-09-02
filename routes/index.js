@@ -2,9 +2,13 @@
  * Created by dbroqua on 8/17/16.
  */
 
+/**
+ * Route declaration for Base
+ * @param {Object} params
+ */
 module.exports = function (params) {
     var basePath = '/';
-    var authenticatePath = basePath+'authenticate';
+    var authenticatePath = basePath + 'authenticate';
     var app = params.app;
     var passport = params.passport;
 

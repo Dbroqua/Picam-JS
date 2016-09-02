@@ -2,6 +2,8 @@
  * Created by dbroqua on 8/16/16.
  */
 var gulp = require('gulp'),
+    jscs = require('gulp-jscs'),
+    jscsStylish = require('gulp-jscs-stylish'),
     jshint = require('gulp-jshint'),
     stylish = require('jshint-stylish'),
     watch = require('gulp-watch'),
@@ -32,6 +34,8 @@ gulp.task('lint', function () {
             "quotmark": "single"
 
         }))
+        .pipe(jscs())
+        .pipe(jscsStylish.combineWithHintResults())
         .pipe(jshint.reporter(stylish));
 });
 /** END ***************************************************************************************************************/

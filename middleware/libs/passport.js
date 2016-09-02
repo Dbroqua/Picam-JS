@@ -2,19 +2,23 @@
  * Created by dbroqua on 8/16/16.
  */
 
-var BasicAuth = require('passport-http').BasicStrategy, // Basic Auth
-    ApiStrategy = require('passport-localapikey').Strategy, // Api Key
+var BasicAuth = require('passport-http').BasicStrategy, //Basic Auth
+    ApiStrategy = require('passport-localapikey').Strategy, //Api Key
     users = require('../../models/v1/users');
 
-/**
- * Basic auth ( Headers : { Authorisation: 'Basic ...' } }
- */
-exports.BasicAuth = new BasicAuth(function (mail, password, done) {
+exports.BasicAuth = new BasicAuth(
+    /**
+     * Basic auth ( Headers : { Authorisation: 'Basic ...' } }
+     * @param {String} mail
+     * @param {String} password
+     * @param {Function} done
+     */
+    function (mail, password, done) {
     users.model.findOne({ mail: mail }, function(err, user) {
         if (err) {
             return done(err, false,{message: 'Invalid username'});
         }else {
-            // test a matching password
+            //Test a matching password
             if ( user !== null ){
                 user.comparePassword(password, function(err, isMatch) {
                     if (err){
@@ -22,7 +26,7 @@ exports.BasicAuth = new BasicAuth(function (mail, password, done) {
                     }else {
                         if (isMatch ){
                             return done(null, user );
-                        }else{
+                        } else {
                             return done(null, false,{message: 'Invalid password'});
                         }
                     }
@@ -34,10 +38,13 @@ exports.BasicAuth = new BasicAuth(function (mail, password, done) {
     });
 });
 
-/**
- * Api key authentication ( url : ?apikey=... )
- */
-exports.ApiKey = new ApiStrategy(function (apikey, done) {
+exports.ApiKey = new ApiStrategy(
+    /**
+     * Api key authentication ( url : ?apikey=... )
+     * @param {String} apikey
+     * @param {Function} done
+     */
+    function (apikey, done) {
     users.model.findOne({ apikey: apikey }, function(err, user) {
         if (err) {
             return done(err, false,{message: 'Invalid username'});

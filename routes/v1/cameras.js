@@ -2,6 +2,10 @@
  * Created by dbroqua on 8/16/16.
  */
 
+/**
+ * Route declaration for Cameras
+ * @param {Object} params
+ */
 module.exports = function (params) {
     var basePath = params.baseUrl + 'cameras';
     var specificItem = basePath + '/:id';
@@ -91,7 +95,9 @@ module.exports = function (params) {
                             });
                             break;
                         case 'Net':
-                            var target = item.definition.scheme + '://' + item.definition.uri + ':' + item.definition.port + '/api/v1/cameras/' + item.definition.cameraId + '/stream/?apikey=' + item.definition.apikey;
+                            var target = item.definition.scheme + '://' + item.definition.uri + ':' +
+                                item.definition.port + '/api/v1/cameras/' + item.definition.cameraId + '/stream/?apikey=' +
+                                item.definition.apikey;
                             apiProxy.web(req, res, {
                                 target: target
                             });

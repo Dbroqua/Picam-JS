@@ -13,8 +13,8 @@ var params = {
 
 /**
  * Create new user
- * @param req
- * @param callback
+ * @param {Object} req
+ * @param {Function} callback
  */
 exports.createOne = function (req, callback) {
     libs.createOne(params, req, callback);
@@ -22,8 +22,8 @@ exports.createOne = function (req, callback) {
 
 /**
  * Get all users
- * @param req
- * @param callback
+ * @param {Object} req
+ * @param {Function} callback
  */
 exports.getAll = function (req, callback) {
     libs.getAll(params, req, function (err, data) {
@@ -45,8 +45,8 @@ exports.getAll = function (req, callback) {
 
 /**
  * Get one user
- * @param req
- * @param callback
+ * @param {Object} req
+ * @param {Function} callback
  */
 exports.getOne = function (req, callback) {
     libs.getOne(params, req, function (err, data) {
@@ -65,10 +65,16 @@ exports.getOne = function (req, callback) {
 
 /**
  * Patch one user
- * @param req
- * @param callback
+ * @param {Object} req
+ * @param {Function} callback
  */
 exports.patchOne = function (req, callback) {
+    /**
+     * If all test pass, run patch
+     * @param {Object} req
+     * @param {Function} callback
+     * @private
+     */
     var _runAction = function (req, callback) {
         libs.patchOne(params, req, callback);
     };
@@ -95,8 +101,8 @@ exports.patchOne = function (req, callback) {
 
 /**
  * Delete one user
- * @param req
- * @param callback
+ * @param {Object} req
+ * @param {Function} callback
  */
 exports.deleteOne = function (req, callback) {
     libs.deleteOne(params, req, callback);

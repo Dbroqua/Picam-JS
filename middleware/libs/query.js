@@ -9,10 +9,9 @@ var errors = require('./errors');
 
 var deleteCatcher, getOne, queryBuilder;
 
-
 /**
  * Return the size of an object
- * @param obj
+ * @param {Object} obj
  * @returns {number}
  */
 Object.size = function (obj) {
@@ -23,13 +22,13 @@ Object.size = function (obj) {
     return size;
 };
 
-// PRIVATE FUNCTIONS -------------------------------------------------------------------------------------------------//
+//PRIVATE FUNCTIONS --------------------------------------------------------------------------------------------------//
 /**
  * Internal function for queryBuilder
- * @param req
- * @param dataModel
- * @param model
- * @param callback
+ * @param {Object} req
+ * @param {Object} dataModel
+ * @param {Object} model
+ * @param {Function} callback
  * @private
  */
 var _querySearchBuilder = function (req, dataModel, model, callback) {
@@ -49,8 +48,8 @@ var _querySearchBuilder = function (req, dataModel, model, callback) {
 
     /**
      * Extract search type
-     * @param value
-     * @param comparisonSymbol
+     * @param {String} value
+     * @param {String} comparisonSymbol
      * @private
      */
     var _queryType = function (value, comparisonSymbol) {
@@ -119,32 +118,32 @@ var _querySearchBuilder = function (req, dataModel, model, callback) {
         _runCallBack();
     } else {
         for (var key in urlParams) {
-            // Extracting query filters
+            //Extracting query filters
             if (key.split('.')[0] === 'q' && ( key.split('.').length >= 3 )) {
-                value = urlParams[key]; // Value of current item
-                var params = key.split('.'); // Split key in data
+                value = urlParams[key]; //Value of current item
+                var params = key.split('.'); //Split key in data
                 var paramsLength = params.length;
-                keyExists = true; // By default we suppose user send correct query field
-                comparisonSymbol = params[paramsLength - 1]; // Type of query (like, <, >, in, ...)
-                searchCol = ''; // final search key in object
+                keyExists = true; //By default we suppose user send correct query field
+                comparisonSymbol = params[paramsLength - 1]; //Type of query (like, <, >, in, ...)
+                searchCol = ''; //final search key in object
 
-                if (paramsLength >= 3) { // Min length for query is 3 : q.<field>.<comparison type>
-                    tmpObj = dataModel; // Create temp var is data model
-                    for (i = 1; i < ( paramsLength - 1 ); i++) { // For current <field> check if exists in model
-                        searchCol += (searchCol !== '' ? '.' : '' ) + params[i]; // Generate final search key
+                if (paramsLength >= 3) { //Min length for query is 3 : q.<field>.<comparison type>
+                    tmpObj = dataModel; //Create temp var is data model
+                    for (i = 1; i < ( paramsLength - 1 ); i++) { //For current <field> check if exists in model
+                        searchCol += (searchCol !== '' ? '.' : '' ) + params[i]; //Generate final search key
                         if (tmpObj[0] !== undefined) {
-                            tmpObj = tmpObj[0][params[i]]; // Copy current data model in tmpObj
+                            tmpObj = tmpObj[0][params[i]]; //Copy current data model in tmpObj
                         } else {
-                            tmpObj = tmpObj[params[i]]; // Copy current data model in tmpObj
+                            tmpObj = tmpObj[params[i]]; //Copy current data model in tmpObj
                         }
 
-                        if (tmpObj === undefined) { // tmpObj is not define (current <field> not recognized in model)
+                        if (tmpObj === undefined) { //tmpObj is not define (current <field> not recognized in model)
                             keyExists = false;
                             break;
                         }
                     }
                 }
-                if (keyExists || params[1] === '_id') { // If <field> is acceptable check <comparison>
+                if (keyExists || params[1] === '_id') { //If <field> is acceptable check <comparison>
                     value = ( value === 'null' ? null : value );
                     currentIndex++;
                     _queryType(value, comparisonSymbol);
@@ -164,16 +163,15 @@ var _querySearchBuilder = function (req, dataModel, model, callback) {
     }
 };
 
-// END PRIVATE FUNCTIONS ---------------------------------------------------------------------------------------------//
+//END PRIVATE FUNCTIONS ----------------------------------------------------------------------------------------------//
 
 /**
  * Function for send callback on delete method
- * @param count
- * @param objId
- * @param objType
- * @param callback
+ * @param {Object} count
+ * @param {String} objId
+ * @param {Function} callback
  */
-deleteCatcher = function (count, objId, objType, callback) {
+deleteCatcher = function (count, objId, callback) {
     var res = count.result;
     if (res.ok > 0) {
         if (res.n === 0) {
@@ -188,10 +186,10 @@ deleteCatcher = function (count, objId, objType, callback) {
 
 /**
  * Function for generate some filters on get list of collection
- * @param req
- * @param dataModel
- * @param model
- * @param callback
+ * @param {Object} req
+ * @param {Object} dataModel
+ * @param {Object} model
+ * @param {Function} callback
  */
 queryBuilder = function (req, dataModel, model, callback) {
     var urlParams = url.parse(req.url, true).query;
@@ -212,7 +210,7 @@ queryBuilder = function (req, dataModel, model, callback) {
         message = data.message;
         searchObj = data.searchObj;
 
-        if (isInError === true) { // One of <fields> of <comparison> not acceptable
+        if (isInError === true) { //One of <fields> of <comparison> not acceptable
             callback({
                 code: code,
                 res: {
@@ -223,42 +221,42 @@ queryBuilder = function (req, dataModel, model, callback) {
             var query = model.find(searchObj);
             var queryCount = model.find(searchObj);
 
-            // List of returned fields ---------------------------------------------------------------------------------
+            //List of returned fields ----------------------------------------------------------------------------------
             var fields = {};
             if (urlParams.fields !== undefined) {
-                var listOfFields = urlParams.fields.split(','); // List of desired returned fields
-                var nbFields = listOfFields.length; // Number of desired returned fields
-                var wantShowId = false; // Show _id of item or not ?
+                var listOfFields = urlParams.fields.split(','); //List of desired returned fields
+                var nbFields = listOfFields.length; //Number of desired returned fields
+                var wantShowId = false; //Show _id of item or not ?
 
-                if (nbFields > 0 && listOfFields[0] !== '') { // If fields param not empty
-                    for (i = 0; i < nbFields; i++) { // For each field check if exist in model
-                        if (listOfFields[i] === '_id') { // If field is _id
+                if (nbFields > 0 && listOfFields[0] !== '') { //If fields param not empty
+                    for (i = 0; i < nbFields; i++) { //For each field check if exist in model
+                        if (listOfFields[i] === '_id') { //If field is _id
                             wantShowId = true;
                             fields._id = 1;
-                        } else { // Other case
-                            var currentField = listOfFields[i]; // Save current field for simplify next
-                            currentField = currentField.split('.'); // For case of field is child of other field
-                            var currentFieldLn = currentField.length; // Length of childs
-                            var fieldStructure = ''; // Final field
-                            keyExists = true; // By default we suppose that user want existing field
+                        } else { //Other case
+                            var currentField = listOfFields[i]; //Save current field for simplify next
+                            currentField = currentField.split('.'); //For case of field is child of other field
+                            var currentFieldLn = currentField.length; //Length of childs
+                            var fieldStructure = ''; //Final field
+                            keyExists = true; //By default we suppose that user want existing field
 
-                            tmpObj = dataModel; // Copy root model in tmp object
-                            for (j = 0; j < currentFieldLn; j++) { // For all soon in field
-                                fieldStructure += (fieldStructure !== '' ? '.' : '' ) + currentField[j]; // Create final field
-                                tmpObj = tmpObj[currentField[j]]; // Copy extract model in tmp object
-                                if (tmpObj === undefined) { // If tmp object not defined (currentField not exists in model)
+                            tmpObj = dataModel; //Copy root model in tmp object
+                            for (j = 0; j < currentFieldLn; j++) { //For all soon in field
+                                fieldStructure += (fieldStructure !== '' ? '.' : '' ) + currentField[j]; //Create final field
+                                tmpObj = tmpObj[currentField[j]]; //Copy extract model in tmp object
+                                if (tmpObj === undefined) { //If tmp object not defined (currentField not exists in model)
                                     keyExists = false;
                                     break;
                                 }
                             }
 
-                            if (keyExists === true) { // If final field exists in model, add it in fields lists
+                            if (keyExists === true) { //If final field exists in model, add it in fields lists
                                 fields[fieldStructure] = 1;
                             }
                         }
                     }
 
-                    if (wantShowId === false) { // Hide _id in results
+                    if (wantShowId === false) { //Hide _id in results
                         fields._id = 0;
                     }
                 }
@@ -268,32 +266,31 @@ queryBuilder = function (req, dataModel, model, callback) {
             queryCount.select(fields);
             //----------------------------------------------------------------------------------------------------------
 
-            // Sort data -----------------------------------------------------------------------------------------------
+            //Sort data ------------------------------------------------------------------------------------------------
             if (urlParams.sort !== undefined) {
-                var sortColumn = urlParams.sort; // Copy sort filters in tmp variable
-                var dir = 1; // By default we suppose user want ASC sort
-                if (urlParams.sort.indexOf('-') === 0) { // User want DESC sort
+                var sortColumn = urlParams.sort; //Copy sort filters in tmp variable
+                var dir = 1; //By default we suppose user want ASC sort
+                if (urlParams.sort.indexOf('-') === 0) { //User want DESC sort
                     sortColumn = urlParams.sort.substr(1);
                     dir = -1;
                 }
 
-                sortColumn = sortColumn.split('.'); // For case of sort is child of other sort
-                var sortColumnLn = sortColumn.length; // Length of childs
-                var sortColumnFinal = ''; // Final sort
-                keyExists = true; // By default we suppose that user sort on existing field
+                sortColumn = sortColumn.split('.'); //For case of sort is child of other sort
+                var sortColumnLn = sortColumn.length; //Length of childs
+                var sortColumnFinal = ''; //Final sort
+                keyExists = true; //By default we suppose that user sort on existing field
 
-
-                tmpObj = dataModel; // Copy root model in tmp object
-                for (j = 0; j < sortColumnLn; j++) { // For all soon in field
-                    sortColumnFinal += (sortColumnFinal !== '' ? '.' : '' ) + sortColumn[j]; // Create final sort
-                    tmpObj = tmpObj[sortColumn[j]]; // Copy extract model in tmp object
-                    if (tmpObj === undefined) { // If tmp object not defined (sortColumn not exists in model)
+                tmpObj = dataModel; //Copy root model in tmp object
+                for (j = 0; j < sortColumnLn; j++) { //For all soon in field
+                    sortColumnFinal += (sortColumnFinal !== '' ? '.' : '' ) + sortColumn[j]; //Create final sort
+                    tmpObj = tmpObj[sortColumn[j]]; //Copy extract model in tmp object
+                    if (tmpObj === undefined) { //If tmp object not defined (sortColumn not exists in model)
                         keyExists = false;
                         break;
                     }
                 }
 
-                if (keyExists === true || sortColumnFinal === '_id') { // If final sort exists in model
+                if (keyExists === true || sortColumnFinal === '_id') { //If final sort exists in model
                     var sort = {};
                     sort[sortColumnFinal] = dir;
                     query.sort(sort);
@@ -302,18 +299,18 @@ queryBuilder = function (req, dataModel, model, callback) {
             }
             //----------------------------------------------------------------------------------------------------------
 
-            // Paginate mode -------------------------------------------------------------------------------------------
+            //Paginate mode --------------------------------------------------------------------------------------------
             if (urlParams.page !== undefined && urlParams.limit !== undefined && urlParams.limit > 0) {
                 limit = Number(urlParams.limit);
                 var _page = ( Number(urlParams.page) > 1 ? ( Number(urlParams.page) - 1 ) : 0 );
                 page = Number(urlParams.page);
                 var firstElement = _page * limit;
-                query.limit(limit); // Number of element by page
-                query.skip(firstElement); // Number of element skipped before start
+                query.limit(limit); //Number of element by page
+                query.skip(firstElement); //Number of element skipped before start
             }
             //----------------------------------------------------------------------------------------------------------
 
-            // Finally exec queries ------------------------------------------------------------------------------------
+            //Finally exec queries -------------------------------------------------------------------------------------
             if (req.params !== undefined && req.params.id !== undefined) {
                 query.exec(function (err, items) {
                     if (err) {
@@ -361,9 +358,9 @@ queryBuilder = function (req, dataModel, model, callback) {
 
 /**
  * Get all resources from one model based on filters
- * @param params
- * @param req
- * @param callback
+ * @param {Object} params
+ * @param {Object} req
+ * @param {Function} callback
  */
 var getAll = function (params, req, callback) {
     queryBuilder(req, params.dataModel, params.model, function (err, data) {
@@ -377,9 +374,9 @@ var getAll = function (params, req, callback) {
 
 /**
  * Create new resource based on model
- * @param params
- * @param req
- * @param callback
+ * @param {Object} params
+ * @param {Object} req
+ * @param {Function} callback
  */
 var createOne = function (params, req, callback) {
     var newItem = new params.model(req.body);
@@ -396,9 +393,9 @@ var createOne = function (params, req, callback) {
 
 /**
  * Get one resource based on model restricted by Id
- * @param params
- * @param req
- * @param callback
+ * @param {Object} params
+ * @param {Object} req
+ * @param {Function} callback
  */
 getOne = function (params, req, callback) {
     params.model.findOne({_id: req.params.id}, function (err, item) {
@@ -416,9 +413,9 @@ getOne = function (params, req, callback) {
 
 /**
  * Patch one resource based on model
- * @param params
- * @param req
- * @param callback
+ * @param {Object} params
+ * @param {Object} req
+ * @param {Function} callback
  */
 var patchOne = function (params, req, callback) {
     delete req.body.created_at;
@@ -448,16 +445,16 @@ var patchOne = function (params, req, callback) {
 
 /**
  * Function use to delete an element, check before if not used in an asset
- * @param {object} params
- * @param {object} req
- * @param {function} callback
+ * @param {Object} params
+ * @param {Object} req
+ * @param {Function} callback
  */
 var deleteOne = function (params, req, callback) {
     params.model.remove({_id: req.params.id}, function (err, count) {
         if (err) {
             errors.errorCatcher(err, req, callback);
         } else {
-            deleteCatcher(count, req.params.id, params.model.modelName, callback);
+            deleteCatcher(count, req.params.id, callback);
         }
     });
 };

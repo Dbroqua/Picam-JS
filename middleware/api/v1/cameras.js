@@ -15,15 +15,21 @@ var params = {
     model: cameras.model
 };
 
+/**
+ * Function that return timestamp of date
+ * @param {Date} ts
+ * @returns {Date}
+ * @private
+ */
 var _timeStampToDate = function (ts) {
     return new Date(ts * 1000);
 };
 
 /**
  * For each cameras attach informations like last run, last detection, state...
- * @param data
- * @param req
- * @param callback
+ * @param {Object} data
+ * @param {Object} req
+ * @param {Function} callback
  * @private
  */
 var _getCamerasInfos = function (data, req, callback) {
@@ -33,12 +39,21 @@ var _getCamerasInfos = function (data, req, callback) {
         nbChecks = 2,
         currentCheckList = [];
 
+    /**
+     * Callback function
+     * @private
+     */
     var _runCallback = function () {
         if (nbElt === currentElt) {
             callback(data);
         }
     };
 
+    /**
+     * Callback for current element
+     * @param {Integer} _currentElt
+     * @private
+     */
     var _endCurrentElt = function (_currentElt) {
         if (nbChecks === currentCheckList[_currentElt]) {
             currentElt++;
@@ -55,8 +70,6 @@ var _getCamerasInfos = function (data, req, callback) {
             lastRun: new Date()
         };
 
-        var password = item.definition.password;
-
         if (req.keepPasswords !== true) {
             item.definition.password = undefined;
         }
@@ -66,22 +79,22 @@ var _getCamerasInfos = function (data, req, callback) {
                 var _currentEltIndex = currentLocalIndex;
                 currentLocalIndex++;
                 currentCheckList[_currentEltIndex] = 0;
-                // Is running ?
+                //Is running ?
                 fs.stat('/var/run/motion/motion.pid', function (err, stats) {
                     item.infos.state = ( err ? 'Stop' : 'Running' );
 
                     if (item.infos.state === 'Running') {
-                        // Last start
+                        //Last start
                         item.infos.startedAt = stats.birthtime;
 
-                        // Detection state
+                        //Detection state
                         exec('grep "webcontrol_authentication" /etc/motion.conf|cut -d" " -f 2', function (err, stdout) {
                             currentCheckList[_currentEltIndex]++;
                             if (!err) {
                                 var authorization = stdout.replace(/(\r\n|\n|\r)/gm, '');
                                 var res = requestSync('GET', item.definition.motion.adminUri + 'status', {
-                                    'headers': {
-                                        'Authorization': 'Basic ' + new Buffer(authorization).toString('base64'),
+                                    headers: {
+                                        Authorization: 'Basic ' + new Buffer(authorization).toString('base64'),
                                         'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.52 Safari/537.17'
                                     }
                                 });
@@ -99,7 +112,7 @@ var _getCamerasInfos = function (data, req, callback) {
                     }
                 });
 
-                // Last detection
+                //Last detection
                 fs.stat(item.definition.fileIntrustion, function (err) {
                     if (err) {
                         currentCheckList[_currentEltIndex]++;
@@ -117,7 +130,8 @@ var _getCamerasInfos = function (data, req, callback) {
                 break;
             case 'Net':
                 var options = {
-                    url: item.definition.scheme + '://' + item.definition.uri + ':' + item.definition.port + '/api/v1/cameras/' + item.definition.cameraId + '?apikey=' + item.definition.apikey,
+                    url: item.definition.scheme + '://' + item.definition.uri + ':' + item.definition.port +
+                    '/api/v1/cameras/' + item.definition.cameraId + '?apikey=' + item.definition.apikey,
                     timeout: 15000
                 };
 
@@ -138,8 +152,8 @@ var _getCamerasInfos = function (data, req, callback) {
 
 /**
  * Create new camera
- * @param req
- * @param callback
+ * @param {Object} req
+ * @param {Function} callback
  */
 exports.createOne = function (req, callback) {
     libs.createOne(params, req, callback);
@@ -147,8 +161,8 @@ exports.createOne = function (req, callback) {
 
 /**
  * Get all cameras
- * @param req
- * @param callback
+ * @param {Object} req
+ * @param {Function} callback
  */
 exports.getAll = function (req, callback) {
     libs.getAll(params, req, function (err, data) {
@@ -156,7 +170,7 @@ exports.getAll = function (req, callback) {
             errors.errorCatcher(err, req, callback);
         } else {
             if (data.code === 200) {
-                // Loop and attach all infos
+                //Loop and attach all infos
                 _getCamerasInfos(data.res.resources, req, function (cameras) {
                     data.resources = cameras;
                     callback(null, {code: 200, res: data});
@@ -170,8 +184,8 @@ exports.getAll = function (req, callback) {
 
 /**
  * Get one camera
- * @param req
- * @param callback
+ * @param {Object} req
+ * @param {Function} callback
  */
 exports.getOne = function (req, callback) {
     libs.getOne(params, req, function (err, data) {
@@ -191,8 +205,8 @@ exports.getOne = function (req, callback) {
 
 /**
  * Patch one camera
- * @param req
- * @param callback
+ * @param {Object} req
+ * @param {Function} callback
  */
 exports.patchOne = function (req, callback) {
     if (req.body.infos !== undefined && ( req.body.infos.state !== undefined || req.body.infos.detectionState !== undefined )) {
@@ -219,7 +233,7 @@ exports.patchOne = function (req, callback) {
                                         var options = {
                                             url: item.definition.motion.adminUri + (req.body.infos.detectionState === 'Active' ? 'start' : 'pause' ),
                                             headers: {
-                                                'Authorization': 'Basic ' + new Buffer(stdout.replace(/(\r\n|\n|\r)/gm, '')).toString('base64'),
+                                                Authorization: 'Basic ' + new Buffer(stdout.replace(/(\r\n|\n|\r)/gm, '')).toString('base64'),
                                                 'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.52 Safari/537.17'
                                             }
                                         };
@@ -242,7 +256,8 @@ exports.patchOne = function (req, callback) {
                             break;
                         case 'Net':
                             var options = {
-                                url: item.definition.scheme + '://' + item.definition.uri + ':' + item.definition.port + '/api/v1/cameras/' + item.definition.cameraId + '?apikey=' + item.definition.apikey,
+                                url: item.definition.scheme + '://' + item.definition.uri + ':' + item.definition.port +
+                                '/api/v1/cameras/' + item.definition.cameraId + '?apikey=' + item.definition.apikey,
                                 form: req.body
                             };
 
@@ -268,8 +283,8 @@ exports.patchOne = function (req, callback) {
 
 /**
  * Delete one camera
- * @param req
- * @param callback
+ * @param {Object} req
+ * @param {Function} callback
  */
 exports.deleteOne = function (req, callback) {
     libs.deleteOne(params, req, callback);

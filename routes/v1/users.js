@@ -2,6 +2,10 @@
  * Created by dbroqua on 8/16/16.
  */
 
+/**
+ * Route declaration for Users
+ * @param {Object} params
+ */
 module.exports = function (params) {
     var basePath = params.baseUrl + 'users';
     var specificItem = basePath + '/:id';
