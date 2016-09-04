@@ -76,6 +76,7 @@ angular.module('PiCam',
             $rootScope.isLogged = false;
             $rootScope.SERVER_PATH = SERVER_PATH;
             $rootScope.apikey = null;
+            $rootScope.containerClass = '';
 
             $rootScope.logOut = function () {
                 HTTPService.logout(function () {

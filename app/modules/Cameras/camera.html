@@ -1,15 +1,15 @@
-<div class="col-xs-12 text-center">
+<div class="flex-container" ng-if="isLoading">
+    <img src="/resources/img/loader.gif"/>
+</div>
+<div class="col-xs-12 text-center" ng-if="!isLoading">
     <h1 ng-if="Camera.name.length > 0 ">
         {{Camera.name}}
-        <sup>
-            <span class="glyphicon glyphicon-pencil small link" ng-click="showForm();"></span>
-        </sup>
     </h1>
 </div>
-<div class="col-xs-12 col-md-6 col-md-offset-3" ng-class="{'col-md-offset-3': cameraId === null}">
+<div class="col-xs-12 col-md-6 col-md-offset-3" ng-if="!isLoading">
     <form novalidate>
         <table class="table table-striped table-bordered table-hover table-responsive">
-            <tfoot ng-if="showEditableValues">
+            <tfoot>
             <tr>
                 <td colspan="2" class="text-center">
                     <button type="submit" class="btn btn-primary" ng-click="updateCamera()" ng-bind="cameraId !== null ? 'Update' : 'Create'"></button>
@@ -62,11 +62,11 @@
                 <td ng-bind="Camera.infos.lastRun | date : 'medium'"></td>
             </tr>
 
-            <tr ng-if="showEditableValues">
+            <tr>
                 <td><label for="name">Name</label></td>
                 <td><input type="text" class="form-control" name="name" ng-model="updatedValues.name" id="name"></td>
             </tr>
-            <tr ng-if="showEditableValues">
+            <tr>
                 <td><label for="type">Type</label></td>
                 <td>
                     <select class="form-control" ng-model="updatedValues.type" id="type">
@@ -75,32 +75,32 @@
                     </select>
                 </td>
             </tr>
-            <tr ng-if="showEditableValues && updatedValues.type === 'Local'">
+            <tr ng-if="updatedValues.type === 'Local'">
                 <td><label for="fileIntrustion">File intrusion</label></td>
                 <td><input type="text" class="form-control" name="fileIntrustion"
                            ng-model="updatedValues.definition.fileIntrustion" id="fileIntrustion"></td>
             </tr>
-            <tr ng-if="showEditableValues && updatedValues.type === 'Local'">
+            <tr ng-if="updatedValues.type === 'Local'">
                 <td><label for="filesDirectory">Files directory</label></td>
                 <td><input type="text" class="form-control" name="filesDirectory"
                            ng-model="updatedValues.definition.filesDirectory" id="filesDirectory"></td>
             </tr>
-            <tr ng-if="showEditableValues && updatedValues.type === 'Local'">
+            <tr ng-if="updatedValues.type === 'Local'">
                 <td><label for="id">Motion id</label></td>
                 <td><input type="text" class="form-control" name="id" ng-model="updatedValues.definition.motion.id"
                            id="id"></td>
             </tr>
-            <tr ng-if="showEditableValues && updatedValues.type === 'Local'">
+            <tr ng-if="updatedValues.type === 'Local'">
                 <td><label for="adminUri">Motion admin url</label></td>
                 <td><input type="text" class="form-control" name="adminUri"
                            ng-model="updatedValues.definition.motion.adminUri" id="adminUri"></td>
             </tr>
-            <tr ng-if="showEditableValues && updatedValues.type === 'Local'">
+            <tr ng-if="updatedValues.type === 'Local'">
                 <td><label for="streamUri">Motion stream url</label></td>
                 <td><input type="text" class="form-control" name="streamUri"
                            ng-model="updatedValues.definition.motion.streamUri" id="streamUri"></td>
             </tr>
-            <tr ng-if="showEditableValues && updatedValues.type === 'Net'">
+            <tr ng-if="updatedValues.type === 'Net'">
                 <td><label for="scheme">Scheme</label></td>
                 <td>
                     <select class="form-control" ng-model="updatedValues.definition.scheme" id="scheme">
@@ -109,22 +109,22 @@
                     </select>
                 </td>
             </tr>
-            <tr ng-if="showEditableValues && updatedValues.type === 'Net'">
+            <tr ng-if="updatedValues.type === 'Net'">
                 <td><label for="uri">Uri</label></td>
                 <td><input type="text" class="form-control" name="uri" ng-model="updatedValues.definition.uri" id="uri">
                 </td>
             </tr>
-            <tr ng-if="showEditableValues && updatedValues.type === 'Net'">
+            <tr ng-if="updatedValues.type === 'Net'">
                 <td><label for="port">Port</label></td>
                 <td><input type="number" class="form-control" name="port" ng-model="updatedValues.definition.port"
                            id="port"></td>
             </tr>
-            <tr ng-if="showEditableValues && updatedValues.type === 'Net'">
+            <tr ng-if="updatedValues.type === 'Net'">
                 <td><label for="apikey">Apikey</label></td>
                 <td><input type="text" class="form-control" name="apikey"
                            ng-model="updatedValues.definition.apikey" id="apikey"></td>
             </tr>
-            <tr ng-if="showEditableValues && updatedValues.type === 'Net'">
+            <tr ng-if="updatedValues.type === 'Net'">
                 <td><label for="cameraId">Camera id</label></td>
                 <td>
                     <select class="form-control" ng-model="updatedValues.definition.cameraId" id="cameraId">

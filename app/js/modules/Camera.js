@@ -11,7 +11,16 @@ angular.module('Camera')
                 $scope.updatedValues = {};
                 $scope.cameraId = null;
                 $scope.remoteCameras = [];
-                $scope.showEditableValues = false;
+                $rootScope.containerClass = '';
+                $scope.isLoading = true;
+
+                $scope.$watch('isLoading',function(newVal){
+                    $rootScope.containerClass = ( newVal ? 'flex-container' : '' );
+                });
+
+                $scope.$on('$destroy', function() {
+                    $rootScope.containerClass = '';
+                });
 
                 $scope.$watch('[updatedValues.type,updatedValues.definition.uri,updatedValues.definition.scheme,updatedValues.definition.port,updatedValues.definition.apikey]', function () {
                     if ($scope.updatedValues.type === 'Net') {
@@ -38,12 +47,10 @@ angular.module('Camera')
                     }
                 });
 
-                $scope.showForm = function () {
-                    $scope.showEditableValues = !($scope.showEditableValues);
-                };
-
                 $scope.patchCamera = function (id, values) {
+                    $scope.isLoading = true;
                     HTTPService.patch('cameras', id, values, function (response) {
+                        $scope.isLoading = false;
                         if (response.status === 200) {
                             toastr.success('Action completed');
                             $scope.load();
@@ -54,11 +61,13 @@ angular.module('Camera')
                 };
 
                 $scope.updateCamera = function () {
+                    $scope.isLoading = true;
                     delete $scope.updatedValues.infos;
 
                     if ($routeParams.id !== 'add') {
                         // Update camera
                         HTTPService.patch('cameras', $scope.cameraId, $scope.updatedValues, function (response) {
+                            $scope.isLoading = false;
                             if (response.status === 200) {
                                 toastr.success('Action completed');
                                 $scope.load();
@@ -69,6 +78,7 @@ angular.module('Camera')
                     } else {
                         // Create new camera
                         HTTPService.post('cameras', $scope.updatedValues, function (response) {
+                            $scope.isLoading = false;
                             if (response.status === 201) {
                                 toastr.success('New camera created');
                                 $location.path('/cameras/' + response.data._id);
@@ -86,7 +96,9 @@ angular.module('Camera')
                 };
 
                 $scope.deleteCamera = function () {
+                    $scope.isLoading = true;
                     HTTPService.delete('cameras', $scope.cameraId, $scope.updatedValues, function (response) {
+                        $scope.isLoading = false;
                         if (response.status === 200) {
                             toastr.success('Camera deleted');
                             $location.path('/cameras/');
@@ -97,12 +109,13 @@ angular.module('Camera')
                 };
 
                 $scope.load = function () {
+                    $scope.isLoading = true;
                     $scope.Camera = {};
 
                     if ($routeParams.id !== 'add') {
                         $scope.cameraId = $routeParams.id;
                         HTTPService.getOne('cameras', $routeParams.id, null, function (response) {
-                            $scope.loadingList = false;
+                            $scope.isLoading = false;
                             if (response.status === 200) {
                                 $scope.Camera = response.data;
                                 $scope.updatedValues = response.data;
@@ -139,7 +152,7 @@ angular.module('Camera')
                             }
                         };
                         $scope.updatedValues = $scope.Camera;
-                        $scope.showEditableValues = true;
+                        $scope.isLoading = false;
                     }
                 };
 
