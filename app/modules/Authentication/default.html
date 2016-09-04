@@ -1,16 +1,25 @@
-<form class="form-signin" ng-submit="login()">
-    <h2 class="form-signin-heading">Login</h2>
+<form class="col-xs-12 col-sm-8 col-md-6 col-lg-2 "
+      ng-submit="login()">
+    <h2 class="form-signin-heading">PiCam - Login</h2>
     <div class="alert alert-danger" role="alert" ng-if="message !== null">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
         <span class="sr-only">Error:</span>
         {{message}}
     </div>
-    <label for="inputEmail" class="sr-only">Email</label>
-    <input type="email" id="inputEmail" ng-model="username" class="form-control" placeholder="Email" required autofocus>
-    <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" id="inputPassword" class="form-control" ng-model="password" placeholder="Password" required>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">
-        <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
-        Sign in
-    </button>
+    <div class="form-group">
+        <label for="inputEmail" class="sr-only">Email</label>
+        <input type="email" id="inputEmail" ng-model="username" class="form-control" placeholder="Email" required
+               autofocus>
+    </div>
+    <div class="form-group">
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" ng-model="password" placeholder="Password"
+               required>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">
+            <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+            Sign in
+        </button>
+    </div>
 </form>

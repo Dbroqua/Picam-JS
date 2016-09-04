@@ -8,6 +8,7 @@ angular.module('Authentication')
             'use strict';
             $rootScope.title = TITLEPrefix + 'Login';
             $rootScope.bodyClass = 'signin';
+            $rootScope.containerClass = 'flex-container';
             $scope.message = null;
 
             $scope.$on('$destroy',function(){
