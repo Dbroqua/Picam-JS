@@ -13,6 +13,7 @@ angular.module('Authentication')
 
             $scope.$on('$destroy',function(){
                 $rootScope.bodyClass = '';
+                $rootScope.containerClass = '';
             });
 
             $scope.username = '';

@@ -7,25 +7,17 @@
  * @param {Object} params
  */
 module.exports = function (params) {
-    var basePath = '/install';
-    var app = params.app;
-    var firstUser = require('../config').autoInstall;
+    var basePath = '/install',
+        router = params.router,
+        firstUser = require('../config').autoInstall,
+        users = require('../models/v1/users'),
+        libs = require('../middleware/libs/query'),
+        _params = {
+            dataModel: users.dataModel,
+            model: users.model
+        };
 
-    var users = require('../models/v1/users'),
-        libs = require('../middleware/libs/query');
-
-    var _params = {
-        dataModel: users.dataModel,
-        model: users.model
-    };
-
-    app.options(basePath,
-        function (req, res) {
-            res.statusCode = 200;
-            res.json(['GET']);
-        });
-
-    app.get(basePath,
+    router.get(basePath,
         function (req, res) {
             libs.getAll(_params, req, function(err, data){
                 if (data.code === 204 && data.res.totalRows === 0) {
@@ -39,4 +31,6 @@ module.exports = function (params) {
                 }
             });
         });
+
+    return router;
 };

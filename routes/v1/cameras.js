@@ -7,75 +7,58 @@
  * @param {Object} params
  */
 module.exports = function (params) {
-    var basePath = params.baseUrl + 'cameras';
-    var specificItem = basePath + '/:id';
-    var streamItem = specificItem + '/stream';
-
-    var Middle = require('../../middleware/api/v1/cameras'),
+    var basePath = params.baseUrl + 'cameras',
+        specificItem = basePath + '/:id',
+        streamItem = specificItem + '/stream',
+        router = params.router,
+        passport = params.passport,
+        Middle = require('../../middleware/api/v1/cameras'),
+        middle = new Middle(),
         apiProxy = require('http-proxy').createProxyServer(),
         exec = require('child_process').exec;
 
-    var app = params.app;
-    var passport = params.passport;
-
-    app.options(basePath,
-        function (req, res) {
-            res.statusCode = 200;
-            res.json(['GET', 'POST']);
-        });
-    app.options(specificItem,
-        function (req, res) {
-            res.statusCode = 200;
-            res.json(['GET', 'PATCH', 'DELETE']);
-        });
-    app.options(streamItem,
-        function (req, res) {
-            res.statusCode = 200;
-            res.json(['GET']);
-        });
-
-    app.get(basePath,
+    router.get(basePath,
         passport.authenticate(['basic', 'api-key'], {session: false}),
         function (req, res) {
-            Middle.getAll(req, function (err, data) {
+            middle.getAll(req, function (err, data) {
                 res.status(data.code).send(data.res).end();
             });
         });
-    app.post(basePath,
+    router.post(basePath,
         passport.authenticate(['basic'], {session: false}),
         function (req, res) {
-            Middle.createOne(req, function (err, data) {
+            middle.createOne(req, function (err, data) {
                 res.status(data.code).send(data.res).end();
             });
         });
 
-    app.get(specificItem,
+    router.get(specificItem,
         passport.authenticate(['basic', 'api-key'], {session: false}),
         function (req, res) {
-            Middle.getOne(req, function (err, data) {
+            middle.getOne(req, function (err, data) {
                 res.status(data.code).send(data.res).end();
             });
         });
-    app.patch(specificItem,
+    router.patch(specificItem,
         passport.authenticate(['basic', 'api-key'], {session: false}),
         function (req, res) {
-            Middle.patchOne(req, function (err, data) {
+            middle.patchOne(req, function (err, data) {
                 res.status(data.code).send(data.res).end();
             });
         });
-    app.delete(specificItem,
+    router.delete(specificItem,
         passport.authenticate(['basic', 'api-key'], {session: false}),
         function (req, res) {
-            Middle.deleteOne(req, function (err, data) {
+            middle.deleteOne(req, function (err, data) {
                 res.status(data.code).send(data.res).end();
             });
         });
 
-    app.get(streamItem,
+    router.get(streamItem,
         passport.authenticate(['basic', 'api-key'], {session: false}),
         function (req, res) {
             req.keepPasswords = true;
-            Middle.getOne(req, function (err, data) {
+            middle.getOne(req, function (err, data) {
                 if (data.code === 200) {
                     var isOk = false;
                     var item = data.res;
@@ -119,4 +102,6 @@ module.exports = function (params) {
                 }
             });
         });
+
+    return router;
 };

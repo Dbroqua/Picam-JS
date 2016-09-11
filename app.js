@@ -23,11 +23,7 @@ var express = require('express'),
 /**
  * Init Passport
  */
-passport.use('basic', passportStrategies.BasicAuth);
-passport.use('api-key', passportStrategies.ApiKey);
-passport.serializeUser(function(user, done) {
-    done(null, user);
-});
+require('./middleware/libs/passport')(passport); //Pass passport for configuration
 //-- End of passport init ----------------------------------------------------------------------------------------------
 
 /**
@@ -98,7 +94,7 @@ app.use('/',
  * @type {{app: *, baseUrl: string, passport, fs, env: *}}
  */
 var params = {
-    app: app,
+    router: express.Router(),
     baseUrl: baseUrl,
     passport: passport,
     fs: fs,
@@ -108,10 +104,10 @@ var params = {
 /**
  * List of routes
  */
-require('./routes/')(params);
-require('./routes/v1/cameras')(params);
-require('./routes/v1/users')(params);
-require('./routes/install')(params);
+app.use('/', require('./routes/')(params));
+app.use('/', require('./routes/v1/cameras')(params));
+app.use('/', require('./routes/v1/users')(params));
+app.use('/', require('./routes/install')(params));
 //----------------------------------------------------------------------------------------------------------------------
 
 app.use(

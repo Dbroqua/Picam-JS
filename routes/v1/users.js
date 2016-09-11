@@ -7,59 +7,49 @@
  * @param {Object} params
  */
 module.exports = function (params) {
-    var basePath = params.baseUrl + 'users';
-    var specificItem = basePath + '/:id';
+    var basePath = params.baseUrl + 'users',
+        specificItem = basePath + '/:id',
+        Middle = require('../../middleware/api/v1/users'),
+        middle = new Middle(),
+        router = params.router,
+        passport = params.passport;
 
-    var Middle = require('../../middleware/api/v1/users');
-
-    var app = params.app;
-    var passport = params.passport;
-
-    app.options(basePath,
-        function (req, res) {
-            res.statusCode = 200;
-            res.json(['GET', 'POST']);
-        });
-    app.options(specificItem,
-        function (req, res) {
-            res.statusCode = 200;
-            res.json(['GET','PATCH','DELETE']);
-        });
-
-    app.get(basePath,
+    router.get(basePath,
         passport.authenticate(['basic'], {session: false}),
         function (req, res) {
-            Middle.getAll(req, function (err, data) {
+            middle.getAll(req, function (err, data) {
                 res.status(data.code).send(data.res).end();
             });
         });
-    app.post(basePath,
+    router.post(basePath,
         passport.authenticate(['basic'], {session: false}),
         function (req, res) {
-            Middle.createOne(req, function (err, data) {
+            middle.createOne(req, function (err, data) {
                 res.status(data.code).send(data.res).end();
             });
         });
 
-    app.get(specificItem,
+    router.get(specificItem,
         passport.authenticate(['basic', 'api-key'], {session: false}),
         function (req, res) {
-            Middle.getOne(req, function (err, data) {
+            middle.getOne(req, function (err, data) {
                 res.status(data.code).send(data.res).end();
             });
         });
-    app.patch(specificItem,
+    router.patch(specificItem,
         passport.authenticate(['basic', 'api-key'], {session: false}),
         function (req, res) {
-            Middle.patchOne(req, function (err, data) {
+            middle.patchOne(req, function (err, data) {
                 res.status(data.code).send(data.res).end();
             });
         });
-    app.delete(specificItem,
+    router.delete(specificItem,
         passport.authenticate(['basic', 'api-key'], {session: false}),
         function (req, res) {
-            Middle.deleteOne(req, function (err, data) {
+            middle.deleteOne(req, function (err, data) {
                 res.status(data.code).send(data.res).end();
             });
         });
+
+    return router;
 };
