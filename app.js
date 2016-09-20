@@ -56,6 +56,7 @@ if (app.get('env') === 'development') {
  */
 app.use(express.static(path.join(__dirname, 'app')));
 app.use('/resources', express.static(path.join(__dirname, 'resources')));
+app.use('/documentation', express.static(path.join(__dirname, 'documentation')));
 app.use('/bower_components', express.static(path.join(__dirname, 'bower_components')));
 app.use(favicon(path.join(__dirname, 'resources', 'favicon.png')));
 
