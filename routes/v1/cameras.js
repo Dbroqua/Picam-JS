@@ -10,10 +10,13 @@ module.exports = function (params) {
     var basePath = params.baseUrl + 'cameras',
         specificItem = basePath + '/:id',
         streamItem = specificItem + '/stream',
+        filesItem = specificItem + '/files',
         router = params.router,
         passport = params.passport,
         Middle = require('../../middleware/api/v1/cameras'),
+        MiddleFiles = require('../../middleware/api/v1/files'),
         middle = new Middle(),
+        middleFiles = new MiddleFiles(),
         apiProxy = require('http-proxy').createProxyServer(),
         exec = require('child_process').exec;
 
@@ -100,6 +103,14 @@ module.exports = function (params) {
                 } else {
                     res.status(data.code).send(data.res).end();
                 }
+            });
+        });
+
+    router.get(filesItem,
+        passport.authenticate(['basic', 'api-key'], {session: false}),
+        function (req, res) {
+            middleFiles.getAll(req, function (err, data) {
+                res.status(data.code).send(data.res).end();
             });
         });
 
