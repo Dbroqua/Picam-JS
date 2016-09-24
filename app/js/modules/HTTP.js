@@ -221,8 +221,14 @@ angular.module("Network", [])
             '           <span aria-hidden="true">&laquo;</span>' +
             '       </a>' +
             '   </li>' +
-            '   <li ng-class="{active : p.active}" ng-repeat="p in pagination.list">' +
+            '   <li class="disabled" ng-repeat-start="p in pagination.list" ng-if="$index > 2 && $index === (pagination.currentPage - 5) ">' +
+            '       <a href="javascript:void(0)">...</a>' +
+            '   </li>' +
+            '   <li ng-class="{active : p.active}" ng-if="$index < 3 || ( $index > (pagination.currentPage - 5) && $index < (pagination.currentPage + 3) ) || $index > ( pagination.nbPages - 4 )">' +
             '       <a href="javascript:void(0)" ng-click="load(p.index)">{{p.index}}</a>' +
+            '   </li>' +
+            '   <li class="disabled" ng-if="$index <= ( pagination.nbPages - 4 ) && $index === (pagination.currentPage + 3) " ng-repeat-end>' +
+            '       <a href="javascript:void(0)">...</a>' +
             '   </li>' +
             '   <li ng-class="{disabled: pagination.currentPage === pagination.nbPages}">' +
             '       <a href="javascript:void(0)" ng-click="pagination.currentPage < pagination.nbPages && load(pagination.currentPage + 1)" aria-label="Next">' +
@@ -231,4 +237,4 @@ angular.module("Network", [])
             '   </li>' +
             '</ul>'
         };
-    })
+    });
