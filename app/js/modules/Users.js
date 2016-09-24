@@ -21,7 +21,7 @@ angular.module('Users')
                     $scope.loadingList = true;
                     $scope.Users = [];
                     $scope.currentPage = id;
-                    HTTPService.getAll('users', $scope.limit, $scope.currentPage, null, {id: 'name', asc: true}, function(response){
+                    HTTPService.getAll('users', '', $scope.limit, $scope.currentPage, null, {id: 'name', asc: true}, function(response){
                         $scope.loadingList = false;
                         if (response.status === 200) {
                             $scope.pagination = HTTPService.returnPagination(response.data.totalRows, response.data.limit, $scope.currentPage);

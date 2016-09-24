@@ -50,6 +50,10 @@ angular.module('PiCam',
                     templateUrl: 'modules/Cameras/stream.html',
                     controller: 'CameraStreamController'
                 })
+                .when('/cameras/:id/files', {
+                    templateUrl: 'modules/Cameras/files.html',
+                    controller: 'CameraFilesController'
+                })
 
                 .when('/administration/users', {
                     templateUrl: 'modules/Users/default.html',

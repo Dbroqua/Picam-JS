@@ -73,7 +73,7 @@ angular.module('Cameras')
                     $scope.loadingList = true;
                     $scope.Cameras = [];
                     $scope.currentPage = id;
-                    HTTPService.getAll('cameras', $scope.limit, $scope.currentPage, null, {id: 'name', asc: true}, function(response){
+                    HTTPService.getAll('cameras', '', $scope.limit, $scope.currentPage, null, {id: 'name', asc: true}, function(response){
                         $scope.loadingList = false;
                         if (response.status === 200) {
                             $scope.pagination = HTTPService.returnPagination(response.data.totalRows, response.data.limit, $scope.currentPage);

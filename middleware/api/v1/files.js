@@ -9,7 +9,8 @@ module.exports = function () {
         fs = require('fs'),
         url = require('url'),
         path = require('path'),
-        request = require('request');
+        request = require('request'),
+        mmm = require('mmmagic');
 
     var params = {
         dataModel: cameras.dataModel,
@@ -130,7 +131,7 @@ module.exports = function () {
                     } else {
                         request.get({
                             url: camera.definition.scheme + '://' + camera.definition.uri + ':' + camera.definition.port +
-                            '/api/v1/cameras/' + camera.definition.cameraId + '?apikey=' + camera.definition.apikey,
+                            '/api/v1/cameras/' + camera.definition.cameraId + '/files/?apikey=' + camera.definition.apikey,
                             timeout: 15000
                         }, function (err, res, body) {
                             if (err) {
@@ -139,6 +140,72 @@ module.exports = function () {
                                 callback(null, {code: res.statusCode, res: JSON.parse(body)});
                             }
                         });
+                    }
+                }
+            }
+        });
+    };
+
+    this.getOne = function (req, callback) {
+        libs.getOne(params, req, function (err, data) {
+            if (err) {
+                errors.errorCatcher(err, req, callback);
+            } else {
+                if (data.code !== 200) {
+                    callback(null, data);
+                } else {
+                    var camera = data.res;
+                    if (camera.type === 'Local') {
+                        var file = path.join(camera.definition.filesDirectory, req.params.file);
+                        fs.stat(file, function (err, stats) {
+                            if (err) {
+                                errors.errorCatcher(err, req, callback);
+                            } else {
+                                if (stats.isFile()) {
+                                    var Magic = mmm.Magic,
+                                        magic = new Magic(mmm.MAGIC_MIME_TYPE);
+                                    magic.detectFile(file, function (err, mimeType) {
+                                        if (err) {
+                                            errors.errorCatcher(err, req, callback);
+                                        } else {
+                                            var type = ( stats.isFile() ? 'File' : 'Directory' );
+                                            var name = file.split('/');
+                                            callback(
+                                                null,
+                                                {
+                                                    code: 200,
+                                                    res: {
+                                                        name: name[name.length - 1],
+                                                        file: file,
+                                                        type: 'File',
+                                                        mimeType: mimeType,
+                                                        size: stats.size
+                                                    }
+                                                }
+                                            );
+                                        }
+                                    });
+                                } else {
+                                    callback(null, {
+                                        code: 404,
+                                        res: {message: 'File not found'}
+                                    });
+                                }
+                            }
+                        });
+                    } else {
+                        callback(null, {code: 501, res: {message: 'Not implemented yet!'}});
+                        // request.get({
+                        //     url: camera.definition.scheme + '://' + camera.definition.uri + ':' + camera.definition.port +
+                        //     '/api/v1/cameras/' + camera.definition.cameraId + '/files/' + req.params.file + '?apikey=' + camera.definition.apikey,
+                        //     timeout: 15000
+                        // }, function (err, res, body) {
+                        //     if (err) {
+                        //         errors.errorCatcher(err, req, callback);
+                        //     } else {
+                        //         callback(null, {code: res.statusCode, res: JSON.parse(body)});
+                        //     }
+                        // });
                     }
                 }
             }
