@@ -129,9 +129,15 @@ module.exports = function () {
                             }
                         });
                     } else {
+                        var extraParams = '?apikey=' + camera.definition.apikey;
+                        for (var key in urlParams) {
+                            extraParams += '&' + key + '=' + urlParams[key];
+                        }
+                        var uri = camera.definition.scheme + '://' + camera.definition.uri + ':' + camera.definition.port +
+                            '/api/v1/cameras/' + camera.definition.cameraId + '/files/' + extraParams;
+
                         request.get({
-                            url: camera.definition.scheme + '://' + camera.definition.uri + ':' + camera.definition.port +
-                            '/api/v1/cameras/' + camera.definition.cameraId + '/files/?apikey=' + camera.definition.apikey,
+                            url: uri,
                             timeout: 15000
                         }, function (err, res, body) {
                             if (err) {
@@ -194,18 +200,12 @@ module.exports = function () {
                             }
                         });
                     } else {
-                        callback(null, {code: 501, res: {message: 'Not implemented yet!'}});
-                        // request.get({
-                        //     url: camera.definition.scheme + '://' + camera.definition.uri + ':' + camera.definition.port +
-                        //     '/api/v1/cameras/' + camera.definition.cameraId + '/files/' + req.params.file + '?apikey=' + camera.definition.apikey,
-                        //     timeout: 15000
-                        // }, function (err, res, body) {
-                        //     if (err) {
-                        //         errors.errorCatcher(err, req, callback);
-                        //     } else {
-                        //         callback(null, {code: res.statusCode, res: JSON.parse(body)});
-                        //     }
-                        // });
+                        callback(null, {
+                            code: 200, res: {
+                                type: 'Net',
+                                camera: camera
+                            }
+                        });
                     }
                 }
             }

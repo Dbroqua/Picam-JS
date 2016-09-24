@@ -16,8 +16,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     passport = require('passport'),
     app = express(),
-    env = require('./config'),
-    passportStrategies = require('./middleware/libs/passport');
+    env = require('./config');
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 /**

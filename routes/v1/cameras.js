@@ -20,7 +20,8 @@ module.exports = function (params) {
         middleFiles = new MiddleFiles(),
         apiProxy = require('http-proxy').createProxyServer(),
         exec = require('child_process').exec,
-        fs = require('fs');
+        fs = require('fs'),
+        request = require('request');
 
     router.get(basePath,
         passport.authenticate(['basic', 'api-key'], {session: false}),
@@ -123,13 +124,23 @@ module.exports = function (params) {
                 if (data.code !== 200) {
                     res.status(data.code).send(data.res).end();
                 } else {
-                    var fileInfos = data.res;
-                    res.setHeader('Content-Length', fileInfos.size);
-                    res.setHeader('Content-Type', fileInfos.mimeType);
-                    //res.setHeader('Content-Disposition', 'attachment; filename=' + fileInfos.name);
+                    if (data.res.type === 'Net') {
+                        var camera = data.res.camera;
+                        request.get({
+                            url: camera.definition.scheme + '://' + camera.definition.uri + ':' + camera.definition.port +
+                            '/api/v1/cameras/' + camera.definition.cameraId + '/files/' + req.params.file + '?apikey=' +
+                            camera.definition.apikey,
+                            timeout: 15000
+                        }).pipe(res);
+                    } else {
+                        var fileInfos = data.res;
+                        res.status(200);
+                        res.setHeader('Content-Length', fileInfos.size);
+                        res.setHeader('Content-Type', fileInfos.mimeType);
+                        //res.setHeader('Content-Disposition', 'attachment; filename=' + fileInfos.name);
 
-                    var readStream = fs.createReadStream(fileInfos.file);
-                    readStream.pipe(res);
+                        fs.createReadStream(fileInfos.file).pipe(res);
+                    }
                 }
             });
         });
