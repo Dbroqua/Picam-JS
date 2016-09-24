@@ -154,17 +154,20 @@ angular.module("Network", [])
                 return urlAppendix;
             };
 
-            http_service.getAll = function (route, limit, page, filters, sort, callback) {
+            http_service.getAll = function (route, extraRoute, limit, page, filters, sort, callback) {
                 if (http_service.getAll_cancel[route]) {
                     http_service.getAll_cancel[route].resolve();
                     http_service.getAll_cancel[route] = undefined;
                 }
-                var sorting = sort.id;
-                if (!sort.asc) {
-                    sorting = '-' + sorting;
+                var sorting = '';
+                if (typeof sort === Object) {
+                    sorting = sort.id;
+                    if (!sort.asc) {
+                        sorting = '-' + sorting;
+                    }
                 }
 
-                http_service.getAll_cancel[route] = http_service.get(route + '?limit=' + limit + '&page=' + page + '&sort=' + sorting + '&' + http_service.parseFilters(filters), null, callback, http_service.getAll_cancel[route]);
+                http_service.getAll_cancel[route] = http_service.get(route + extraRoute + '?limit=' + limit + '&page=' + page + '&sort=' + sorting + '&' + http_service.parseFilters(filters), null, callback, http_service.getAll_cancel[route]);
             };
 
             http_service.getAllRemote = function (params, identifier, callback) {
@@ -214,15 +217,15 @@ angular.module("Network", [])
             restrict: 'E',
             template: '<ul class="pagination">' +
             '   <li ng-class="{disabled: pagination.currentPage === 1}">' +
-            '       <a ng-click="pagination.currentPage > 1 && switchToPage( pagination.currentPage - 1 )" aria-label="Previous">' +
+            '       <a href="javascript:void(0)" ng-click="pagination.currentPage > 1 && load( pagination.currentPage - 1 )" aria-label="Previous">' +
             '           <span aria-hidden="true">&laquo;</span>' +
             '       </a>' +
             '   </li>' +
             '   <li ng-class="{active : p.active}" ng-repeat="p in pagination.list">' +
-            '       <a ng-click="switchToPage(p.index)">{{p.index}}</a>' +
+            '       <a href="javascript:void(0)" ng-click="load(p.index)">{{p.index}}</a>' +
             '   </li>' +
             '   <li ng-class="{disabled: pagination.currentPage === pagination.nbPages}">' +
-            '       <a ng-click="pagination.currentPage < pagination.nbPages && switchToPage(pagination.currentPage + 1)" aria-label="Next">' +
+            '       <a href="javascript:void(0)" ng-click="pagination.currentPage < pagination.nbPages && load(pagination.currentPage + 1)" aria-label="Next">' +
             '           <span aria-hidden="true">&raquo;</span>' +
             '       </a>' +
             '   </li>' +

@@ -20,6 +20,7 @@
     "express": "^4.14.0",
     "file-stream-rotator": "0.0.7",
     "http-proxy": "^1.14.0",
+    "mmmagic": "^0.4.5",
     "mongoose": "^4.5.9",
     "morgan": "^1.7.0",
     "passport": "^0.3.2",

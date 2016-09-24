@@ -25,6 +25,11 @@
                                 View stream
                             </a>
                         </li>
+                        <li>
+                            <a ng-href="{{'/#/cameras/'+ camera._id + '/files/'}}">
+                                View files
+                            </a>
+                        </li>
                         <li role="separator" class="divider"></li>
                         <li ng-class="{'disabled': camera.infos.state === 'Running'}">
                             <a href="javascript:void(0)"
