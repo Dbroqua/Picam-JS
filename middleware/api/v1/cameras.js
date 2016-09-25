@@ -209,7 +209,7 @@ module.exports = function () {
      * @param {Object} req
      * @param {Function} callback
      */
-    this.patchOne = function (req, callback) {
+    var patchOne = function (req, callback) {
         if (req.body.infos !== undefined && ( req.body.infos.state !== undefined || req.body.infos.detectionState !== undefined )) {
             params.model.findOne({_id: req.params.id}, function (err, item) {
                 if (err) {
@@ -279,8 +279,97 @@ module.exports = function () {
         } else {
             libs.patchOne(params, req, callback);
         }
-
     };
+
+    /**
+     * Patch all cameras (activate or deactivate detection)
+     * @param {Object} req
+     * @param {Function} callback
+     */
+    this.patchAll = function (req, callback) {
+        libs.getAll(params, req, function (err, data) {
+            if (err) {
+                errors.errorCatcher(err, req, callback);
+            } else {
+                if (data.code === 200) {
+                    var nbCameras = data.res.filteredRows,
+                        nbPatchedCameras = 0,
+                        res = [];
+
+                    /**
+                     * End point for patch all cameras
+                     * @private
+                     */
+                    var _runCallback = function () {
+                        if (nbCameras === nbPatchedCameras) {
+                            callback(null, {code: 200, res: res});
+                        }
+                    };
+
+                    data.res.resources.forEach(function (camera) {
+                        switch (camera.type) {
+                            case 'Local':
+                                var tmpReq = {
+                                    body: req.body,
+                                    params: {
+                                        id: camera.id
+                                    }
+                                };
+                                patchOne(tmpReq, function (err, _data) {
+                                    if (err) {
+                                        res.push({
+                                            name: camera.name,
+                                            result: err
+                                        });
+                                    } else {
+                                        res.push({
+                                            name: camera.name,
+                                            result: {
+                                                code: _data.code,
+                                                message: _data.res
+                                            }
+                                        });
+                                    }
+                                    nbPatchedCameras++;
+                                    _runCallback();
+                                });
+                                break;
+                            case 'Net':
+                                request.patch({
+                                    url: camera.definition.scheme + '://' + camera.definition.uri + ':' + camera.definition.port +
+                                    '/api/v1/cameras/' + camera.definition.cameraId + '?apikey=' + camera.definition.apikey,
+                                    timeout: 15000,
+                                    json: req.body
+                                }, function (err, _res, body) {
+                                    var tmpRes = {
+                                        name: camera.name,
+                                        result: err
+                                    };
+
+                                    if (!err) {
+                                        tmpRes.result = {
+                                            code: _res.statusCode,
+                                            message: body
+                                        };
+                                    }
+                                    res.push(tmpRes);
+                                    nbPatchedCameras++;
+                                    _runCallback();
+                                });
+                                break;
+                            default:
+                                nbPatchedCameras++;
+                                _runCallback();
+                        }
+                    });
+                } else {
+                    callback(null, data);
+                }
+            }
+        });
+    };
+
+    this.patchOne = patchOne;
 
     /**
      * Delete one camera

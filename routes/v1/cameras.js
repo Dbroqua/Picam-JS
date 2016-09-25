@@ -37,6 +37,13 @@ module.exports = function (params) {
                 res.status(data.code).send(data.res).end();
             });
         });
+    router.patch(basePath,
+        passport.authenticate(['basic', 'api-key'], {session: false}),
+        function (req, res) {
+            middle.patchAll(req, function (err, data) {
+                res.status(data.code).send(data.res).end();
+            });
+        });
 
     router.get(specificItem,
         passport.authenticate(['basic', 'api-key'], {session: false}),

@@ -152,6 +152,11 @@ module.exports = function () {
         });
     };
 
+    /**
+     * Get one file
+     * @param {Object} req
+     * @param {Function} callback
+     */
     this.getOne = function (req, callback) {
         libs.getOne(params, req, function (err, data) {
             if (err) {
@@ -174,7 +179,6 @@ module.exports = function () {
                                         if (err) {
                                             errors.errorCatcher(err, req, callback);
                                         } else {
-                                            var type = ( stats.isFile() ? 'File' : 'Directory' );
                                             var name = file.split('/');
                                             callback(
                                                 null,
