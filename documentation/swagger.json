@@ -31,11 +31,11 @@
     "/cameras": {
       "post": {
         "tags": [
-          "pet"
+          "Cameras"
         ],
-        "summary": "Add a new pet to the store",
+        "summary": "Add a new camera",
         "description": "",
-        "operationId": "addPet",
+        "operationId": "addCamera",
         "consumes": [
           "application/json"
         ],
@@ -46,34 +46,37 @@
           {
             "in": "body",
             "name": "body",
-            "description": "Pet object that needs to be added to the store",
+            "description": "Carma object",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Pet"
+              "$ref": "#/definitions/PostCamera"
             }
           }
         ],
         "responses": {
-          "405": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Cameras"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "406": {
             "description": "Invalid input"
+          },
+          "500": {
+            "description": "Internal server error"
           }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
-          }
-        ]
+        }
       },
-      "put": {
+      "patch": {
         "tags": [
-          "pet"
+          "Cameras"
         ],
-        "summary": "Update an existing pet",
+        "summary": "Patch all cameras",
         "description": "",
-        "operationId": "updatePet",
+        "operationId": "patchCameras",
         "consumes": [
           "application/json"
         ],
@@ -84,35 +87,31 @@
           {
             "in": "body",
             "name": "body",
-            "description": "Pet object that needs to be added to the store",
+            "description": "Camera object",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Pet"
+              "$ref": "#/definitions/PatchCamera"
             }
           }
         ],
         "responses": {
-          "400": {
-            "description": "Invalid ID supplied"
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Cameras"
+            }
           },
-          "404": {
-            "description": "Pet not found"
+          "401": {
+            "description": "Unauthorized"
           },
-          "405": {
-            "description": "Validation exception"
+          "406": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Internal server error"
           }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
-          }
-        ]
+        }
       }
     },
-
     "/cameras/{id}": {
       "get": {
         "tags": [
@@ -149,15 +148,7 @@
           "500": {
             "description": "Internal error"
           }
-        },
-        "security": [
-          {
-            "api_key": []
-          },
-          {
-            "basic_auth": []
-          }
-        ]
+        }
       },
       "patch": {
         "tags": [
@@ -174,95 +165,80 @@
         ],
         "parameters": [
           {
-            "name": "petId",
+            "name": "id",
             "in": "path",
-            "description": "ID of pet that needs to be updated",
+            "description": "ID of camera",
             "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "name",
-            "in": "formData",
-            "description": "Updated name of the pet",
-            "required": false,
             "type": "string"
           },
           {
-            "name": "status",
-            "in": "formData",
-            "description": "Updated status of the pet",
-            "required": false,
-            "type": "string"
+            "in": "body",
+            "name": "body",
+            "description": "Camera object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PatchCamera"
+            }
           }
         ],
         "responses": {
-          "405": {
-            "description": "Invalid input"
-          }
-        },
-        "security": [
-          {
-            "api_key": []
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Camera"
+            }
           },
-          {
-            "basic_auth": []
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Camera not found"
+          },
+          "500": {
+            "description": "Internal error"
           }
-        ]
+        }
       },
       "delete": {
         "tags": [
-          "pet"
+          "Cameras"
         ],
-        "summary": "Deletes a pet",
+        "summary": "Delete a camera",
         "description": "",
-        "operationId": "deletePet",
+        "operationId": "deleteCamera",
+        "consumes": [
+          "application/json"
+        ],
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "name": "apikey",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "petId",
+            "name": "id",
             "in": "path",
-            "description": "Pet id to delete",
+            "description": "ID of camera",
             "required": true,
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           }
         ],
         "responses": {
-          "400": {
-            "description": "Invalid ID supplied"
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Camera"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "404": {
-            "description": "Pet not found"
+            "description": "Camera not found"
+          },
+          "500": {
+            "description": "Internal error"
           }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
-          }
-        ]
+        }
       }
-    }
-  },
-  "securityDefinitions": {
-    "basic_auth": {
-      "type": "basic"
-    },
-    "api_key": {
-      "type": "apiKey",
-      "name": "apikey",
-      "in": "query"
     }
   },
   "definitions": {
@@ -286,11 +262,11 @@
     "Definition": {
       "type": "object",
       "properties": {
-        "fileIntrustion":{
+        "fileIntrustion": {
           "type": "string",
           "description": "complete route for the intrusion.date (for local type only)"
         },
-        "filesDirectory":{
+        "filesDirectory": {
           "type": "string",
           "description": "complete route /medias/freebox (for local type only)"
         },
@@ -329,7 +305,7 @@
     "Infos": {
       "type": "object",
       "properties": {
-        "state":{
+        "state": {
           "type": "string",
           "description": "Motion state",
           "enum": [
@@ -337,7 +313,7 @@
             "Stop"
           ]
         },
-        "detectionState":{
+        "detectionState": {
           "type": "string",
           "description": "Motion detection state",
           "enum": [
@@ -345,17 +321,17 @@
             "Active"
           ]
         },
-        "lastDetection":{
+        "lastDetection": {
           "description": "Date of last detection",
           "type": "string",
           "format": "date-time"
         },
-        "startedAt":{
+        "startedAt": {
           "description": "Start date of motion",
           "type": "string",
           "format": "date-time"
         },
-        "lastRun":{
+        "lastRun": {
           "description": "Date of last get on camera (historical object)",
           "type": "string",
           "format": "date-time"
@@ -400,7 +376,6 @@
         }
       }
     },
-
     "ApiResponse": {
       "type": "object",
       "properties": {
