@@ -1,5 +1,5 @@
 # Picam-JS
-[![Build Status](https://travis-ci.org/dbroqu/Picam-JS.png)](https://travis-ci.org/dbroqu/Picam-JS)
+[![Build Status](https://api.travis-ci.org/Dbroqua/Picam-JS.svg?branch=master)](https://travis-ci.org/Dbroqua/Picam-JS)
 
 Picam-PHP like but in Node.JS/Angular.JS
 
