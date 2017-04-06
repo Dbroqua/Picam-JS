@@ -1,7 +1,11 @@
 before_script:
   - npm install -g gulp
   - npm install -g bower
+  - npm install -g codecov
   - npm install
   - bower install
 services: mongodb
-script: gulp lint
+script: 
+  - gulp lint
+  - istanbul cover ./node_modules/mocha/bin/_mocha --reporter lcovonly -- -R spec
+  - codecov
