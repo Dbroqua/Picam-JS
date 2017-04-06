@@ -2,6 +2,7 @@ before_script:
   - npm install -g gulp
   - npm install -g bower
   - npm install -g codecov
+  - npm install -g istanbul
   - npm install
   - bower install
 services: mongodb
