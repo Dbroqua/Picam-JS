@@ -2,7 +2,7 @@
  * Created by dbroqua on 8/16/16.
  */
 
-var BasicAuth = require('passport-http').BasicStrategy, //Basic Auth
+let BasicAuth = require('passport-http').BasicStrategy, //Basic Auth
     ApiStrategy = require('passport-localapikey').Strategy, //Api Key
     users = require('../../models/v1/users');
 

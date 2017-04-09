@@ -2,11 +2,9 @@
  * Created by dbroqua on 8/16/16.
  */
 
-//Base url for REST API
-var baseUrl = '/api/v1/';
-
-//Declaration of requirement
-var express = require('express'),
+let baseUrl = '/api/v1/', //Base url for REST API
+    //Declaration of requirement
+    express = require('express'),
     path = require('path'),
     fs = require('fs'),
     favicon = require('serve-favicon'),
@@ -28,18 +26,18 @@ require('./middleware/libs/passport')(passport); //Pass passport for configurati
 /**
  * Init app
  */
-app.set('env', env.env.env );
+app.set('env', env.env.env);
 
 /**
  * Logs
  */
-var logDirectory = __dirname + '/logs';
+let logDirectory = __dirname + '/logs';
 //Ensure log directory exists
 if (!fs.existsSync(logDirectory)) {
     fs.mkdirSync(logDirectory);
 }
 //Create a rotating write stream
-var accessLogStream = FileStreamRotator.getStream({
+let accessLogStream = FileStreamRotator.getStream({
     date_format: 'YYYYMMDD',
     filename: logDirectory + '/access-%DATE%.log',
     frequency: 'daily',
@@ -93,7 +91,7 @@ app.use('/',
  * Set params object passed for all routes
  * @type {{app: *, baseUrl: string, passport, fs, env: *}}
  */
-var params = {
+let params = {
     router: express.Router(),
     baseUrl: baseUrl,
     passport: passport,
@@ -118,16 +116,16 @@ app.use(
      * @param {Function} next
      */
     function (req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
+        let err = new Error('Not Found');
+        err.status = 404;
+        next(err);
+    });
 
 //Error handlers
 //Development error handler
 //Will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res) {
+    app.use(function (err, req, res) {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
@@ -138,7 +136,7 @@ if (app.get('env') === 'development') {
 
 //Production error handler
 //No stacktraces leaked to user
-app.use(function(err, req, res) {
+app.use(function (err, req, res) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
