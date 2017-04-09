@@ -1,7 +1,7 @@
 /**
  * Created by dbroqua on 8/16/16.
  */
-let gulp = require('gulp'),
+var gulp = require('gulp'),
     jscs = require('gulp-jscs'),
     jscsStylish = require('gulp-jscs-stylish'),
     jshint = require('gulp-jshint'),

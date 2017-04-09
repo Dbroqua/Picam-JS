@@ -22,11 +22,11 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "bcrypt": "^0.8.7",
+    "bcrypt": "^1.0.2",
     "body-parser": "^1.15.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
-    "file-stream-rotator": "0.0.7",
+    "file-stream-rotator": "0.1.0",
     "http-proxy": "^1.14.0",
     "mmmagic": "^0.4.5",
     "mongoose": "^4.5.9",
@@ -36,7 +36,7 @@
     "passport-localapikey": "0.0.3",
     "request": "^2.74.0",
     "serve-favicon": "^2.3.0",
-    "sync-request": "^3.0.1"
+    "sync-request": "^4.0.2"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
