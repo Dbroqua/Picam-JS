@@ -2,57 +2,56 @@
  * Created by dbroqua on 8/16/16.
  */
 
-module.exports = function () {
-    var users = require('../../../models/v1/users'),
-        libs = require('../../libs/query'),
-        errors = require('../../libs/errors');
-
-    var params = {
+let users = require('../../../models/v1/users'),
+    libs = require('../../libs/query'),
+    errors = require('../../libs/errors'),
+    params = {
         dataModel: users.dataModel,
         model: users.model
     };
 
+class Users {
     /**
      * Create new user
      * @param {Object} req
      * @param {Function} callback
      */
-    this.createOne = function (req, callback) {
+    static createOne(req, callback) {
         libs.createOne(params, req, callback);
-    };
+    }
 
     /**
      * Get all users
      * @param {Object} req
      * @param {Function} callback
      */
-    this.getAll = function (req, callback) {
+    static getAll(req, callback) {
         libs.getAll(params, req, function (err, data) {
             if (err) {
-                errors.errorCatcher(err, req, callback);
+                errors.errorCatcher(err, callback);
             } else {
                 if (data.code !== 200) {
                     callback(null, data);
                 } else {
-                    var nbUser = data.res.resources.length;
-                    for (var i = 0; i < nbUser; i++) {
+                    let nbUser = data.res.resources.length;
+                    for (let i = 0; i < nbUser; i++) {
                         data.res.resources[i].password = undefined;
                     }
                     callback(null, data);
                 }
             }
         });
-    };
+    }
 
     /**
      * Get one user
      * @param {Object} req
      * @param {Function} callback
      */
-    this.getOne = function (req, callback) {
+    static getOne(req, callback) {
         libs.getOne(params, req, function (err, data) {
             if (err) {
-                errors.errorCatcher(err, req, callback);
+                errors.errorCatcher(err, callback);
             } else {
                 if (data.code !== 200) {
                     callback(null, data);
@@ -62,21 +61,21 @@ module.exports = function () {
                 }
             }
         });
-    };
+    }
 
     /**
      * Patch one user
      * @param {Object} req
      * @param {Function} callback
      */
-    this.patchOne = function (req, callback) {
+    static patchOne(req, callback) {
         /**
          * If all test pass, run patch
          * @param {Object} req
          * @param {Function} callback
          * @private
          */
-        var _runAction = function (req, callback) {
+        let _runAction = function (req, callback) {
             libs.patchOne(params, req, callback);
         };
 
@@ -98,14 +97,16 @@ module.exports = function () {
         } else {
             _runAction(req, callback);
         }
-    };
+    }
 
     /**
      * Delete one user
      * @param {Object} req
      * @param {Function} callback
      */
-    this.deleteOne = function (req, callback) {
+    static deleteOne (req, callback) {
         libs.deleteOne(params, req, callback);
-    };
-};
+    }
+}
+
+module.exports = Users;

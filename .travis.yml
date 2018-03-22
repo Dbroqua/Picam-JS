@@ -1,0 +1,8 @@
+before_script:
+  - npm install -g gulp
+  - npm install -g bower
+  - npm install
+  - bower install
+services: mongodb
+script: 
+  - gulp lint

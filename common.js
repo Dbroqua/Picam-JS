@@ -2,7 +2,7 @@
  * Created by dbroqua on 8/16/16.
  */
 
-var mongoose = require('mongoose'),
+let mongoose = require('mongoose'),
     mongodb = require('./config').mongodb;
 
 module.exports.mongoose = mongoose.connect('mongodb://' + ( mongodb.user !== null ? mongodb.user + ':' + mongodb.pass +

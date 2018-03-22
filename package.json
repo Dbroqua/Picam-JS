@@ -1,8 +1,16 @@
 {
   "name": "PiCam",
-  "version": "0.0.0",
+  "version": "0.1.1",
   "description": "Simple web interface for Motion on Raspberry",
   "homepage": "https://github.com/Dbroqua/Picam-JS",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dbroqua/Picam-JS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Dbroqua/Picam-JS/issues",
+    "email": "contact@darkou.fr"
+  },
   "private": false,
   "license": "LGPL-3.0",
   "author": {
@@ -24,7 +32,7 @@
     "bootstrap": "^3.0.0",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
-    "file-stream-rotator": "0.0.7",
+    "file-stream-rotator": "0.1.0",
     "http-proxy": "^1.14.0",
     "jquery": "^3.3.1",
     "mmmagic": "^0.4.5",
@@ -36,7 +44,7 @@
     "passport-localapikey": "0.0.3",
     "request": "^2.74.0",
     "serve-favicon": "^2.3.0",
-    "sync-request": "^3.0.1"
+    "sync-request": "^4.0.2"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
