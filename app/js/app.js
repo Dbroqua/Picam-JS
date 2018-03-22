@@ -11,14 +11,12 @@ angular.module('Users', []);
 angular.module('User', []);
 
 //App
-angular.module('PiCam',
-    [
+angular.module('PiCam', [
         'toastr',
         'ngRoute',
         'ngCookies',
         'ngBootbox',
         'base64',
-        'ui.pwgen',
 
         'Network',
         'Authentication',
@@ -28,10 +26,10 @@ angular.module('PiCam',
         'Users',
         'User'
     ])
-//Redirections
+    //Redirections
     .config([
         '$routeProvider',
-        function ($routeProvider) {
+        function($routeProvider) {
             $routeProvider
                 .when('/home/', {
                     templateUrl: 'modules/HomePage/default.html',
@@ -72,25 +70,26 @@ angular.module('PiCam',
                 .otherwise({
                     redirectTo: '/cameras/'
                 });
-        }])
+        }
+    ])
     //RootScope control
     .run(['$rootScope', '$location', 'HTTPService',
-        function ($rootScope, $location, HTTPService) {
+        function($rootScope, $location, HTTPService) {
             $rootScope.bodyClass = '';
             $rootScope.isLogged = false;
             $rootScope.SERVER_PATH = SERVER_PATH;
             $rootScope.apikey = null;
             $rootScope.containerClass = '';
 
-            $rootScope.logOut = function () {
-                HTTPService.logout(function () {
+            $rootScope.logOut = function() {
+                HTTPService.logout(function() {
                     $rootScope.isLogged = false;
                     $location.path('/login/');
                 });
             };
 
             //Change the route to trigger the route dispatcher
-            $rootScope.changeRoute = function (path) {
+            $rootScope.changeRoute = function(path) {
                 if ($location.path() !== path) {
                     $location.path(path);
                     return true;
@@ -98,19 +97,19 @@ angular.module('PiCam',
                 return false;
             };
             //Check root
-            $rootScope.routeContains = function (pattern) {
+            $rootScope.routeContains = function(pattern) {
                 var currentRoot = $location.path();
                 return currentRoot.indexOf(pattern) >= 0;
             };
 
             // First function called when start navigation
             $rootScope.$on('$locationChangeStart',
-                function () {
+                function() {
                     $rootScope.isLogged = HTTPService.isLogged();
                     if ($rootScope.isLogged) {
                         HTTPService.initEnv();
-                        HTTPService.relogin(function(success,failure){
-                            if (failure){
+                        HTTPService.relogin(function(success, failure) {
+                            if (failure) {
                                 $rootScope.logOut();
                             }
                         });
@@ -119,5 +118,5 @@ angular.module('PiCam',
                     }
                 }
             );
-        }]
-    );
+        }
+    ]);
