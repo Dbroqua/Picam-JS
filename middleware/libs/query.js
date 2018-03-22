@@ -11,8 +11,9 @@ let mongoose = require('mongoose'),
  * @param {Object} obj
  * @returns {number}
  */
-Object.size = function (obj) {
-    let size = 0, key;
+Object.size = function(obj) {
+    let size = 0,
+        key;
     for (key in obj) {
         size++;
     }
@@ -44,31 +45,45 @@ class Queries {
          * @param {String} comparisonSymbol
          * @private
          */
-        let _queryType = function (value, comparisonSymbol) {
+        let _queryType = function(value, comparisonSymbol) {
             switch (comparisonSymbol) {
                 case 'gt':
-                    searchObj[searchCol] = {$gt: value};
+                    searchObj[searchCol] = {
+                        $gt: value
+                    };
                     break;
                 case 'ge':
-                    searchObj[searchCol] = {$gte: value};
+                    searchObj[searchCol] = {
+                        $gte: value
+                    };
                     break;
                 case 'lt':
-                    searchObj[searchCol] = {$lt: value};
+                    searchObj[searchCol] = {
+                        $lt: value
+                    };
                     break;
                 case 'le':
-                    searchObj[searchCol] = {$lte: value};
+                    searchObj[searchCol] = {
+                        $lte: value
+                    };
                     break;
                 case 'ne':
-                    searchObj[searchCol] = {$ne: value};
+                    searchObj[searchCol] = {
+                        $ne: value
+                    };
                     break;
                 case 'lk':
                     searchObj[searchCol] = new RegExp(value.split('*').join('.{0,}'), 'i');
                     break;
                 case 'in':
-                    searchObj[searchCol] = {$in: value.split(',')};
+                    searchObj[searchCol] = {
+                        $in: value.split(',')
+                    };
                     break;
                 case 'mt':
-                    searchObj[searchCol] = {$all: value.split(',')};
+                    searchObj[searchCol] = {
+                        $all: value.split(',')
+                    };
                     break;
                 case 'eq':
                     searchObj[searchCol] = value;
@@ -84,7 +99,7 @@ class Queries {
          * Run the callback if all items is parsed
          * @private
          */
-        let _runCallBack = function () {
+        let _runCallBack = function() {
             if (nbTotalIndex === currentIndex) {
                 if (req.params !== undefined && req.params.id !== undefined) {
                     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -119,7 +134,7 @@ class Queries {
                     searchCol = ''; //final search key in object
 
                     for (let i = 1; i < paramsLength - 1; i++) {
-                        searchCol += ( searchCol !== '' ? '.' : '' ) + params[i];
+                        searchCol += (searchCol !== '' ? '.' : '') + params[i];
                     }
 
                     currentIndex++;
@@ -142,12 +157,27 @@ class Queries {
         let res = count.result;
         if (res.ok > 0) {
             if (res.n === 0) {
-                callback(null, {code: 404, res: {message: 'Item not found'}});
+                callback(null, {
+                    code: 404,
+                    res: {
+                        message: 'Item not found'
+                    }
+                });
             } else {
-                callback(null, {code: 200, res: {message: 'Item deleted'}});
+                callback(null, {
+                    code: 200,
+                    res: {
+                        message: 'Item deleted'
+                    }
+                });
             }
         } else {
-            callback(null, {code: 500, res: {message: 'Error while trying to remove this object'}});
+            callback(null, {
+                code: 500,
+                res: {
+                    message: 'Error while trying to remove this object'
+                }
+            });
         }
     }
 
@@ -168,7 +198,7 @@ class Queries {
             page = 1,
             limit = 0;
 
-        that._querySearchBuilder(req, function (err, data) {
+        that._querySearchBuilder(req, function(err, data) {
             isInError = err;
             code = data.code;
             message = data.message;
@@ -213,7 +243,7 @@ class Queries {
                 //----------------------------------------------------------------------------------------------------------
 
                 //Sort data ------------------------------------------------------------------------------------------------
-                if (urlParams.sort !== undefined) {
+                if (urlParams.sort !== undefined && urlParams.sort !== '') {
                     let sort = {},
                         sortColumn = urlParams.sort, //Copy sort filters in tmp variable
                         dir = 1; //By default we suppose user want ASC sort
@@ -231,7 +261,7 @@ class Queries {
                 //Paginate mode --------------------------------------------------------------------------------------------
                 if (urlParams.page !== undefined && urlParams.limit !== undefined && urlParams.limit > 0) {
                     limit = Number(urlParams.limit);
-                    let _page = ( Number(urlParams.page) > 1 ? ( Number(urlParams.page) - 1 ) : 0 );
+                    let _page = (Number(urlParams.page) > 1 ? (Number(urlParams.page) - 1) : 0);
                     page = Number(urlParams.page);
                     let firstElement = _page * limit;
                     query.limit(limit); //Number of element by page
@@ -241,7 +271,7 @@ class Queries {
 
                 //Finally exec queries -------------------------------------------------------------------------------------
                 if (req.params !== undefined && req.params.id !== undefined) {
-                    query.exec(function (err, items) {
+                    query.exec(function(err, items) {
                         if (err) {
                             callback(err, null);
                         } else {
@@ -249,14 +279,14 @@ class Queries {
                         }
                     });
                 } else {
-                    queryCount.count().exec(function (err, count) {
+                    queryCount.count().exec(function(err, count) {
                         if (err) {
                             callback(err, null);
                         } else {
                             let totalRows = count;
 
                             if (totalRows > 0) {
-                                query.exec(function (err, items) {
+                                query.exec(function(err, items) {
                                     if (err) {
                                         callback(err, null);
                                     } else {
@@ -292,11 +322,14 @@ class Queries {
      * @param {Function} callback
      */
     static getAll(params, req, callback) {
-        this._queryBuilder(req,params.model, function (err, data) {
+        this._queryBuilder(req, params.model, function(err, data) {
             if (err) {
                 errors.errorCatcher(err, callback);
             } else {
-                callback(null, {code: (data.filteredRows > 0 ? 200 : 204 ), res: data});
+                callback(null, {
+                    code: (data.filteredRows > 0 ? 200 : 204),
+                    res: data
+                });
             }
         });
     }
@@ -311,11 +344,14 @@ class Queries {
         let newItem = new params.model(req.body);
         params.newItem = newItem;
 
-        newItem.save(function (err, item) {
+        newItem.save(function(err, item) {
             if (err) {
                 errors.errorCatcher(err, callback);
             } else {
-                callback(null, {code: 201, res: item});
+                callback(null, {
+                    code: 201,
+                    res: item
+                });
             }
         });
     }
@@ -327,14 +363,24 @@ class Queries {
      * @param {Function} callback
      */
     static getOne(params, req, callback) {
-        params.model.findOne({_id: req.params.id}, function (err, item) {
+        params.model.findOne({
+            _id: req.params.id
+        }, function(err, item) {
             if (err) {
                 errors.errorCatcher(err, callback);
             } else {
                 if (item === null) {
-                    callback(null, {code: 404, res: {message: 'Item not found'}});
+                    callback(null, {
+                        code: 404,
+                        res: {
+                            message: 'Item not found'
+                        }
+                    });
                 } else {
-                    callback(null, {code: 200, res: item});
+                    callback(null, {
+                        code: 200,
+                        res: item
+                    });
                 }
             }
         });
@@ -350,21 +396,35 @@ class Queries {
         delete req.body.created_at;
         delete req.body.updatedAt;
 
-        params.model.findOne({_id: req.params.id}, function (err, item) {
+        params.model.findOne({
+            _id: req.params.id
+        }, function(err, item) {
             if (err) {
                 errors.errorCatcher(err, callback);
             } else {
                 if (item === null) {
-                    callback(null, {code: 404, res: {message: 'Item not found'}});
+                    callback(null, {
+                        code: 404,
+                        res: {
+                            message: 'Item not found'
+                        }
+                    });
                 } else {
                     delete req.body.created_at;
                     delete req.body.updatedAt;
                     delete req.body.timeout;
-                    params.model.update({_id: req.params.id}, req.body, {upsert: true}, function (err) {
+                    params.model.update({
+                        _id: req.params.id
+                    }, req.body, {
+                        upsert: true
+                    }, function(err) {
                         if (err) {
                             errors.errorCatcher(err, callback);
                         } else {
-                            callback(null, {code: 200, res: req.body});
+                            callback(null, {
+                                code: 200,
+                                res: req.body
+                            });
                         }
                     });
                 }
@@ -380,7 +440,9 @@ class Queries {
      */
     static deleteOne(params, req, callback) {
         let that = this;
-        params.model.remove({_id: req.params.id}, function (err, count) {
+        params.model.remove({
+            _id: req.params.id
+        }, function(err, count) {
             if (err) {
                 errors.errorCatcher(err, callback);
             } else {
