@@ -89,7 +89,7 @@ class Cameras {
                             item.infos.startedAt = stats.birthtime;
 
                             //Detection state
-                            exec('grep "webcontrol_authentication" /etc/motion.conf|cut -d" " -f 2', function(err, stdout) {
+                            exec('grep "webcontrol_authentication" /etc/motion/motion.conf|cut -d" " -f 2', function(err, stdout) {
                                 currentCheckList[_currentEltIndex]++;
                                 if (!err) {
                                     let authorization = stdout.replace(/(\r\n|\n|\r)/gm, ''),
@@ -244,7 +244,7 @@ class Cameras {
                                         }
                                     });
                                 } else {
-                                    exec('grep "webcontrol_authentication" /etc/motion.conf|cut -d" " -f 2', function(err, stdout) {
+                                    exec('grep "webcontrol_authentication" /etc/motion/motion.conf|cut -d" " -f 2', function(err, stdout) {
                                         if (!err) {
                                             let options = {
                                                 url: item.definition.motion.adminUri + (req.body.infos.detectionState === 'Active' ? 'start' : 'pause'),
