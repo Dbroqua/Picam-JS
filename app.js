@@ -28,7 +28,7 @@ require('./middleware/libs/passport')(passport); //Pass passport for configurati
 /**
  * Init app
  */
-app.set('env', env.env.env );
+app.set('env', env.env.env);
 
 /**
  * Logs
@@ -45,7 +45,9 @@ var accessLogStream = FileStreamRotator.getStream({
     frequency: 'daily',
     verbose: true
 });
-app.use(morgan('combined', {stream: accessLogStream})); //Log file
+app.use(morgan('combined', {
+    stream: accessLogStream
+})); //Log file
 if (app.get('env') === 'development') {
     app.use(morgan('dev')); //Console log
 }
@@ -63,7 +65,9 @@ app.use(favicon(path.join(__dirname, 'resources', 'favicon.png')));
  * Define several stuff for application
  */
 app.use(bodyParser.json()); //Parse application/json
-app.use(bodyParser.urlencoded({extended: true})); //Parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({
+    extended: true
+})); //Parse application/x-www-form-urlencoded
 app.use(cookieParser()); //Cookie parsing middleware
 app.use(passport.initialize()); //Initialize passport transaction
 
@@ -77,7 +81,7 @@ app.use('/',
      * @param {Object} res
      * @param {Function} next
      */
-    function (req, res, next) {
+    function(req, res, next) {
         //Website you wish to allow to connect
         res.setHeader('Access-Control-Allow-Origin', '*');
         //Request methods you wish to allow
@@ -117,11 +121,11 @@ app.use(
      * @param {Object} res
      * @param {Function} next
      */
-    function (req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
+    function(req, res, next) {
+        var err = new Error('Not Found');
+        err.status = 404;
+        next(err);
+    });
 
 //Error handlers
 //Development error handler

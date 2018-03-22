@@ -7,15 +7,15 @@ module.exports.env = {
 };
 
 module.exports.mongodb = {
-    url: '127.0.0.1',
+    url: process.env.MONGO_URL,
     collection: 'PiCam',
-    user: null,
-    pass: null,
-    port: 27017
+    user: process.env.MONGO_USER,
+    pass: process.env.MONGO_PASSWORD,
+    port: process.env.MONGO_PORT
 };
 
 module.exports.autoInstall = {
-    user : {
+    user: {
         first_name: 'admin',
         last_name: 'admin',
         mail: 'pi@raspberry',
