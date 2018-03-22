@@ -43,7 +43,9 @@ let accessLogStream = FileStreamRotator.getStream({
     frequency: 'daily',
     verbose: true
 });
-app.use(morgan('combined', {stream: accessLogStream})); //Log file
+app.use(morgan('combined', {
+    stream: accessLogStream
+})); //Log file
 if (app.get('env') === 'development') {
     app.use(morgan('dev')); //Console log
 }
@@ -54,14 +56,16 @@ if (app.get('env') === 'development') {
 app.use(express.static(path.join(__dirname, 'app')));
 app.use('/resources', express.static(path.join(__dirname, 'resources')));
 app.use('/documentation', express.static(path.join(__dirname, 'documentation')));
-app.use('/bower_components', express.static(path.join(__dirname, 'bower_components')));
+app.use('/static', express.static(path.join(__dirname, 'node_modules')));
 app.use(favicon(path.join(__dirname, 'resources', 'favicon.png')));
 
 /**
  * Define several stuff for application
  */
 app.use(bodyParser.json()); //Parse application/json
-app.use(bodyParser.urlencoded({extended: true})); //Parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({
+    extended: true
+})); //Parse application/x-www-form-urlencoded
 app.use(cookieParser()); //Cookie parsing middleware
 app.use(passport.initialize()); //Initialize passport transaction
 
@@ -75,7 +79,7 @@ app.use('/',
      * @param {Object} res
      * @param {Function} next
      */
-    function (req, res, next) {
+    function(req, res, next) {
         //Website you wish to allow to connect
         res.setHeader('Access-Control-Allow-Origin', '*');
         //Request methods you wish to allow
@@ -115,8 +119,8 @@ app.use(
      * @param {Object} res
      * @param {Function} next
      */
-    function (req, res, next) {
-        let err = new Error('Not Found');
+    function(req, res, next) {
+        var err = new Error('Not Found');
         err.status = 404;
         next(err);
     });
@@ -125,7 +129,7 @@ app.use(
 //Development error handler
 //Will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function (err, req, res) {
+    app.use(function(err, req, res) {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
@@ -136,7 +140,7 @@ if (app.get('env') === 'development') {
 
 //Production error handler
 //No stacktraces leaked to user
-app.use(function (err, req, res) {
+app.use(function(err, req, res) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,

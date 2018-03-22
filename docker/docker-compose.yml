@@ -1,0 +1,31 @@
+version: '2'
+
+services:
+
+### Applications Code Container #############################
+
+    applications:
+      image: tianon/true
+
+### MongoDB Container #######################################
+
+    mongo:
+      build: ./mongo
+      ports:
+        - "${MONGODB_PORT}:27017"
+      volumes:
+        - ${DATA_SAVE_PATH}/mongo:/data/db
+      networks:
+        - backend
+
+### Networks Setup ############################################
+
+networks:
+  backend:
+    driver: "bridge"
+
+### Volumes Setup #############################################
+
+volumes:
+  mongo:
+    driver: "local"
