@@ -21,12 +21,12 @@
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                         <li ng-class="{'disabled': camera.infos.state === 'Stop'}">
-                            <a href="javascript:void(0)" ng-click="changeRoute('cameras/add'+ camera._id + '/stream/')">
+                            <a href="javascript:void(0)" ng-click="changeRoute('cameras/'+ camera._id + '/stream/')">
                                 View stream
                             </a>
                         </li>
                         <li>
-                            <a href="javascript:void(0)" ng-click="changeRoute('cameras/add'+ camera._id + '/files/')">
+                            <a href="javascript:void(0)" ng-click="changeRoute('cameras/'+ camera._id + '/files/')">
                                 View files
                             </a>
                         </li>
