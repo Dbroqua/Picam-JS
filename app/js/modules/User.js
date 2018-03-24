@@ -55,7 +55,7 @@ angular.module('User')
                     }
                 };
 
-                if ($scope.updatedValues.password.length === 0) {
+                if ($routeParams.id === 'add' && $scope.updatedValues.password.length === 0) {
                     preventEmptyPassword = true;
                 }
 

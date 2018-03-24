@@ -10,7 +10,12 @@
         <tbody>
         <tr ng-repeat="file in Files">
             <td ng-hide="isLoading">
-                <a ng-href="/api/v1/cameras/{{cameraId}}/files/{{file.name}}?apikey={{apikey}}">{{file.name}}</a>
+                <a ng-href="/api/v1/cameras/{{cameraId}}/files/{{file.name}}?apikey={{apikey}}" target="_blank">
+                    <span class="glyphicon glyphicon-picture" ng-if="file.extension === 'jpg'" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-film" ng-if="file.extension === 'avi'" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-time" ng-if="file.extension === 'date'" aria-hidden="true"></span>
+                    {{file.name}}
+                </a>
             </td>
             <td ng-hide="isLoading">
                 {{file.extension}}

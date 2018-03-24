@@ -10,7 +10,10 @@
         <tbody>
         <tr ng-repeat="user in Users">
             <td>
-                <a href="javascript:void(0);" ng-click="viewUserDetails(user._id);">{{user.first_name}} </a>
+                <a href="javascript:void(0);" ng-click="viewUserDetails(user._id);">
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                    {{user.first_name}}
+                </a>
             </td>
             <td>
                 <a href="javascript:void(0);" ng-click="viewUserDetails(user._id);">{{user.last_name}} </a>
