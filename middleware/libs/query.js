@@ -15,7 +15,7 @@ Object.size = function(obj) {
     let size = 0,
         key;
     for (key in obj) {
-        if (obj.hasOwnProperty(key)) {
+        if (Object.keys(obj).indexOf(key) !== -1) {
             size++;
         }
     }
@@ -127,7 +127,7 @@ class Queries {
             _runCallBack();
         } else {
             for (let key in urlParams) {
-                if (urlParams.hasOwnProperty(key)) {
+                if (Object.keys(urlParams).indexOf(key) !== -1) {
                     //Extracting query filters
                     let params = key.split('.'), //Split key in data
                         paramsLength = params.length;

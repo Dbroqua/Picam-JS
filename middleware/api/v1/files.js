@@ -135,7 +135,7 @@ class Files {
                     } else {
                         let extraParams = '?apikey=' + camera.definition.apikey;
                         for (let key in urlParams) {
-                            if (urlParams.hasOwnProperty(key)) {
+                            if (Object.keys(urlParams).indexOf(key) !== -1) {
                                 extraParams += '&' + key + '=' + urlParams[key];
                             }
                         }
