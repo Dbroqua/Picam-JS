@@ -42,7 +42,7 @@
     "passport": "=0.4.0",
     "passport-http": "^0.3.0",
     "passport-localapikey": "0.0.3",
-    "request": "^2.74.0",
+    "request": "^2.84.0",
     "serve-favicon": "^2.3.0",
     "sync-request": "^6.0.0"
   },
