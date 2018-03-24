@@ -4,83 +4,102 @@
 
 /**
  * Route declaration for Cameras
+ *
  * @param {Object} params
+ * @returns {Object}
  */
-module.exports = function (params) {
-    let basePath = params.baseUrl + 'cameras',
+module.exports = function(params) {
+    const middle = require('../../middleware/api/v1/cameras'),
+        middleFiles = require('../../middleware/api/v1/files'),
+        proxy = require('http-proxy'),
+        exec = require('child_process'),
+        fs = require('fs'),
+        request = require('request');
+    const basePath = params.baseUrl + 'cameras',
         specificItem = basePath + '/:id',
         streamItem = specificItem + '/stream',
         filesItem = specificItem + '/files',
         specificFilesItem = filesItem + '/:file',
-        router = params.router,
-        passport = params.passport,
-        middle = require('../../middleware/api/v1/cameras'),
-        middleFiles = require('../../middleware/api/v1/files'),
-        apiProxy = require('http-proxy').createProxyServer(),
-        exec = require('child_process').exec,
-        fs = require('fs'),
-        request = require('request');
+        passport = params.passport;
+    let router = params.router;
 
     router.route(basePath)
         .get(
-            passport.authenticate(['basic', 'api-key'], {session: false}),
-            function (req, res) {
-                middle.getAll(req, function (err, data) {
+            passport.authenticate(['basic', 'api-key'], {
+                session: false
+            }),
+            function(req, res) {
+                middle.getAll(req, function(err, data) {
                     res.status(data.code).send(data.res).end();
                 });
             }
         )
         .post(
-            passport.authenticate(['basic'], {session: false}),
-            function (req, res) {
-                middle.createOne(req, function (err, data) {
+            passport.authenticate(['basic'], {
+                session: false
+            }),
+            function(req, res) {
+                middle.createOne(req, function(err, data) {
                     res.status(data.code).send(data.res).end();
                 });
             })
         .patch(
-            passport.authenticate(['basic', 'api-key'], {session: false}),
-            function (req, res) {
-                middle.patchAll(req, function (err, data) {
+            passport.authenticate(['basic', 'api-key'], {
+                session: false
+            }),
+            function(req, res) {
+                middle.patchAll(req, function(err, data) {
                     res.status(data.code).send(data.res).end();
                 });
             });
 
     router.route(specificItem)
         .get(
-            passport.authenticate(['basic', 'api-key'], {session: false}),
-            function (req, res) {
-                middle.getOne(req, function (err, data) {
+            passport.authenticate(['basic', 'api-key'], {
+                session: false
+            }),
+            function(req, res) {
+                middle.getOne(req, function(err, data) {
                     res.status(data.code).send(data.res).end();
                 });
             })
         .patch(
-            passport.authenticate(['basic', 'api-key'], {session: false}),
-            function (req, res) {
-                middle.patchOne(req, function (err, data) {
+            passport.authenticate(['basic', 'api-key'], {
+                session: false
+            }),
+            function(req, res) {
+                middle.patchOne(req, function(err, data) {
                     res.status(data.code).send(data.res).end();
                 });
             })
         .delete(
-            passport.authenticate(['basic', 'api-key'], {session: false}),
-            function (req, res) {
-                middle.deleteOne(req, function (err, data) {
+            passport.authenticate(['basic', 'api-key'], {
+                session: false
+            }),
+            function(req, res) {
+                middle.deleteOne(req, function(err, data) {
                     res.status(data.code).send(data.res).end();
                 });
             });
 
     router.route(streamItem)
         .get(
-            passport.authenticate(['basic', 'api-key'], {session: false}),
-            function (req, res) {
+            passport.authenticate(['basic', 'api-key'], {
+                session: false
+            }),
+            function(req, res) {
                 req.keepPasswords = true;
-                middle.getOne(req, function (err, data) {
+                middle.getOne(req, function(err, data) {
                     if (data.code === 200) {
                         let isOk = false,
-                            item = data.res;
+                            item = data.res,
+                            apiProxy = proxy.createProxyServer();
                         req.url = '';
+
                         switch (item.type) {
                             case 'Local':
-                                exec('grep "stream_authentication" /etc/motion.conf|cut -d" " -f 2', function (err, stdout) {
+                                //TODO: at this time auth does not work
+                                exec.exec('grep "stream_authentication" /etc/motion/motion.conf|cut -d" " -f 2', function(err, stdout) {
                                     if (!err) {
                                         apiProxy.web(req, res, {
                                             target: item.definition.motion.streamUri,
@@ -88,7 +107,9 @@ module.exports = function (params) {
                                         });
                                         isOk = true;
                                     } else {
-                                        res.status(500).send({message: 'Internal server error'}).end();
+                                        res.status(500).send({
+                                            message: 'Internal server error'
+                                        }).end();
                                     }
                                 });
                                 break;
@@ -102,12 +123,14 @@ module.exports = function (params) {
                                 isOk = true;
                                 break;
                             default:
-                                res.status(406).send({message: 'Bad camera type'}).end();
+                                res.status(406).send({
+                                    message: 'Bad camera type'
+                                }).end();
                                 break;
                         }
 
                         if (isOk) {
-                            apiProxy.on('error', function (err) {
+                            apiProxy.on('error', function(err) {
                                 console.log(err);
                             });
                         }
@@ -116,20 +139,26 @@ module.exports = function (params) {
                         res.status(data.code).send(data.res).end();
                     }
                 });
-            })
+            });
+
+    router.route(filesItem)
         .get(
-            passport.authenticate(['basic', 'api-key'], {session: false}),
-            function (req, res) {
-                middleFiles.getAll(req, function (err, data) {
+            passport.authenticate(['basic', 'api-key'], {
+                session: false
+            }),
+            function(req, res) {
+                middleFiles.getAll(req, function(err, data) {
                     res.status(data.code).send(data.res).end();
                 });
             });
 
     router.route(specificFilesItem)
         .get(
-            passport.authenticate(['basic', 'api-key'], {session: false}),
-            function (req, res) {
-                middleFiles.getOne(req, function (err, data) {
+            passport.authenticate(['basic', 'api-key'], {
+                session: false
+            }),
+            function(req, res) {
+                middleFiles.getOne(req, function(err, data) {
                     if (data.code !== 200) {
                         res.status(data.code).send(data.res).end();
                     } else {
@@ -137,8 +166,8 @@ module.exports = function (params) {
                             let camera = data.res.camera;
                             request.get({
                                 url: camera.definition.scheme + '://' + camera.definition.uri + ':' + camera.definition.port +
-                                '/api/v1/cameras/' + camera.definition.cameraId + '/files/' + req.params.file + '?apikey=' +
-                                camera.definition.apikey,
+                                    '/api/v1/cameras/' + camera.definition.cameraId + '/files/' + req.params.file + '?apikey=' +
+                                    camera.definition.apikey,
                                 timeout: 15000
                             }).pipe(res);
                         } else {

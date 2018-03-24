@@ -1,18 +1,19 @@
 /**
  * Created by dbroqua on 9/20/16.
  */
-let cameras = require('../../../models/v1/cameras'),
+const cameras = require('../../../models/v1/cameras'),
     libs = require('../../libs/query'),
     errors = require('../../libs/errors'),
     fs = require('fs'),
     url = require('url'),
     path = require('path'),
     request = require('request'),
-    mmm = require('mmmagic'),
-    params = {
-        dataModel: cameras.dataModel,
-        model: cameras.model
-    };
+    mmm = require('mmmagic');
+
+let params = {
+    dataModel: cameras.dataModel,
+    model: cameras.model
+};
 
 class Files {
     /**
@@ -23,7 +24,7 @@ class Files {
     static getAll(req, callback) {
         let urlParams = url.parse(req.url, true).query;
 
-        libs.getOne(params, req, function (err, data) {
+        libs.getOne(params, req, function(err, data) {
             if (err) {
                 errors.errorCatcher(err, callback);
             } else {
@@ -33,12 +34,12 @@ class Files {
                     let camera = data.res;
                     if (camera.type === 'Local') {
                         let directory = camera.definition.filesDirectory;
-                        fs.stat(directory, function (err, stats) {
+                        fs.stat(directory, function(err, stats) {
                             if (err) {
                                 errors.errorCatcher(err, callback);
                             } else {
                                 if (stats.isDirectory()) {
-                                    fs.readdir(directory, function (err, files) {
+                                    fs.readdir(directory, function(err, files) {
                                         if (err) {
                                             errors.errorCatcher(err, callback);
                                         } else {
@@ -60,10 +61,10 @@ class Files {
                                                 limit = Number(urlParams.limit);
                                                 page = Number(urlParams.page) - 1;
 
-                                                if (page >= 0 && nbFiles > (Number(urlParams.limit) * (Number(urlParams.page) - 1 ))) {
+                                                if (page >= 0 && nbFiles > (Number(urlParams.limit) * (Number(urlParams.page) - 1))) {
                                                     res.page = page;
                                                     res.limit = limit;
-                                                    res.resources = files.splice((page * limit ), limit);
+                                                    res.resources = files.splice((page * limit), limit);
 
                                                     code = 200;
                                                 }
@@ -75,10 +76,13 @@ class Files {
                                              * When stat of all files finished, call callback
                                              * @private
                                              */
-                                            let _runCallback = function () {
+                                            let _runCallback = function() {
                                                 if (readFiles === nbFiles) {
                                                     res.filteredRows = res.resources.length;
-                                                    callback(null, {code: code, res: res});
+                                                    callback(null, {
+                                                        code: code,
+                                                        res: res
+                                                    });
                                                 }
                                             };
 
@@ -88,9 +92,9 @@ class Files {
                                              * @param {Integer} index
                                              * @private
                                              */
-                                            let _statFile = function (file, index) {
+                                            let _statFile = function(file, index) {
                                                 console.log('Path: ', file);
-                                                fs.stat(path.join(directory, file), function (err, stats) {
+                                                fs.stat(path.join(directory, file), function(err, stats) {
                                                     readFiles++;
                                                     let splitedFile = file.split('.');
                                                     res.resources[index] = {
@@ -108,7 +112,7 @@ class Files {
                                             };
 
                                             if (nbFiles > 0) {
-                                                res.resources.forEach(function (file) {
+                                                res.resources.forEach(function(file) {
                                                     _statFile(file, currentFileIndex);
                                                     currentFileIndex++;
 
@@ -121,7 +125,9 @@ class Files {
                                 } else {
                                     callback(null, {
                                         code: 500,
-                                        res: {message: directory + ' is not a valid directory'}
+                                        res: {
+                                            message: directory + ' is not a valid directory'
+                                        }
                                     });
                                 }
                             }
@@ -129,7 +135,9 @@ class Files {
                     } else {
                         let extraParams = '?apikey=' + camera.definition.apikey;
                         for (let key in urlParams) {
-                            extraParams += '&' + key + '=' + urlParams[key];
+                            if (urlParams.hasOwnProperty(key)) {
+                                extraParams += '&' + key + '=' + urlParams[key];
+                            }
                         }
                         let uri = camera.definition.scheme + '://' + camera.definition.uri + ':' + camera.definition.port +
                             '/api/v1/cameras/' + camera.definition.cameraId + '/files/' + extraParams;
@@ -137,11 +145,14 @@ class Files {
                         request.get({
                             url: uri,
                             timeout: 15000
-                        }, function (err, res, body) {
+                        }, function(err, res, body) {
                             if (err) {
                                 errors.errorCatcher(err, callback);
                             } else {
-                                callback(null, {code: res.statusCode, res: JSON.parse(body)});
+                                callback(null, {
+                                    code: res.statusCode,
+                                    res: JSON.parse(body)
+                                });
                             }
                         });
                     }
@@ -156,7 +167,7 @@ class Files {
      * @param {Function} callback
      */
     static getOne(req, callback) {
-        libs.getOne(params, req, function (err, data) {
+        libs.getOne(params, req, function(err, data) {
             if (err) {
                 errors.errorCatcher(err, callback);
             } else {
@@ -166,21 +177,20 @@ class Files {
                     let camera = data.res;
                     if (camera.type === 'Local') {
                         let file = path.join(camera.definition.filesDirectory, req.params.file);
-                        fs.stat(file, function (err, stats) {
+                        fs.stat(file, function(err, stats) {
                             if (err) {
                                 errors.errorCatcher(err, callback);
                             } else {
                                 if (stats.isFile()) {
                                     let Magic = mmm.Magic,
                                         magic = new Magic(mmm.MAGIC_MIME_TYPE);
-                                    magic.detectFile(file, function (err, mimeType) {
+                                    magic.detectFile(file, function(err, mimeType) {
                                         if (err) {
                                             errors.errorCatcher(err, callback);
                                         } else {
                                             let name = file.split('/');
                                             callback(
-                                                null,
-                                                {
+                                                null, {
                                                     code: 200,
                                                     res: {
                                                         name: name[name.length - 1],
@@ -196,14 +206,17 @@ class Files {
                                 } else {
                                     callback(null, {
                                         code: 404,
-                                        res: {message: 'File not found'}
+                                        res: {
+                                            message: 'File not found'
+                                        }
                                     });
                                 }
                             }
                         });
                     } else {
                         callback(null, {
-                            code: 200, res: {
+                            code: 200,
+                            res: {
                                 type: 'Net',
                                 camera: camera
                             }

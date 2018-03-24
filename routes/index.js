@@ -4,7 +4,9 @@
 
 /**
  * Route declaration for Base
+ *
  * @param {Object} params
+ * @returns {Object}
  */
 module.exports = function(params) {
     var basePath = '/',
@@ -23,10 +25,10 @@ module.exports = function(params) {
 
     router.get(basePath + 'js/env.js',
         function(req, res) {
-            res.status(200).send("let APIUri = '" + process.env.APP_URL + "', " +
-                "   SERVER_PATH =  APIUri + 'api/v1/', " +
-                "   TITLEPrefix = 'PiCam :: ', " +
-                "   LIMIT = 10;").end();
+            res.status(200).send('let APIUri = "' + process.env.APP_URL + '", ' +
+                '   SERVER_PATH = APIUri + "api/v1/", ' +
+                '   TITLEPrefix = "PiCam :: ", ' +
+                '   LIMIT = 10;').end();
         });
 
     return router;

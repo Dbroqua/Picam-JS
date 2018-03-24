@@ -4,24 +4,24 @@
 
 angular.module("Network", [])
     .factory('HTTPService', ['$rootScope', '$http', '$base64', '$cookies', '$q', '$ngBootbox',
-        function ($rootScope, $http, $base64, $cookies, $q, $ngBootbox) {
+        function($rootScope, $http, $base64, $cookies, $q, $ngBootbox) {
             var http_service = {
-                authDatas: $cookies.get('AssetManager') || null,
+                authDatas: $cookies.get('PiCam') || null,
                 userData: null,
                 getAll_cancel: {},
                 getOne_cancel: {}
             };
 
-            http_service.isLogged = function () {
-                return ( http_service.authDatas !== null );
+            http_service.isLogged = function() {
+                return (http_service.authDatas !== null);
             };
 
-            http_service.initEnv = function () {
+            http_service.initEnv = function() {
                 $http.defaults.headers.common.Authorization = 'Basic ' + http_service.authDatas;
             };
 
             //All request return a promise that can be resolved to cancel this request
-            http_service.get = function (url, data, callback, promise) {
+            http_service.get = function(url, data, callback, promise) {
                 var canceler = promise ? promise : $q.defer();
                 if (!data || data === null) {
                     data = {
@@ -33,7 +33,7 @@ angular.module("Network", [])
                 $http.get(SERVER_PATH + url, data).then(callback, callback);
                 return canceler;
             };
-            http_service.getRemote = function (url, data, callback, promise) {
+            http_service.getRemote = function(url, data, callback, promise) {
                 var canceler = promise ? promise : $q.defer();
                 if (!data || data === null) {
                     data = {
@@ -53,19 +53,19 @@ angular.module("Network", [])
                 return canceler;
             };
 
-            http_service.patch = function (url, id, data, callback) {
+            http_service.patch = function(url, id, data, callback) {
                 $http.patch(SERVER_PATH + url + '/' + id, data).then(callback, callback);
             };
 
-            http_service.post = function (url, data, callback) {
+            http_service.post = function(url, data, callback) {
                 $http.post(SERVER_PATH + url + '/', data).then(callback, callback);
             };
 
-            http_service.delete = function (url, id, data, callback) {
+            http_service.delete = function(url, id, data, callback) {
                 $ngBootbox.confirm('Are you sure to want delete this element ?')
-                    .then(function () {
+                    .then(function() {
                         $http.delete(SERVER_PATH + url + '/' + id, data).then(callback, callback);
-                    }, function () {
+                    }, function() {
                         console.log('Confirm dismissed!');
                     });
             };
@@ -78,15 +78,18 @@ angular.module("Network", [])
              * @param password the user password
              * @return a basic authorization header (eg. 'Basic dGVzdA==')
              */
-            http_service.generateAuthorizationHeader = function (username, password) {
+            http_service.generateAuthorizationHeader = function(username, password) {
                 return $base64.encode(username + ':' + password);
             };
 
-            http_service.login = function (userName, password, success, failure) {
+            http_service.login = function(userName, password, success, failure) {
                 var authData = this.generateAuthorizationHeader(userName, password);
                 $http.defaults.headers.common.Authorization = 'Basic ' + authData;
                 // Post the login request to the backend server in order to validate them
-                $http.post(APIUri + 'authenticate', {username: userName, password: password}).then(function (response) {
+                $http.post(APIUri + 'authenticate', {
+                    username: userName,
+                    password: password
+                }).then(function(response) {
                     // Store authorization header as default authorization header for further queries
                     var userData = response.data;
                     http_service.authDatas = authData;
@@ -95,27 +98,27 @@ angular.module("Network", [])
                     $rootScope.apikey = userData.apikey;
                     // Delegate response to the caller (afterSuccess hook)
                     if (success) {
-                        $cookies.put('AssetManager', authData);
+                        $cookies.put('PiCam', authData);
                         success();
                     }
-                }, function (error) {
+                }, function(error) {
                     // Delegate response to the caller (afterFailure hook)
                     if (failure) {
                         failure(error);
                     }
                 });
             };
-            http_service.relogin = function (success, failure) {
+            http_service.relogin = function(success, failure) {
                 if (http_service.userData === null) {
                     // Post the login request to the backend server in order to validate them
-                    $http.post(APIUri + 'authenticate', null).then(function (response) {
+                    $http.post(APIUri + 'authenticate', null).then(function(response) {
                         // Store authorization header as default authorization header for further queries
                         http_service.userData = response.data;
                         $rootScope.apikey = response.data.apikey;
                         if (success) {
                             success();
                         }
-                    }, function (error) {
+                    }, function(error) {
                         // Delegate response to the caller (afterFailure hook)
                         if (failure) {
                             failure(error);
@@ -124,14 +127,14 @@ angular.module("Network", [])
                 }
             };
 
-            http_service.logout = function (success) {
+            http_service.logout = function(success) {
                 http_service.authDatas = null;
-                $cookies.remove('AssetManager');
+                $cookies.remove('PiCam');
                 $http.defaults.headers.common.Authorization = null;
                 success();
             };
 
-            http_service.parseFilters = function (filters) {
+            http_service.parseFilters = function(filters) {
                 var urlAppendix = '';
                 for (var prop in filters) {
                     if (Array.isArray(filters[prop].values)) {
@@ -154,7 +157,7 @@ angular.module("Network", [])
                 return urlAppendix;
             };
 
-            http_service.getAll = function (route, extraRoute, limit, page, filters, sort, callback) {
+            http_service.getAll = function(route, extraRoute, limit, page, filters, sort, callback) {
                 if (http_service.getAll_cancel[route]) {
                     http_service.getAll_cancel[route].resolve();
                     http_service.getAll_cancel[route] = undefined;
@@ -167,10 +170,11 @@ angular.module("Network", [])
                     }
                 }
 
-                http_service.getAll_cancel[route] = http_service.get(route + extraRoute + '?limit=' + limit + '&page=' + page + '&sort=' + sorting + '&' + http_service.parseFilters(filters), null, callback, http_service.getAll_cancel[route]);
+                http_service.getAll_cancel[route] = http_service.get(route + extraRoute + '?limit=' + limit + '&page=' + page + '&sort=' + sorting + '&' + http_service.parseFilters(
+                    filters), null, callback, http_service.getAll_cancel[route]);
             };
 
-            http_service.getAllRemote = function (params, identifier, callback) {
+            http_service.getAllRemote = function(params, identifier, callback) {
                 if (http_service.getAll_cancel[identifier]) {
                     http_service.getAll_cancel[identifier].resolve();
                     http_service.getAll_cancel[identifier] = undefined;
@@ -180,10 +184,11 @@ angular.module("Network", [])
                     sorting = '-' + sorting;
                 }
 
-                http_service.getAll_cancel[identifier] = http_service.getRemote(params.scheme + '://' + params.uri + ':' + params.port + '/api/v1/cameras/' + '?apikey='+params.apikey+'&sort=' + sorting, params, callback, http_service.getAll_cancel[identifier]);
+                http_service.getAll_cancel[identifier] = http_service.getRemote(params.scheme + '://' + params.uri + ':' + params.port + '/api/v1/cameras/' + '?apikey=' +
+                    params.apikey + '&sort=' + sorting, params, callback, http_service.getAll_cancel[identifier]);
             };
 
-            http_service.getOne = function (route, id, params, callback) {
+            http_service.getOne = function(route, id, params, callback) {
                 if (http_service.getOne_cancel[route]) {
                     http_service.getOne_cancel[route].resolve();
                     http_service.getOne_cancel[route] = undefined;
@@ -192,8 +197,8 @@ angular.module("Network", [])
                 http_service.getOne_cancel[route] = http_service.get(route + '/' + id + '?' + params, null, callback, http_service.getOne_cancel[route]);
             };
 
-            http_service.returnPagination = function (totalRows, limit, currentPage) {
-                var nbPages = Math.ceil(totalRows / (limit > 0 ? limit : 1 ));
+            http_service.returnPagination = function(totalRows, limit, currentPage) {
+                var nbPages = Math.ceil(totalRows / (limit > 0 ? limit : 1));
                 var pagin = {
                     list: [],
                     nbPages: nbPages,
@@ -203,7 +208,7 @@ angular.module("Network", [])
                     var currentIndex = (i + 1);
                     pagin.list.push({
                         index: currentIndex,
-                        active: ( currentPage === currentIndex )
+                        active: (currentPage === currentIndex)
                     });
                 }
                 return pagin;
@@ -212,29 +217,29 @@ angular.module("Network", [])
             return http_service;
         }
     ])
-    .directive('pagination', function () {
+    .directive('pagination', function() {
         return {
             restrict: 'E',
             template: '<ul class="pagination">' +
-            '   <li ng-class="{disabled: pagination.currentPage === 1}">' +
-            '       <a href="javascript:void(0)" ng-click="pagination.currentPage > 1 && load( pagination.currentPage - 1 )" aria-label="Previous">' +
-            '           <span aria-hidden="true">&laquo;</span>' +
-            '       </a>' +
-            '   </li>' +
-            '   <li class="disabled" ng-repeat-start="p in pagination.list" ng-if="$index > 2 && $index === (pagination.currentPage - 5) ">' +
-            '       <a href="javascript:void(0)">...</a>' +
-            '   </li>' +
-            '   <li ng-class="{active : p.active}" ng-if="$index < 3 || ( $index > (pagination.currentPage - 5) && $index < (pagination.currentPage + 3) ) || $index > ( pagination.nbPages - 4 )">' +
-            '       <a href="javascript:void(0)" ng-click="load(p.index)">{{p.index}}</a>' +
-            '   </li>' +
-            '   <li class="disabled" ng-if="$index <= ( pagination.nbPages - 4 ) && $index === (pagination.currentPage + 3) " ng-repeat-end>' +
-            '       <a href="javascript:void(0)">...</a>' +
-            '   </li>' +
-            '   <li ng-class="{disabled: pagination.currentPage === pagination.nbPages}">' +
-            '       <a href="javascript:void(0)" ng-click="pagination.currentPage < pagination.nbPages && load(pagination.currentPage + 1)" aria-label="Next">' +
-            '           <span aria-hidden="true">&raquo;</span>' +
-            '       </a>' +
-            '   </li>' +
-            '</ul>'
+                '   <li ng-class="{disabled: pagination.currentPage === 1}">' +
+                '       <a href="javascript:void(0)" ng-click="pagination.currentPage > 1 && load( pagination.currentPage - 1 )" aria-label="Previous">' +
+                '           <span aria-hidden="true">&laquo;</span>' +
+                '       </a>' +
+                '   </li>' +
+                '   <li class="disabled" ng-repeat-start="p in pagination.list" ng-if="$index > 2 && $index === (pagination.currentPage - 5) ">' +
+                '       <a href="javascript:void(0)">...</a>' +
+                '   </li>' +
+                '   <li ng-class="{active : p.active}" ng-if="$index < 3 || ( $index > (pagination.currentPage - 5) && $index < (pagination.currentPage + 3) ) || $index > ( pagination.nbPages - 4 )">' +
+                '       <a href="javascript:void(0)" ng-click="load(p.index)">{{p.index}}</a>' +
+                '   </li>' +
+                '   <li class="disabled" ng-if="$index <= ( pagination.nbPages - 4 ) && $index === (pagination.currentPage + 3) " ng-repeat-end>' +
+                '       <a href="javascript:void(0)">...</a>' +
+                '   </li>' +
+                '   <li ng-class="{disabled: pagination.currentPage === pagination.nbPages}">' +
+                '       <a href="javascript:void(0)" ng-click="pagination.currentPage < pagination.nbPages && load(pagination.currentPage + 1)" aria-label="Next">' +
+                '           <span aria-hidden="true">&raquo;</span>' +
+                '       </a>' +
+                '   </li>' +
+                '</ul>'
         };
     });

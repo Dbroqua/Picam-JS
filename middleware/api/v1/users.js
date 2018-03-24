@@ -2,13 +2,14 @@
  * Created by dbroqua on 8/16/16.
  */
 
-let users = require('../../../models/v1/users'),
+const users = require('../../../models/v1/users'),
     libs = require('../../libs/query'),
-    errors = require('../../libs/errors'),
-    params = {
-        dataModel: users.dataModel,
-        model: users.model
-    };
+    errors = require('../../libs/errors');
+
+let params = {
+    dataModel: users.dataModel,
+    model: users.model
+};
 
 class Users {
     /**
@@ -26,7 +27,7 @@ class Users {
      * @param {Function} callback
      */
     static getAll(req, callback) {
-        libs.getAll(params, req, function (err, data) {
+        libs.getAll(params, req, function(err, data) {
             if (err) {
                 errors.errorCatcher(err, callback);
             } else {
@@ -49,7 +50,7 @@ class Users {
      * @param {Function} callback
      */
     static getOne(req, callback) {
-        libs.getOne(params, req, function (err, data) {
+        libs.getOne(params, req, function(err, data) {
             if (err) {
                 errors.errorCatcher(err, callback);
             } else {
@@ -75,18 +76,28 @@ class Users {
          * @param {Function} callback
          * @private
          */
-        let _runAction = function (req, callback) {
+        let _runAction = function(req, callback) {
             libs.patchOne(params, req, callback);
         };
 
         if (req.body.password !== undefined) {
-            users.bcrypt.genSalt(users.SALT_WORK_FACTOR, function (err, salt) {
+            users.bcrypt.genSalt(users.SALT_WORK_FACTOR, function(err, salt) {
                 if (err) {
-                    callback(err, {code: 500, res: {message: 'Internal server error'}});
+                    callback(err, {
+                        code: 500,
+                        res: {
+                            message: 'Internal server error'
+                        }
+                    });
                 } else {
-                    users.bcrypt.hash(req.body.password, salt, function (err, hash) {
+                    users.bcrypt.hash(req.body.password, salt, function(err, hash) {
                         if (err) {
-                            callback(err, {code: 500, res: {message: 'Internal server error'}});
+                            callback(err, {
+                                code: 500,
+                                res: {
+                                    message: 'Internal server error'
+                                }
+                            });
                         } else {
                             req.body.password = hash;
                             _runAction(req, callback);
@@ -104,7 +115,7 @@ class Users {
      * @param {Object} req
      * @param {Function} callback
      */
-    static deleteOne (req, callback) {
+    static deleteOne(req, callback) {
         libs.deleteOne(params, req, callback);
     }
 }

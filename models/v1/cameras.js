@@ -2,8 +2,9 @@
  * Created by dbroqua on 8/16/16.
  */
 
-let mongoose = require('../../common').mongoose,
-    Schema = mongoose.Schema,
+const mongoose = require('../../common').mongoose;
+
+let Schema = mongoose.Schema,
     dataModel = {
         name: {
             type: String,
@@ -68,7 +69,13 @@ let mongoose = require('../../common').mongoose,
             }
         }
     },
-    schema = new mongoose.Schema(dataModel, {versionKey: false, strict: true, timestamps: {createdAt: 'created_at'}});
+    schema = new mongoose.Schema(dataModel, {
+        versionKey: false,
+        strict: true,
+        timestamps: {
+            createdAt: 'created_at'
+        }
+    });
 
 module.exports = {
     model: mongoose.model('cameras', schema),

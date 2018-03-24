@@ -50,15 +50,11 @@
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-concat": "^2.6.0",
-    "gulp-jscs": "^4.0.0",
-    "gulp-jscs-stylish": "^1.4.0",
-    "gulp-jshint": "^2.1.0",
+    "gulp-eslint": "^4.0.2",
     "gulp-less": "^3.1.0",
     "gulp-livereload": "^3.8.1",
     "gulp-plumber": "^1.1.0",
     "gulp-util": "^3.0.7",
-    "gulp-watch": "^4.3.9",
-    "jshint": "^2.9.5",
-    "jshint-stylish": "^2.2.1"
+    "gulp-watch": "^4.3.9"
   }
 }
