@@ -34,6 +34,7 @@ class Files {
                     let camera = data.res;
                     if (camera.type === 'Local') {
                         let directory = camera.definition.filesDirectory;
+
                         fs.stat(directory, function(err, stats) {
                             if (err) {
                                 errors.errorCatcher(err, callback);
@@ -57,10 +58,11 @@ class Files {
                                                     resources: []
                                                 };
 
+                                            res.resources = files;
+
                                             if (urlParams.page !== undefined && urlParams.limit !== undefined && urlParams.limit > 0) {
                                                 limit = Number(urlParams.limit);
                                                 page = Number(urlParams.page) - 1;
-
                                                 if (page >= 0 && nbFiles > (Number(urlParams.limit) * (Number(urlParams.page) - 1))) {
                                                     res.page = page;
                                                     res.limit = limit;
@@ -79,6 +81,7 @@ class Files {
                                             let _runCallback = function() {
                                                 if (readFiles === nbFiles) {
                                                     res.filteredRows = res.resources.length;
+                                                    code = (res.filteredRows > 0 ? 200 : 204);
                                                     callback(null, {
                                                         code: code,
                                                         res: res
@@ -93,7 +96,6 @@ class Files {
                                              * @private
                                              */
                                             let _statFile = function(file, index) {
-                                                console.log('Path: ', file);
                                                 fs.stat(path.join(directory, file), function(err, stats) {
                                                     readFiles++;
                                                     let splitedFile = file.split('.');
