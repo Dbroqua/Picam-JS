@@ -4,22 +4,24 @@
 
 /**
  * Route declaration for Cameras
+ *
  * @param {Object} params
+ * @returns {Object}
  */
 module.exports = function(params) {
-    let basePath = params.baseUrl + 'cameras',
+    const middle = require('../../middleware/api/v1/cameras'),
+        middleFiles = require('../../middleware/api/v1/files'),
+        proxy = require('http-proxy'),
+        exec = require('child_process'),
+        fs = require('fs'),
+        request = require('request');
+    const basePath = params.baseUrl + 'cameras',
         specificItem = basePath + '/:id',
         streamItem = specificItem + '/stream',
         filesItem = specificItem + '/files',
         specificFilesItem = filesItem + '/:file',
-        router = params.router,
-        passport = params.passport,
-        middle = require('../../middleware/api/v1/cameras'),
-        middleFiles = require('../../middleware/api/v1/files'),
-        apiProxy = require('http-proxy').createProxyServer(),
-        exec = require('child_process').exec,
-        fs = require('fs'),
-        request = require('request');
+        passport = params.passport;
+    let router = params.router;
 
     router.route(basePath)
         .get(
@@ -90,11 +92,14 @@ module.exports = function(params) {
                 middle.getOne(req, function(err, data) {
                     if (data.code === 200) {
                         let isOk = false,
-                            item = data.res;
+                            item = data.res,
+                            apiProxy = proxy.createProxyServer();
                         req.url = '';
+
                         switch (item.type) {
                             case 'Local':
-                                exec('grep "stream_authentication" /etc/motion.conf|cut -d" " -f 2', function(err, stdout) {
+                                //TODO: at this time auth does not work
+                                exec.exec('grep "stream_authentication" /etc/motion/motion.conf|cut -d" " -f 2', function(err, stdout) {
                                     if (!err) {
                                         apiProxy.web(req, res, {
                                             target: item.definition.motion.streamUri,
@@ -134,7 +139,9 @@ module.exports = function(params) {
                         res.status(data.code).send(data.res).end();
                     }
                 });
-            })
+            });
+
+    router.route(filesItem)
         .get(
             passport.authenticate(['basic', 'api-key'], {
                 session: false

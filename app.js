@@ -2,9 +2,7 @@
  * Created by dbroqua on 8/16/16.
  */
 
-let baseUrl = '/api/v1/', //Base url for REST API
-    //Declaration of requirement
-    express = require('express'),
+const express = require('express'),
     path = require('path'),
     fs = require('fs'),
     favicon = require('serve-favicon'),
@@ -13,8 +11,11 @@ let baseUrl = '/api/v1/', //Base url for REST API
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     passport = require('passport'),
-    app = express(),
     env = require('./config');
+const baseUrl = '/api/v1/'; //Base url for REST API
+let app = express(),
+    logDirectory = path.join(__dirname, 'logs');
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 /**
@@ -31,24 +32,34 @@ app.set('env', env.env.env);
 /**
  * Logs
  */
-let logDirectory = __dirname + '/logs';
-//Ensure log directory exists
-if (!fs.existsSync(logDirectory)) {
-    fs.mkdirSync(logDirectory);
-}
-//Create a rotating write stream
-let accessLogStream = FileStreamRotator.getStream({
-    date_format: 'YYYYMMDD',
-    filename: logDirectory + '/access-%DATE%.log',
-    frequency: 'daily',
-    verbose: true
+let setLogs = function() {
+    //Create a rotating write stream
+    let accessLogStream = FileStreamRotator.getStream({
+        date_format: 'YYYYMMDD',
+        filename: logDirectory + '/access-%DATE%.log',
+        frequency: 'daily',
+        verbose: true
+    });
+    app.use(morgan('combined', {
+        stream: accessLogStream
+    })); //Log file
+    if (app.get('env') === 'development') {
+        app.use(morgan('dev')); //Console log
+    }
+};
+fs.stat(logDirectory, function(err, stats) {
+    if (err) {
+        fs.mkdir(logDirectory, function(err) {
+            if (err) {
+                //throw exception
+            } else {
+                setLogs();
+            }
+        })
+    } else {
+        setLogs();
+    }
 });
-app.use(morgan('combined', {
-    stream: accessLogStream
-})); //Log file
-if (app.get('env') === 'development') {
-    app.use(morgan('dev')); //Console log
-}
 
 /**
  * Set public dir's
@@ -74,6 +85,7 @@ app.use(passport.initialize()); //Initialize passport transaction
  */
 app.use('/',
     /**
+     * Set defaults Headers
      *
      * @param {Object} req
      * @param {Object} res

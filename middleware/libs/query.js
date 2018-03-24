@@ -15,7 +15,9 @@ Object.size = function(obj) {
     let size = 0,
         key;
     for (key in obj) {
-        size++;
+        if (obj.hasOwnProperty(key)) {
+            size++;
+        }
     }
     return size;
 };
@@ -125,24 +127,26 @@ class Queries {
             _runCallBack();
         } else {
             for (let key in urlParams) {
-                //Extracting query filters
-                let params = key.split('.'), //Split key in data
-                    paramsLength = params.length;
-                if (params[0] === 'q' && paramsLength >= 3) {
-                    value = urlParams[key]; //Value of current item
-                    comparisonSymbol = params[paramsLength - 1]; //Type of query (like, <, >, in, ...)
-                    searchCol = ''; //final search key in object
+                if (urlParams.hasOwnProperty(key)) {
+                    //Extracting query filters
+                    let params = key.split('.'), //Split key in data
+                        paramsLength = params.length;
+                    if (params[0] === 'q' && paramsLength >= 3) {
+                        value = urlParams[key]; //Value of current item
+                        comparisonSymbol = params[paramsLength - 1]; //Type of query (like, <, >, in, ...)
+                        searchCol = ''; //final search key in object
 
-                    for (let i = 1; i < paramsLength - 1; i++) {
-                        searchCol += (searchCol !== '' ? '.' : '') + params[i];
+                        for (let i = 1; i < paramsLength - 1; i++) {
+                            searchCol += (searchCol !== '' ? '.' : '') + params[i];
+                        }
+
+                        currentIndex++;
+                        _queryType(value, comparisonSymbol);
+                        _runCallBack();
+                    } else {
+                        currentIndex++;
+                        _runCallBack();
                     }
-
-                    currentIndex++;
-                    _queryType(value, comparisonSymbol);
-                    _runCallBack();
-                } else {
-                    currentIndex++;
-                    _runCallBack();
                 }
             }
         }

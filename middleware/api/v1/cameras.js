@@ -2,17 +2,18 @@
  * Created by dbroqua on 8/16/16.
  */
 
-let cameras = require('../../../models/v1/cameras'),
+const cameras = require('../../../models/v1/cameras'),
     libs = require('../../libs/query'),
     errors = require('../../libs/errors'),
     fs = require('fs'),
     requestSync = require('sync-request'),
     request = require('request'),
-    exec = require('child_process').exec,
-    params = {
-        dataModel: cameras.dataModel,
-        model: cameras.model
-    };
+    exec = require('child_process').exec;
+
+let params = {
+    dataModel: cameras.dataModel,
+    model: cameras.model
+};
 
 class Cameras {
     /**
