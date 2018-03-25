@@ -28,8 +28,8 @@ angular.module('PiCam', [
     ])
     //Redirections
     .config([
-        '$routeProvider',
-        function($routeProvider) {
+        '$routeProvider', '$locationProvider',
+        function($routeProvider, $locationProvider) {
             $routeProvider
                 .when('/home/', {
                     templateUrl: 'modules/HomePage/default.html',
@@ -70,16 +70,19 @@ angular.module('PiCam', [
                 .otherwise({
                     redirectTo: '/cameras/'
                 });
+
+            $locationProvider.html5Mode(true);
         }
     ])
     //RootScope control
-    .run(['$rootScope', '$location', 'HTTPService',
-        function($rootScope, $location, HTTPService) {
+    .run(['$rootScope', '$location', 'HTTPService', 'breadcrumbs',
+        function($rootScope, $location, HTTPService, breadcrumbs) {
             $rootScope.bodyClass = '';
             $rootScope.isLogged = false;
             $rootScope.SERVER_PATH = SERVER_PATH;
             $rootScope.apikey = null;
             $rootScope.containerClass = '';
+            $rootScope.breadcrumbs = breadcrumbs;
 
             $rootScope.logOut = function() {
                 HTTPService.logout(function() {
@@ -88,15 +91,11 @@ angular.module('PiCam', [
                 });
             };
 
-            //Change the route to trigger the route dispatcher
-            $rootScope.changeRoute = function(path) {
-                if ($location.path() !== path) {
-                    $location.path(path);
-                    return true;
-                }
-                return false;
-            };
-            //Check root
+            /**
+             * Check if route contains pattern (used in nav menu)
+             * @param  {String} pattern
+             * @return {Boolean}
+             */
             $rootScope.routeContains = function(pattern) {
                 var currentRoot = $location.path();
                 return currentRoot.indexOf(pattern) >= 0;
@@ -119,4 +118,33 @@ angular.module('PiCam', [
                 }
             );
         }
-    ]);
+    ])
+    .factory('breadcrumbs', ['$rootScope', '$location', function($rootScope, $location) {
+        let breadcrumbs = [],
+            breadcrumbsService = {};
+
+        $rootScope.$on('$routeChangeSuccess', function(event, current) {
+            let pathElements = $location.path().split('/'),
+                result = [];
+
+            let breadcrumbPath = function(index) {
+                return '/' + (pathElements.slice(0, index + 1)).join('/');
+            };
+
+            pathElements.shift();
+            for (let i = 0; i < pathElements.length; i++) {
+                result.push({
+                    name: pathElements[i].charAt(0).toUpperCase() + pathElements[i].slice(1),
+                    path: breadcrumbPath(i)
+                });
+            }
+
+            breadcrumbs = result;
+        });
+
+        breadcrumbsService.getAll = function() {
+            return breadcrumbs;
+        };
+
+        return breadcrumbsService;
+    }]);

@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html ng-app="PiCam">
+
 <head lang="en">
     <meta charset="UTF-8">
     <title ng-bind="title"></title>
+    <base href="/">
 
     <!-- Styles -->
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
@@ -13,12 +15,15 @@
     <link rel="stylesheet" href="css/main.css">
 
     <style type="text/css">
-        html, body {
+        html,
+        body {
             height: 100%;
         }
+
         body {
             margin: 0;
         }
+
         .flex-container {
             height: 100%;
             padding: 0;
@@ -33,101 +38,112 @@
         }
     </style>
 </head>
+
 <body ng-class="bodyClass">
-<!-- Fixed navbar -->
-<nav class="navbar navbar-default navbar-fixed-top" ng-if="isLogged">
-    <div style="padding:0 10px;">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="false" aria-controls="navbar">
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top" ng-if="isLogged">
+        <div style="padding:0 10px;">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="javascript:void(0)" ng-click="changeRoute('Home')">PiCam</a>
+                <a class="navbar-brand" href="/home">PiCam</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+
+                    <li class="dropdown" ng-class="{'active': routeContains('cameras')}">
+                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            Cameras
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/cameras/add"><i class="glyphicon glyphicon-plus"></i>Add</a></li>
+                            <li><a href="/cameras"><i class="glyphicon glyphicon-list"></i>View</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown" ng-class="{'active': routeContains('administration')}">
+                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            Administration
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-header">Users</li>
+                            <li><a href="/administration/users/add"><i class="glyphicon glyphicon-plus"></i>Add</a></li>
+                            <li><a href="/administration/users"><i class="glyphicon glyphicon-list"></i>View</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="javascript:void(0)" ng-click="logOut()">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                            Log out
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
+    </nav>
 
-                <li class="dropdown"
-                    ng-class="{'active': routeContains('cameras')}">
-                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                       aria-haspopup="true" aria-expanded="false">Cameras<span
-                            class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="javascript:void(0)" ng-click="changeRoute('cameras/add')"><i
-                                class="glyphicon glyphicon-plus"></i>Add</a></li>
-                        <li><a href="javascript:void(0)" ng-click="changeRoute('cameras')"><i
-                                class="glyphicon glyphicon-list"></i>View</a></li>
-                    </ul>
-                </li>
+    <div class="container view-animate">
+        <ol class="breadcrumb" ng-if="isLogged">
+            <li ng-repeat-start="breadcrumb in breadcrumbs.getAll()" ng-if="$last" class="active">
+                {{breadcrumb.name}}
+            </li>
+            <li ng-repeat-end ng-if="!$last">
+                <a href="{{breadcrumb.path}}">
+                    {{breadcrumb.name}}
+                </a>
+            </li>
+        </ol>
 
-                <li class="dropdown"
-                    ng-class="{'active': routeContains('administration')}">
-                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                       aria-haspopup="true" aria-expanded="false">Administration<span
-                            class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-header">Users</li>
-                        <li><a href="javascript:void(0)" ng-click="changeRoute('administration/users/add')"><i
-                                class="glyphicon glyphicon-plus"></i>Add</a></li>
-                        <li><a href="javascript:void(0)" ng-click="changeRoute('administration/users')"><i
-                                class="glyphicon glyphicon-list"></i>View</a></li>
-                    </ul>
-                </li>
-
-
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="javascript:void(0)" ng-click="logOut()"><span class="glyphicon glyphicon-log-out"
-                                                                           aria-hidden="true"></span> Log out</a></li>
-            </ul>
-        </div><!--/.nav-collapse -->
+        <div ng-view></div>
     </div>
-</nav>
+    <div class="clearfix"></div>
 
-<div class="view-animate" ng-view ng-class="containerClass"></div>
-<div class="clearfix"></div>
-
-<footer class="navbar navbar-default navbar-fixed-bottom">
-    <div class="container">
-        <p class="text-muted text-center">
-            &copy; DBroqua -
-            <a href="https://github.com/Dbroqua/Picam-JS" target="_blank">
+    <footer class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container">
+            <p class="text-muted text-center">
+                &copy; DBroqua -
+                <a href="https://github.com/Dbroqua/Picam-JS" target="_blank">
                 <i class="fa fa-github" aria-hidden="true"></i>
                 PiCam-JS
             </a>
-        </p>
-    </div>
-</footer>
+            </p>
+        </div>
+    </footer>
 
-<!-- BOWER COMPONENTS -->
-<script type="text/javascript" src="/static/jquery/dist/jquery.min.js"></script>
-<script type="text/javascript" src="/static/bootstrap/dist/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/static/bootbox/bootbox.js"></script>
+    <script type="text/javascript" src="/static/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/bootbox/bootbox.js"></script>
 
-<script type="text/javascript" src="/static/angular/angular.min.js"></script>
-<script type="text/javascript" src="/static/angular-base64/angular-base64.min.js"></script>
-<script type="text/javascript" src="/static/angular-cookies/angular-cookies.min.js"></script>
-<script type="text/javascript" src="/static/angular-toastr/dist/angular-toastr.tpls.js"></script>
-<script type="text/javascript" src="/static/angular-route/angular-route.min.js"></script>
-<script type="text/javascript" src="/static/ngbootbox/dist/ngBootbox.min.js"></script>
+    <script type="text/javascript" src="/static/angular/angular.min.js"></script>
+    <script type="text/javascript" src="/static/angular-base64/angular-base64.min.js"></script>
+    <script type="text/javascript" src="/static/angular-cookies/angular-cookies.min.js"></script>
+    <script type="text/javascript" src="/static/angular-toastr/dist/angular-toastr.tpls.js"></script>
+    <script type="text/javascript" src="/static/angular-route/angular-route.min.js"></script>
+    <script type="text/javascript" src="/static/ngbootbox/dist/ngBootbox.min.js"></script>
 
-<!-- APP Scripts -->
-<script src="js/env.js"></script>
-<script src="js/app.js"></script>
-<!-- Controller & Services -->
+    <!-- APP Scripts -->
+    <script src="js/env.js"></script>
+    <script src="js/app.js"></script>
+    <!-- Controller & Services -->
 
-<script type="text/javascript" src="js/modules/HTTP.js"></script>
-<script type="text/javascript" src="js/modules/Authentication.js"></script>
-<script type="text/javascript" src="js/modules/HomePage.js"></script>
-<script type="text/javascript" src="js/modules/Cameras.js"></script>
-<script type="text/javascript" src="js/modules/Camera.js"></script>
-<script type="text/javascript" src="js/modules/CameraStream.js"></script>
-<script type="text/javascript" src="js/modules/CameraFiles.js"></script>
-<script type="text/javascript" src="js/modules/Users.js"></script>
-<script type="text/javascript" src="js/modules/User.js"></script>
+    <script type="text/javascript" src="js/modules/HTTP.js"></script>
+    <script type="text/javascript" src="js/modules/Authentication.js"></script>
+    <script type="text/javascript" src="js/modules/HomePage.js"></script>
+    <script type="text/javascript" src="js/modules/Cameras.js"></script>
+    <script type="text/javascript" src="js/modules/Camera.js"></script>
+    <script type="text/javascript" src="js/modules/CameraStream.js"></script>
+    <script type="text/javascript" src="js/modules/CameraFiles.js"></script>
+    <script type="text/javascript" src="js/modules/Users.js"></script>
+    <script type="text/javascript" src="js/modules/User.js"></script>
 
 </body>
+
 </html>
