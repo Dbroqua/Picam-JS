@@ -16,6 +16,9 @@ body .link {
 body #toast-container {
   z-index: 2031 !important;
 }
+body .container {
+  margin-bottom: 22px;
+}
 body footer.navbar {
   height: 32px !important;
   min-height: 32px !important;

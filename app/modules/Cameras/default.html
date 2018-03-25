@@ -1,93 +1,91 @@
-<div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-    <table class="table table-striped table-bordered table-hover table-responsive col-xs-12">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>States</th>
-            <th>Information</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="camera in Cameras"
-            ng-class="{'success': camera.infos.state === 'Running' && camera.infos.detectionState === 'Active',
-                'warning': camera.infos.state === 'Running' && camera.infos.detectionState === 'Pause',
-                'danger': camera.infos.state === 'Stop'}">
-            <td ng-hide="camera.isLoading">
-                <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        {{camera.name}}
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li ng-class="{'disabled': camera.infos.state === 'Stop'}">
-                            <a href="javascript:void(0)" ng-click="changeRoute('cameras/'+ camera._id + '/stream/')">
-                                View stream
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)" ng-click="changeRoute('cameras/'+ camera._id + '/files/')">
-                                View files
-                            </a>
-                        </li>
-                        <li role="separator" class="divider"></li>
-                        <li ng-class="{'disabled': camera.infos.state === 'Running'}">
-                            <a href="javascript:void(0)"
-                               ng-click="patchCamera(camera._id,{infos: {state: 'Running'}});">
-                                Start motion
-                            </a>
-                        </li>
-                        <li ng-class="{'disabled': camera.infos.state === 'Stop'}">
-                            <a href="javascript:void(0)" ng-click="patchCamera(camera._id,{infos: {state: 'Stop' }});">
-                                Stop motion
-                            </a>
-                        </li>
-                        <li ng-class="{'disabled': camera.infos.detectionState === 'Active'}">
-                            <a href="javascript:void(0)"
-                               ng-click="patchCamera(camera._id,{infos: {detectionState: 'Active'}});">
-                                Start detection
-                            </a>
-                        </li>
-                        <li ng-class="{'disabled': camera.infos.detectionState === 'Pause'}">
-                            <a href="javascript:void(0)"
-                               ng-click="patchCamera(camera._id,{infos: {detectionState: 'Pause' }});">
-                                Pause detection
-                            </a>
-                        </li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="javascript:void(0)" ng-click="viewCameraDetails(camera._id);">Edit camera</a></li>
-                        <li><a href="javascript:void(0)" ng-click="deleteCamera(camera._id);">Delete camera</a></li>
-                    </ul>
-                </div>
-            </td>
-            <td ng-hide="camera.isLoading">
-                <strong>Motion:</strong>
-                <span ng-bind="camera.infos.state"></span>
-                <br/>
-                <strong>Detection:</strong>
-                <span ng-bind="camera.infos.detectionState"></span>
-            </td>
-            <td ng-hide="camera.isLoading">
-                <strong>Started at:</strong>
-                <span ng-if="camera.infos.state === 'Running'"
-                      ng-bind="camera.infos.startedAt | date : 'medium'"></span>
-                <br/>
-                <strong>Last detection:</strong>
-                <span ng-bind="camera.infos.lastDetection | date : 'medium'"></span>
-            </td>
-            <td ng-show="camera.isLoading" colspan="3" class="loaderRow text-center">
-                <img src="/resources/img/loader.gif"/>
-            </td>
-        </tr>
-        <tr ng-if="!loadingList && camera.length <= 0">
-            <td colspan="3" class="emptyRow">No camera found</td>
-        </tr>
-        <tr ng-if="loadingList">
-            <td colspan="3" class="loaderRow text-center">
-                <img src="/resources/img/loader.gif"/>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <pagination></pagination>
-</div>
+<table class="table table-striped table-bordered table-hover table-responsive col-xs-12">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>States</th>
+        <th>Information</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="camera in Cameras"
+        ng-class="{'success': camera.infos.state === 'Running' && camera.infos.detectionState === 'Active',
+            'warning': camera.infos.state === 'Running' && camera.infos.detectionState === 'Pause',
+            'danger': camera.infos.state === 'Stop'}">
+        <td ng-hide="camera.isLoading">
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    {{camera.name}}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li ng-class="{'disabled': camera.infos.state === 'Stop'}">
+                        <a ng-href="/cameras/{{camera._id}}/stream/">
+                            View stream
+                        </a>
+                    </li>
+                    <li>
+                        <a ng-href="/cameras/{{camera._id}}/files/">
+                            View files
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li ng-class="{'disabled': camera.infos.state === 'Running'}">
+                        <a href="javascript:void(0)"
+                           ng-click="patchCamera(camera._id,{infos: {state: 'Running'}});">
+                            Start motion
+                        </a>
+                    </li>
+                    <li ng-class="{'disabled': camera.infos.state === 'Stop'}">
+                        <a href="javascript:void(0)" ng-click="patchCamera(camera._id,{infos: {state: 'Stop' }});">
+                            Stop motion
+                        </a>
+                    </li>
+                    <li ng-class="{'disabled': camera.infos.detectionState === 'Active'}">
+                        <a href="javascript:void(0)"
+                           ng-click="patchCamera(camera._id,{infos: {detectionState: 'Active'}});">
+                            Start detection
+                        </a>
+                    </li>
+                    <li ng-class="{'disabled': camera.infos.detectionState === 'Pause'}">
+                        <a href="javascript:void(0)"
+                           ng-click="patchCamera(camera._id,{infos: {detectionState: 'Pause' }});">
+                            Pause detection
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="javascript:void(0)" ng-click="viewCameraDetails(camera._id);">Edit camera</a></li>
+                    <li><a href="javascript:void(0)" ng-click="deleteCamera(camera._id);">Delete camera</a></li>
+                </ul>
+            </div>
+        </td>
+        <td ng-hide="camera.isLoading">
+            <strong>Motion:</strong>
+            <span ng-bind="camera.infos.state"></span>
+            <br/>
+            <strong>Detection:</strong>
+            <span ng-bind="camera.infos.detectionState"></span>
+        </td>
+        <td ng-hide="camera.isLoading">
+            <strong>Started at:</strong>
+            <span ng-if="camera.infos.state === 'Running'"
+                  ng-bind="camera.infos.startedAt | date : 'medium'"></span>
+            <br/>
+            <strong>Last detection:</strong>
+            <span ng-bind="camera.infos.lastDetection | date : 'medium'"></span>
+        </td>
+        <td ng-show="camera.isLoading" colspan="3" class="loaderRow text-center">
+            <img src="/resources/img/loader.gif"/>
+        </td>
+    </tr>
+    <tr ng-if="!loadingList && camera.length <= 0">
+        <td colspan="3" class="emptyRow">No camera found</td>
+    </tr>
+    <tr ng-if="loadingList">
+        <td colspan="3" class="loaderRow text-center">
+            <img src="/resources/img/loader.gif"/>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<pagination></pagination>

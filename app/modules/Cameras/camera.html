@@ -1,56 +1,48 @@
 <div class="flex-container" ng-if="isLoading">
-    <img src="/resources/img/loader.gif"/>
+    <img src="/resources/img/loader.gif" />
 </div>
 <div class="col-xs-12 text-center" ng-if="!isLoading">
     <h1 ng-if="Camera.name.length > 0 ">
         {{Camera.name}}
     </h1>
 </div>
-<div class="col-xs-12 col-md-6 col-md-offset-3" ng-if="!isLoading">
-    <form novalidate>
-        <table class="table table-striped table-bordered table-hover table-responsive">
-            <tfoot>
+<form novalidate ng-if="!isLoading">
+    <table class="table table-striped table-bordered table-hover table-responsive">
+        <tfoot>
             <tr>
                 <td colspan="2" class="text-center">
                     <button type="submit" class="btn btn-primary" ng-click="updateCamera()" ng-bind="cameraId !== null ? 'Update' : 'Create'"></button>
                     <button type="button" class="btn btn-danger" ng-click="deleteCamera()" ng-if="cameraId !== null">Delete</button>
                 </td>
             </tr>
-            </tfoot>
-            <tbody>
+        </tfoot>
+        <tbody>
             <tr ng-if="cameraId !== null">
                 <td>State</td>
                 <td>
-                <span class='btn'
-                      ng-class="{'btn-success': Camera.infos.state === 'Running', 'btn-danger': Camera.infos.state === 'Stop'}"
-                      ng-click="patchCamera(cameraId,{infos: {state: (Camera.infos.state === 'Running' ? 'Stop' : 'Running') }});">
+                    <span class='btn' ng-class="{'btn-success': Camera.infos.state === 'Running', 'btn-danger': Camera.infos.state === 'Stop'}" ng-click="patchCamera(cameraId,{infos: {state: (Camera.infos.state === 'Running' ? 'Stop' : 'Running') }});">
                      <span ng-if="Camera.infos.state === 'Running'" class="glyphicon glyphicon-ok"
                            aria-hidden="true"></span>
-                    <span ng-if="Camera.infos.state === 'Stop'" class="glyphicon glyphicon-stop"
-                          aria-hidden="true"></span>
+                    <span ng-if="Camera.infos.state === 'Stop'" class="glyphicon glyphicon-stop" aria-hidden="true"></span>
                     <span ng-bind="Camera.infos.state"></span>
-                </span>
+                    </span>
                 </td>
             </tr>
             <tr ng-if="cameraId !== null">
                 <td>Detection state</td>
                 <td>
-                <span class='btn'
-                      ng-class="{'btn-success': Camera.infos.detectionState === 'Active', 'btn-warning': Camera.infos.detectionState === 'Pause'}"
-                      ng-click="patchCamera(cameraId,{infos: {detectionState: (Camera.infos.detectionState === 'Active' ? 'Pause' : 'Active') }});">
+                    <span class='btn' ng-class="{'btn-success': Camera.infos.detectionState === 'Active', 'btn-warning': Camera.infos.detectionState === 'Pause'}" ng-click="patchCamera(cameraId,{infos: {detectionState: (Camera.infos.detectionState === 'Active' ? 'Pause' : 'Active') }});">
                     <span ng-if="Camera.infos.detectionState === 'Active'" class="glyphicon glyphicon-play"
                           aria-hidden="true"></span>
-                    <span ng-if="Camera.infos.detectionState === 'Pause'" class="glyphicon glyphicon-pause"
-                          aria-hidden="true"></span>
+                    <span ng-if="Camera.infos.detectionState === 'Pause'" class="glyphicon glyphicon-pause" aria-hidden="true"></span>
                     <span ng-bind="Camera.infos.detectionState"></span>
-                </span>
+                    </span>
                 </td>
             </tr>
             <tr ng-if="cameraId !== null">
                 <td>started at</td>
                 <td>
-                <span ng-if="Camera.infos.state === 'Running'"
-                      ng-bind="Camera.infos.startedAt | date : 'medium'"></span>
+                    <span ng-if="Camera.infos.state === 'Running'" ng-bind="Camera.infos.startedAt | date : 'medium'"></span>
                 </td>
             </tr>
             <tr ng-if="cameraId !== null">
@@ -77,28 +69,23 @@
             </tr>
             <tr ng-if="updatedValues.type === 'Local'">
                 <td><label for="fileIntrustion">File intrusion</label></td>
-                <td><input type="text" class="form-control" name="fileIntrustion"
-                           ng-model="updatedValues.definition.fileIntrustion" id="fileIntrustion"></td>
+                <td><input type="text" class="form-control" name="fileIntrustion" ng-model="updatedValues.definition.fileIntrustion" id="fileIntrustion"></td>
             </tr>
             <tr ng-if="updatedValues.type === 'Local'">
                 <td><label for="filesDirectory">Files directory</label></td>
-                <td><input type="text" class="form-control" name="filesDirectory"
-                           ng-model="updatedValues.definition.filesDirectory" id="filesDirectory"></td>
+                <td><input type="text" class="form-control" name="filesDirectory" ng-model="updatedValues.definition.filesDirectory" id="filesDirectory"></td>
             </tr>
             <tr ng-if="updatedValues.type === 'Local'">
                 <td><label for="id">Motion id</label></td>
-                <td><input type="text" class="form-control" name="id" ng-model="updatedValues.definition.motion.id"
-                           id="id"></td>
+                <td><input type="text" class="form-control" name="id" ng-model="updatedValues.definition.motion.id" id="id"></td>
             </tr>
             <tr ng-if="updatedValues.type === 'Local'">
                 <td><label for="adminUri">Motion admin url</label></td>
-                <td><input type="text" class="form-control" name="adminUri"
-                           ng-model="updatedValues.definition.motion.adminUri" id="adminUri"></td>
+                <td><input type="text" class="form-control" name="adminUri" ng-model="updatedValues.definition.motion.adminUri" id="adminUri"></td>
             </tr>
             <tr ng-if="updatedValues.type === 'Local'">
                 <td><label for="streamUri">Motion stream url</label></td>
-                <td><input type="text" class="form-control" name="streamUri"
-                           ng-model="updatedValues.definition.motion.streamUri" id="streamUri"></td>
+                <td><input type="text" class="form-control" name="streamUri" ng-model="updatedValues.definition.motion.streamUri" id="streamUri"></td>
             </tr>
             <tr ng-if="updatedValues.type === 'Net'">
                 <td><label for="scheme">Scheme</label></td>
@@ -116,13 +103,11 @@
             </tr>
             <tr ng-if="updatedValues.type === 'Net'">
                 <td><label for="port">Port</label></td>
-                <td><input type="number" class="form-control" name="port" ng-model="updatedValues.definition.port"
-                           id="port"></td>
+                <td><input type="number" class="form-control" name="port" ng-model="updatedValues.definition.port" id="port"></td>
             </tr>
             <tr ng-if="updatedValues.type === 'Net'">
                 <td><label for="apikey">Apikey</label></td>
-                <td><input type="text" class="form-control" name="apikey"
-                           ng-model="updatedValues.definition.apikey" id="apikey"></td>
+                <td><input type="text" class="form-control" name="apikey" ng-model="updatedValues.definition.apikey" id="apikey"></td>
             </tr>
             <tr ng-if="updatedValues.type === 'Net'">
                 <td><label for="cameraId">Camera id</label></td>
@@ -132,7 +117,6 @@
                     </select>
                 </td>
             </tr>
-            </tbody>
-        </table>
-    </form>
-</div>
+        </tbody>
+    </table>
+</form>
