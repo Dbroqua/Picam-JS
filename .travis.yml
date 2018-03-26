@@ -2,13 +2,5 @@ before_script:
   - npm install -g gulp
   - npm install
 services: mongodb
-script: 
+script:
   - gulp validate:eslint
-  - gulp build:css
-after_success:
-  - git config --global user.name "Travis build"
-  - git config --global user.email "dbroqua@mousur.org"
-  - git add app/css/main.css
-  - git commit -m "Build CSS"
-  - git remote add $TRAVIS_BRANCH https://dbroqua@${GITHUB_TOKEN}@github.com/Dbroqua/Picam-JS.git
-  - git push origin HEAD:$TRAVIS_BRANCH
