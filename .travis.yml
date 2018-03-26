@@ -10,5 +10,5 @@ after_success:
   - git config --global user.email "dbroqua@mousur.org"
   - git add app/css/main.css
   - git commit -m "Build CSS"
-  - git remote add origin-pages https://${GH_TOKEN}@github.com/Dbroqua/Picam-JS.git > /dev/null 2>&1
+  - git remote add $TRAVIS_BRANCH https://${GITHUB_TOKEN}@github.com/Dbroqua/Picam-JS.git > /dev/null 2>&1
   - git push origin HEAD:$TRAVIS_BRANCH
