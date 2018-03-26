@@ -2,21 +2,50 @@
  * Created by dbroqua on 8/16/16.
  */
 const gulp = require('gulp'),
+    uglify = require('gulp-uglify'),
     watch = require('gulp-watch'),
-    plumber = require('gulp-plumber'),
     autoprefixer = require('gulp-autoprefixer'),
     concat = require('gulp-concat'),
-    livereload = require('gulp-livereload'),
-    gutil = require('gulp-util'),
     less = require('gulp-less'),
+    cssmin = require('gulp-cssmin'),
     esLint = require('gulp-eslint');
-const sources = [
-    'bin/*.js',
-    'middleware/**/*.js',
-    'models/**/*.js',
-    'routes/**/*.js',
-    '*.js'
-];
+const css = ['build/less/*.less'],
+    libs = [
+        'node_modules/jquery/dist/jquery.min.js',
+        'node_modules/bootstrap/dist/js/bootstrap.min.js',
+        'node_modules/bootbox/bootbox.js',
+        'node_modules/angular/angular.min.js',
+        'node_modules/angular-base64/angular-base64.min.js',
+        'node_modules/angular-cookies/angular-cookies.min.js',
+        'node_modules/angular-toastr/dist/angular-toastr.tpls.js',
+        'node_modules/angular-route/angular-route.min.js',
+        'node_modules/ngbootbox/dist/ngBootbox.min.js'
+    ],
+    modules = [
+        'build/js/main.js',
+        'build/js/modules/*.js'
+    ],
+    sources = [
+        'bin/*.js',
+        'build/js/**/*.js',
+        'middleware/**/*.js',
+        'models/**/*.js',
+        'routes/**/*.js',
+        '*.js'
+    ],
+    uglifyOptions = {
+        compress: {
+            drop_console: true,
+            global_defs: {
+                'DEBUG': false
+            }
+        }
+    };
+
+let onError = function(err) {
+    console.log(err);
+    this.emit('end');
+}
 
 gulp.task('validate:eslint', function() {
     'use strict';
@@ -115,22 +144,42 @@ gulp.task('validate:eslint', function() {
         .pipe(esLint.format());
 });
 
-gulp.task('build:css', function() { // DEV Env
-    return gulp.src(['app/less/*.less'], {
-            base: 'app/'
+gulp.task('build:libs', function() {
+    return gulp.src(libs, {
+            base: '/'
         })
-        .pipe(plumber())
+        .pipe(uglify(uglifyOptions)).on('error', onError)
+        .pipe(concat('js/libs.min.js')).on('error', onError)
+        .pipe(gulp.dest('app'));
+});
+
+gulp.task('build:app', function() {
+    return gulp.src(modules, {
+            base: '/'
+        })
+        .pipe(uglify(uglifyOptions)).on('error', onError)
+        .pipe(concat('js/app.min.js')).on('error', onError)
+        .pipe(gulp.dest('app'));
+});
+
+gulp.task('build:css', function() {
+    return gulp.src(css, {
+            base: '/'
+        })
         .pipe(less({
             style: 'compressed'
-        }).on('error', gutil.log))
-        .pipe(autoprefixer('last 6 versions', '> 1%', 'Explorer 7', 'Android 2'))
-        .pipe(concat('main.css'))
+        }).on('error', onError))
+        .pipe(autoprefixer('last 4 versions', '> 1%', 'Explorer 7', 'Android 2'))
+        .pipe(concat('main.min.css'))
+        .pipe(cssmin().on('error', function(err) {
+            console.log(err);
+        }))
         .pipe(gulp.dest('app/css'))
-        .pipe(livereload())
 });
 
-gulp.task('dev', function() { // DEV Env watcher
-    gulp.watch(['app/less/*.less'], ['build:css']); // Watch all the .less files, then run the less task
-});
-
-gulp.task('default', ['validate:eslint']);
+gulp.task('build:watch', function() {
+    gulp.watch(css, ['build:css']);
+    gulp.watch(modules, ['build:app']);
+})
+gulp.task('build', ['build:css', 'build:libs', 'build:app']);
+gulp.task('default', ['build:watch']);

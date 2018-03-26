@@ -94,7 +94,7 @@ angular.module('PiCam', [
             /**
              * Check if route contains pattern (used in nav menu)
              * @param  {String} pattern
-             * @return {Boolean}
+             * @returns {Boolean}
              */
             $rootScope.routeContains = function(pattern) {
                 var currentRoot = $location.path();
@@ -120,19 +120,20 @@ angular.module('PiCam', [
         }
     ])
     .factory('breadcrumbs', ['$rootScope', '$location', function($rootScope, $location) {
-        let breadcrumbs = [],
+        var breadcrumbs = [],
             breadcrumbsService = {};
 
         $rootScope.$on('$routeChangeSuccess', function(event, current) {
-            let pathElements = $location.path().split('/'),
-                result = [];
+            var pathElements = $location.path().split('/'),
+                result = [],
+                i;
 
-            let breadcrumbPath = function(index) {
+            var breadcrumbPath = function(index) {
                 return '/' + (pathElements.slice(0, index + 1)).join('/');
             };
 
             pathElements.shift();
-            for (let i = 0; i < pathElements.length; i++) {
+            for (i = 0; i < pathElements.length; i++) {
                 result.push({
                     name: pathElements[i].charAt(0).toUpperCase() + pathElements[i].slice(1),
                     path: breadcrumbPath(i)
