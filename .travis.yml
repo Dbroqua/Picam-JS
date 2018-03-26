@@ -3,7 +3,7 @@ before_script:
   - npm install
 services: mongodb
 script: 
-  - gulp validate:lint
+  - gulp validate:eslint
   - gulp build:css
 after_success:
   - git config --global user.name "Travis build"
