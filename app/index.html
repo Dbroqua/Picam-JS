@@ -41,7 +41,7 @@
 
 <body ng-class="bodyClass">
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top" ng-if="isLogged">
+    <nav class="navbar navbar-default navbar-fixed-top ng-hide" ng-hide="!isLogged">
         <div style="padding:0 10px;">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -91,7 +91,7 @@
     </nav>
 
     <div class="container view-animate">
-        <ol class="breadcrumb" ng-if="isLogged">
+        <ol class="breadcrumb ng-hide" ng-hide="!isLogged">
             <li ng-repeat-start="breadcrumb in breadcrumbs.getAll()" ng-if="$last" class="active">
                 {{breadcrumb.name}}
             </li>

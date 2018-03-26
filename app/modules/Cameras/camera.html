@@ -1,12 +1,10 @@
-<div class="flex-container" ng-if="isLoading">
+<div class="flex-container ng-hide" ng-hide="!isLoading">
     <img src="/resources/img/loader.gif" />
 </div>
-<div class="col-xs-12 text-center" ng-if="!isLoading">
-    <h1 ng-if="Camera.name.length > 0 ">
-        {{Camera.name}}
-    </h1>
+<div class="col-xs-12 text-center ng-hide" ng-hide="isLoading">
+    <h1 ng-if="Camera.name.length > 0 " ng-bind="Camera.name"></h1>
 </div>
-<form novalidate ng-if="!isLoading">
+<form novalidate class="ng-hide" ng-hide="isLoading">
     <table class="table table-striped table-bordered table-hover table-responsive">
         <tfoot>
             <tr>
