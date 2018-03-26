@@ -115,7 +115,7 @@ gulp.task('validate:eslint', function() {
         .pipe(esLint.format());
 });
 
-gulp.task('dev-less', function() { // DEV Env
+gulp.task('build:css', function() { // DEV Env
     return gulp.src(['app/less/*.less'], {
             base: 'app/'
         })
@@ -130,7 +130,7 @@ gulp.task('dev-less', function() { // DEV Env
 });
 
 gulp.task('dev', function() { // DEV Env watcher
-    gulp.watch(['app/less/*.less'], ['dev-less']); // Watch all the .less files, then run the less task
+    gulp.watch(['app/less/*.less'], ['build:css']); // Watch all the .less files, then run the less task
 });
 
 gulp.task('default', ['validate:eslint']);

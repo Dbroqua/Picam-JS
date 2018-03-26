@@ -1,8 +1,13 @@
 before_script:
   - npm install -g gulp
-  - npm install -g bower
   - npm install
-  - bower install
 services: mongodb
 script: 
-  - gulp lint
+  - gulp validate:lint
+  - gulp build:css
+after_success:
+  - git config --global user.name "Travis build"
+  - git config --global user.email "dbroqua@mousur.org"
+  - git add app/css/main.css
+  - git commit -m "Build CSS"
+  - git push
