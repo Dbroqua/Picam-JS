@@ -19,7 +19,8 @@ const css = ['build/less/*.less'],
         'node_modules/angular-cookies/angular-cookies.min.js',
         'node_modules/angular-toastr/dist/angular-toastr.tpls.js',
         'node_modules/angular-route/angular-route.min.js',
-        'node_modules/ngbootbox/dist/ngBootbox.min.js'
+        'node_modules/ngbootbox/dist/ngBootbox.min.js',
+        'node_modules/moment/min/moment.min.js'
     ],
     modules = [
         'build/js/main.js',
