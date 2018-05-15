@@ -62,10 +62,15 @@ angular.module('Network', [])
                 $http.post(SERVER_PATH + url + '/', data).then(callback, callback);
             };
 
-            http_service.delete = function(url, id, data, callback) {
-                $ngBootbox.confirm('Are you sure to want delete this element ?')
+            http_service.delete = function(url, id, msg, callback) {
+                let _msg = msg;
+                if (callback === undefined) {
+                    callback = msg;
+                    _msg = 'Are you sure to want delete this element ?';
+                }
+                $ngBootbox.confirm(_msg)
                     .then(function() {
-                        $http.delete(SERVER_PATH + url + '/' + id, data).then(callback, callback);
+                        $http.delete(SERVER_PATH + url + '/' + id).then(callback, callback);
                     }, function() {
                         console.log('Confirm dismissed!');
                     });

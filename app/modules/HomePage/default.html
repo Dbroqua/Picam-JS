@@ -1,9 +1,14 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         Monitoring <span ng-show="lastRefresh">(last refresh: <span ng-bind="lastRefresh"></span>)</span>
-        <button class="btn btn-default btn-xs pull-right" title="Auto refresh" ng-click="monitoring()">
+        <button class="btn btn-default btn-xs pull-right" data-toggle="tooltip" data-placement="top" title="Refresh" ng-click="monitoring()">
             <span class="glyphicon glyphicon-refresh"></title>
         </button>
+
+        <button class="btn btn-danger btn-xs pull-right" data-toggle="tooltip" data-placement="top" title="Reboot Pi" ng-click="reboot()">
+            <span class="glyphicon glyphicon-off"></title>
+        </button>
+
     </div>
     <div ng-show="isLoading" class="loaderRow text-center">
         <img src="/resources/img/loader.gif" />
