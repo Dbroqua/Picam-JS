@@ -16,7 +16,6 @@ angular.module('HomePage')
                 HTTPService.getAll('sys', '', null, null, null, null, function(response) {
                     $scope.loadingList = false;
                     if (response.status === 200) {
-                        console.log(response.data);
                         $scope.isLoading = false;
                         $scope.Monitoring = response.data;
 
