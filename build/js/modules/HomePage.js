@@ -13,6 +13,7 @@ angular.module('HomePage')
 
             $scope.monitoring = function() {
                 $scope.isLoading = true;
+                $scope.lastRefresh = null;
                 HTTPService.getAll('sys', '', null, null, null, null, function(response) {
                     $scope.loadingList = false;
                     if (response.status === 200) {

@@ -68,7 +68,7 @@ angular.module('PiCam', [
                 })
 
                 .otherwise({
-                    redirectTo: '/cameras/'
+                    redirectTo: '/home'
                 });
 
             $locationProvider.html5Mode(true);
