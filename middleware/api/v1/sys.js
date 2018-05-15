@@ -3,7 +3,7 @@
  */
 
 const os = require('os'),
-    exec = require('child_process'),
+    exec = require('child_process').exec,
     utils = require('os-utils'),
     disk = require('diskusage');
 
