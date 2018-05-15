@@ -3,8 +3,8 @@
  */
 
 angular.module('HomePage')
-    .controller('HomePageController', ['$rootScope', '$scope', '$interval', 'HTTPService',
-        function($rootScope, $scope, $interval, HTTPService) {
+    .controller('HomePageController', ['$rootScope', '$scope', '$interval', 'toastr', 'HTTPService',
+        function($rootScope, $scope, $interval, toastr, HTTPService) {
             'use strict';
             $rootScope.title = TITLEPrefix + 'Homepage';
             $scope.isLoading = true;
@@ -28,6 +28,18 @@ angular.module('HomePage')
                     }
                 });
             };
+
+            $scope.reboot = function() {
+                HTTPService.delete('sys/uptime', '', 'Are you sure you want to reboot this Pi?', function(response) {
+                    if (response.status === 202) {
+                        toastr.info('This Pi will reboot in few seconds');
+                    } else {
+                        toastr.error('Error when trying to restart this Pi');
+                    }
+                });
+            };
+
+            $('[data-toggle="tooltip"]').tooltip();
 
             $scope.monitoring();
         }

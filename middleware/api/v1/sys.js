@@ -3,6 +3,7 @@
  */
 
 const os = require('os'),
+    exec = require('child_process').exec,
     utils = require('os-utils'),
     disk = require('diskusage');
 
@@ -107,6 +108,22 @@ class Sys {
             _res.disks.boot = info;
             _parsed++;
             _runCallback();
+        });
+    }
+
+    static reboot(req, callback) {
+        exec('sudo shutdown -r +1', function(err, res) {
+            if (err) {
+                callback(err, {
+                    code: 500,
+                    res: err
+                });
+            } else {
+                callback(null, {
+                    code: 202,
+                    res: res
+                });
+            }
         });
     }
 }

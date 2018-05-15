@@ -26,5 +26,17 @@ module.exports = function(params) {
             }
         );
 
+    router.route(basePath + '/uptime')
+        .delete(
+            passport.authenticate(['basic', 'api-key'], {
+                session: false
+            }),
+            function(req, res) {
+                middle.reboot(req, function(err, data) {
+                    res.status(data.code).send(data.res).end();
+                });
+            }
+        );
+
     return router;
 };
