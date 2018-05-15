@@ -30,7 +30,7 @@ angular.module('HomePage')
             };
 
             $scope.reboot = function() {
-                HTTPService.delete('sys/uptime', null, 'Are you sure you want to reboot this Pi?', funcion(response) {
+                HTTPService.delete('sys/uptime', null, 'Are you sure you want to reboot this Pi?', function(response) {
                     if (response.status === 202) {
                         toastr.info('This Pi will reboot in few seconds');
                     } else {
@@ -38,6 +38,8 @@ angular.module('HomePage')
                     }
                 });
             };
+
+            $('[data-toggle="tooltip"]').tooltip();
 
             $scope.monitoring();
         }

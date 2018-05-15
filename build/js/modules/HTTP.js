@@ -63,7 +63,7 @@ angular.module('Network', [])
             };
 
             http_service.delete = function(url, id, msg, callback) {
-                let _msg = msg;
+                var _msg = msg;
                 if (callback === undefined) {
                     callback = msg;
                     _msg = 'Are you sure to want delete this element ?';
