@@ -97,7 +97,7 @@ angular.module('Camera')
 
             $scope.deleteCamera = function() {
                 $scope.isLoading = true;
-                HTTPService.delete('cameras', $scope.cameraId, $scope.updatedValues, function(response) {
+                HTTPService.delete('cameras', $scope.cameraId, function(response) {
                     $scope.isLoading = false;
                     if (response.status === 200) {
                         toastr.success('Camera deleted');

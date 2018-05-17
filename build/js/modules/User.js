@@ -71,7 +71,7 @@ angular.module('User')
             };
 
             $scope.deleteUser = function() {
-                HTTPService.delete('users', $scope.userId, $scope.updatedValues, function(response) {
+                HTTPService.delete('users', $scope.userId, function(response) {
                     if (response.status === 200) {
                         toastr.success('User deleted');
                         $location.path('/administration/users/');
