@@ -7,6 +7,7 @@ angular.module('HomePage')
         function($rootScope, $scope, $interval, toastr, HTTPService) {
             'use strict';
             $rootScope.title = TITLEPrefix + 'Homepage';
+            $rootScope.bodyClass = 'monitoring';
             $scope.isLoading = true;
             $scope.Monitoring = {};
             $scope.lastRefresh = null;
