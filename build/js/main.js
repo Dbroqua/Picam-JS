@@ -140,6 +140,13 @@ angular.module('PiCam', [
                 });
             }
 
+            if (result[0].path != '/home') {
+                result.unshift({
+                    name: 'Home',
+                    path: '/home'
+                });
+            }
+
             breadcrumbs = result;
         });
 

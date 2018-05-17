@@ -237,27 +237,9 @@ angular.module('Network', [])
     .directive('pagination', function() {
         return {
             restrict: 'E',
-            template: '<ul class="pagination">' +
-                '   <li ng-class="{disabled: pagination.currentPage === 1}">' +
-                '       <a href="javascript:void(0)" ng-click="pagination.currentPage > 1 && load( pagination.currentPage - 1 )" aria-label="Previous">' +
-                '           <span aria-hidden="true">&laquo;</span>' +
-                '       </a>' +
-                '   </li>' +
-                '   <li class="disabled" ng-repeat-start="p in pagination.list" ng-if="$index > 2 && $index === (pagination.currentPage - 5) ">' +
-                '       <a href="javascript:void(0)">...</a>' +
-                '   </li>' +
-                '   <li ng-class="{active : p.active}" ng-if="$index < 3 || ( $index > (pagination.currentPage - 5) && $index < (pagination.currentPage + 3) ) || ' +
-                '       $index > ( pagination.nbPages - 4 )">' +
-                '       <a href="javascript:void(0)" ng-click="load(p.index)">{{p.index}}</a>' +
-                '   </li>' +
-                '   <li class="disabled" ng-if="$index <= ( pagination.nbPages - 4 ) && $index === (pagination.currentPage + 3) " ng-repeat-end>' +
-                '       <a href="javascript:void(0)">...</a>' +
-                '   </li>' +
-                '   <li ng-class="{disabled: pagination.currentPage === pagination.nbPages}">' +
-                '       <a href="javascript:void(0)" ng-click="pagination.currentPage < pagination.nbPages && load(pagination.currentPage + 1)" aria-label="Next">' +
-                '           <span aria-hidden="true">&raquo;</span>' +
-                '       </a>' +
-                '   </li>' +
-                '</ul>'
+            scope: {
+                pagination: '=pages'
+            },
+            templateUrl: 'templates/pagination.html'
         };
     });

@@ -4,14 +4,14 @@
 
 angular.module('Authentication')
     .controller('AuthenticationController', ['$rootScope', '$scope', '$location', 'HTTPService',
-        function ($rootScope, $scope, $location, HTTPService) {
+        function($rootScope, $scope, $location, HTTPService) {
             'use strict';
             $rootScope.title = TITLEPrefix + 'Login';
-            $rootScope.bodyClass = 'signin';
+            $rootScope.bodyClass = 'text-center signin';
             $rootScope.containerClass = 'flex-container';
             $scope.message = null;
 
-            $scope.$on('$destroy',function(){
+            $scope.$on('$destroy', function() {
                 $rootScope.bodyClass = '';
                 $rootScope.containerClass = '';
             });
@@ -19,13 +19,14 @@ angular.module('Authentication')
             $scope.username = '';
             $scope.password = '';
 
-            $scope.login = function () {
+            $scope.login = function() {
                 $scope.message = null;
                 if ($scope.username !== '' && $scope.password !== '') {
                     HTTPService.login($scope.username, $scope.password,
-                        function () {
+                        function() {
                             $location.path('/cameras/');
-                        }, function (error) {
+                        },
+                        function(error) {
                             if (error !== null && error.status !== undefined) {
                                 switch (error.status) {
                                     case 401:
@@ -38,8 +39,7 @@ angular.module('Authentication')
                                 $scope.message = 'Server downn ?';
                             }
                         });
-                }
-                else {
+                } else {
                     $scope.message = '<strong>Error !</strong> Malformated form';
                 }
             };
