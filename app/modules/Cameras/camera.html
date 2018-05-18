@@ -12,9 +12,8 @@
                 <td>State</td>
                 <td>
                     <span class='btn' ng-class="{'btn-success': Camera.infos.state === 'Running', 'btn-danger': Camera.infos.state === 'Stop'}" ng-click="patchCamera(cameraId,{infos: {state: (Camera.infos.state === 'Running' ? 'Stop' : 'Running') }});">
-                     <span ng-if="Camera.infos.state === 'Running'" class="glyphicon glyphicon-ok"
-                           aria-hidden="true"></span>
-                    <span ng-if="Camera.infos.state === 'Stop'" class="glyphicon glyphicon-stop" aria-hidden="true"></span>
+                        <i class="fas fa-check" ng-if="Camera.infos.state === 'Running'"></i>
+                        <i class="fas fa-stop" ng-if="Camera.infos.state === 'Stop'"></i>
                     <span ng-bind="Camera.infos.state"></span>
                     </span>
                 </td>
@@ -23,9 +22,8 @@
                 <td>Detection state</td>
                 <td>
                     <span class='btn' ng-class="{'btn-success': Camera.infos.detectionState === 'Active', 'btn-warning': Camera.infos.detectionState === 'Pause'}" ng-click="patchCamera(cameraId,{infos: {detectionState: (Camera.infos.detectionState === 'Active' ? 'Pause' : 'Active') }});">
-                    <span ng-if="Camera.infos.detectionState === 'Active'" class="glyphicon glyphicon-play"
-                          aria-hidden="true"></span>
-                    <span ng-if="Camera.infos.detectionState === 'Pause'" class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+                        <i class="fas fa-play" ng-if="Camera.infos.detectionState === 'Active'"></i>
+                        <i class="fas fa-oause" ng-if="Camera.infos.detectionState === 'Pause'"></i>
                     <span ng-bind="Camera.infos.detectionState"></span>
                     </span>
                 </td>
