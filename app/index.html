@@ -66,16 +66,7 @@
     </header>
 
     <main role="main" class="container view-animate">
-        <nav aria-label="breadcrumb ng-hide" ng-hide="!isLogged">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item" ng-repeat-start="breadcrumb in breadcrumbs.getAll()" ng-if="!$last">
-                    <a href="{{breadcrumb.path}}">
-                        {{breadcrumb.name}}
-                    </a>
-                </li>
-                <li class="breadcrumb-item active" ng-repeat-end ng-if="$last" aria-current="page">{{breadcrumb.name}}</li>
-            </ol>
-        </nav>
+        <nav aria-label="breadcrumb ng-hide" ng-hide="!isLogged" bread-crumb items="breadcrumbs.items"></nav>
 
         <div ng-view></div>
     </main>
