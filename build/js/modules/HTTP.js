@@ -238,6 +238,7 @@ angular.module('Network', [])
         return {
             restrict: 'E',
             scope: {
+                cta: '=cta',
                 pagination: '=pages'
             },
             templateUrl: 'templates/pagination.html'
