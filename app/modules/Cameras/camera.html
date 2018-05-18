@@ -1,19 +1,12 @@
-<div class="flex-container ng-hide" ng-hide="!isLoading">
+<div class="text-center ng-hide" ng-hide="!isLoading">
     <img src="/resources/img/loader.gif" />
 </div>
-<div class="col-xs-12 text-center ng-hide" ng-hide="isLoading">
+<div class="text-center ng-hide" ng-hide="isLoading">
     <h1 ng-if="Camera.name.length > 0 " ng-bind="Camera.name"></h1>
 </div>
+
 <form novalidate class="ng-hide" ng-hide="isLoading">
-    <table class="table table-striped table-bordered table-hover table-responsive">
-        <tfoot>
-            <tr>
-                <td colspan="2" class="text-center">
-                    <button type="submit" class="btn btn-primary" ng-click="updateCamera()" ng-bind="cameraId !== null ? 'Update' : 'Create'"></button>
-                    <button type="button" class="btn btn-danger" ng-click="deleteCamera()" ng-if="cameraId !== null">Delete</button>
-                </td>
-            </tr>
-        </tfoot>
+    <table class="table table-striped table-bordered table-hover">
         <tbody>
             <tr ng-if="cameraId !== null">
                 <td>State</td>
@@ -59,7 +52,7 @@
             <tr>
                 <td><label for="type">Type</label></td>
                 <td>
-                    <select class="form-control" ng-model="updatedValues.type" id="type">
+                    <select class="custom-select" ng-model="updatedValues.type" id="type">
                         <option>Local</option>
                         <option>Net</option>
                     </select>
@@ -88,7 +81,7 @@
             <tr ng-if="updatedValues.type === 'Net'">
                 <td><label for="scheme">Scheme</label></td>
                 <td>
-                    <select class="form-control" ng-model="updatedValues.definition.scheme" id="scheme">
+                    <select class="custom-select" ng-model="updatedValues.definition.scheme" id="scheme">
                         <option>http</option>
                         <option>https</option>
                     </select>
@@ -110,11 +103,19 @@
             <tr ng-if="updatedValues.type === 'Net'">
                 <td><label for="cameraId">Camera id</label></td>
                 <td>
-                    <select class="form-control" ng-model="updatedValues.definition.cameraId" id="cameraId">
+                    <select class="custom-select" ng-model="updatedValues.definition.cameraId" id="cameraId">
                         <option ng-repeat="camera in remoteCameras" name="{{camera.name}}" value="{{camera._id}}">{{camera.name}}</option>
                     </select>
                 </td>
             </tr>
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2" class="text-center">
+                    <button type="submit" class="btn btn-primary" ng-click="updateCamera()" ng-bind="cameraId !== null ? 'Update' : 'Create'"></button>
+                    <button type="button" class="btn btn-danger" ng-click="deleteCamera()" ng-if="cameraId !== null">Delete</button>
+                </td>
+            </tr>
+        </tfoot>
     </table>
 </form>

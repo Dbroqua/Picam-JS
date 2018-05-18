@@ -1,6 +1,6 @@
-<div class="col-xs-12 text-center">
+<div class="col-12 text-center">
     <h1 ng-if="Camera.name.length > 0 ">
         {{Camera.name}}
     </h1>
 </div>
-<img ng-src="{{SERVER_PATH + 'cameras/' + cameraId + '/stream?apikey=' + apikey}}" alt="Stream" ng-if="cameraId !== null && Camera.infos.state === 'Running'" class="img-responsive" />
+<img ng-src="{{SERVER_PATH + 'cameras/' + cameraId + '/stream?apikey=' + apikey}}" alt="Stream" ng-if="cameraId !== null && Camera.infos.state === 'Running'" class="img-fluid" />

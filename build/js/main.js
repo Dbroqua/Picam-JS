@@ -154,7 +154,6 @@ angular.module('PiCam', [
         return breadcrumbsService;
     }])
     .directive('breadCrumb', function() {
-        console.log('called!');
         return {
             // restrict: 'E',
             scope: {

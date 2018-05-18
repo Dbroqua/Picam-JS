@@ -1,4 +1,4 @@
-<form class="form-signin" ng-submit="login()">
+<form class="form-signin align-self-center col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4 offset-sm-1 offset-md-2 offset-lg-3 offset-xl-4" ng-submit="login()">
     <h1 class="h3 mb-3 font-weight-normal">PiCam - Login</h1>
 
     <div role="alert" class="alert alert-danger ng-hide"ng-hide="message === null">
@@ -7,7 +7,7 @@
     </div>
 
     <label for="inputEmail" class="sr-only">Email address</label>
-    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" ng-model="username" required autofocus>
+    <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" ng-model="username" required autofocus>
 
     <label for="inputPassword" class="sr-only">Password</label>
     <input type="password" id="inputPassword" class="form-control" ng-model="password" placeholder="Password" required>
