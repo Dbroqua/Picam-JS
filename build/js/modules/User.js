@@ -9,6 +9,7 @@ angular.module('User')
             $scope.User = {};
             $scope.updatedValues = {};
             $scope.userId = null;
+            $scope.isLoading = true;
 
             $scope.patchUser = function(id, values) {
                 HTTPService.patch('users', id, values, function(response) {
@@ -24,9 +25,12 @@ angular.module('User')
             $scope.updateUser = function() {
                 var preventEmptyPassword = false,
                     _runAction = function() {
+                        $scope.isLoading = true;
                         if ($routeParams.id !== 'add') {
                             // Update user
                             HTTPService.patch('users', $scope.userId, $scope.updatedValues, function(response) {
+                                $scope.isLoading = false;
+
                                 if (response.status === 200) {
                                     toastr.success('Action completed');
                                     $scope.load();
@@ -37,6 +41,8 @@ angular.module('User')
                         } else {
                             // Create new user
                             HTTPService.post('users', $scope.updatedValues, function(response) {
+                                $scope.isLoading = false;
+
                                 if (response.status === 201) {
                                     toastr.success('New user created');
                                     $location.path('/administration/users/' + response.data._id);
@@ -71,11 +77,13 @@ angular.module('User')
             };
 
             $scope.deleteUser = function() {
-                HTTPService.delete('users', $scope.userId, $scope.updatedValues, function(response) {
+                $scope.isLoading = true;
+                HTTPService.delete('users', $scope.userId, function(response) {
                     if (response.status === 200) {
                         toastr.success('User deleted');
                         $location.path('/administration/users/');
                     } else {
+                        $scope.isLoading = false;
                         toastr.error('Can\'t remove this user');
                     }
                 });
@@ -99,7 +107,7 @@ angular.module('User')
                 if ($routeParams.id !== 'add') {
                     $scope.userId = $routeParams.id;
                     HTTPService.getOne('users', $routeParams.id, null, function(response) {
-                        $scope.loadingList = false;
+                        $scope.isLoading = false;
                         if (response.status === 200) {
                             $scope.User = response.data;
                             $scope.updatedValues = response.data;
@@ -127,6 +135,7 @@ angular.module('User')
                     $scope.updatedValues = {};
                     $scope.generateApiKey();
                     $scope.showEditableValues = true;
+                    $scope.isLoading = false;
                 }
             };
 

@@ -1,9 +1,17 @@
-body.signin {
-  form{
-    border-radius: 16px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.15),0 1px 5px rgba(0,0,0,.075);
-    border: 1px solid #ddd;
-    padding: 16px !important;
-    background-color: #f8f8f8;
-  }
+@import "_variables.less";
+
+body {
+    &.signin {
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: @color-bg-grey;
+
+        .form-signin {
+            padding: 15px;
+
+            .form-control {
+                margin: 16px 0;
+            }
+        }
+    }
 }

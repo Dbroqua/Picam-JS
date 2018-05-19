@@ -1,0 +1,8 @@
+<ol class="breadcrumb">
+    <li class="breadcrumb-item" ng-repeat-start="breadcrumb in items" ng-if="!$last">
+        <a href="{{breadcrumb.path}}">
+            {{breadcrumb.name}}
+        </a>
+    </li>
+    <li class="breadcrumb-item active" ng-repeat-end ng-if="$last" aria-current="page">{{breadcrumb.name}}</li>
+</ol>

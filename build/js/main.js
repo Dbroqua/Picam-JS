@@ -81,7 +81,6 @@ angular.module('PiCam', [
             $rootScope.isLogged = false;
             $rootScope.SERVER_PATH = SERVER_PATH;
             $rootScope.apikey = null;
-            $rootScope.containerClass = '';
             $rootScope.breadcrumbs = breadcrumbs;
 
             $rootScope.logOut = function() {
@@ -120,8 +119,9 @@ angular.module('PiCam', [
         }
     ])
     .factory('breadcrumbs', ['$rootScope', '$location', function($rootScope, $location) {
-        var breadcrumbs = [],
-            breadcrumbsService = {};
+        var breadcrumbsService = {};
+
+        breadcrumbsService.items = [];
 
         $rootScope.$on('$routeChangeSuccess', function(event, current) {
             var pathElements = $location.path().split('/'),
@@ -140,12 +140,24 @@ angular.module('PiCam', [
                 });
             }
 
-            breadcrumbs = result;
+            if (result[0].path != '/home') {
+                result.unshift({
+                    name: 'Home',
+                    path: '/home'
+                });
+            }
+
+            breadcrumbsService.items = result;
         });
 
-        breadcrumbsService.getAll = function() {
-            return breadcrumbs;
-        };
-
         return breadcrumbsService;
-    }]);
+    }])
+    .directive('breadCrumb', function() {
+        return {
+            // restrict: 'E',
+            scope: {
+                items: '=items'
+            },
+            templateUrl: 'templates/breadcrumb.html'
+        };
+    });

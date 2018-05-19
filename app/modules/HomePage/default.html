@@ -1,45 +1,45 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
-        Monitoring <span ng-show="lastRefresh">(last refresh: <span ng-bind="lastRefresh"></span>)</span>
-        <button class="btn btn-default btn-xs pull-right" data-toggle="tooltip" data-placement="top" title="Refresh" ng-click="monitoring()">
-            <span class="glyphicon glyphicon-refresh"></title>
-        </button>
+<div class="card">
+  <div class="card-header">
+    Monitoring <span ng-show="lastRefresh">(last refresh: <span ng-bind="lastRefresh"></span>)</span>
 
-        <button class="btn btn-danger btn-xs pull-right" data-toggle="tooltip" data-placement="top" title="Reboot Pi" ng-click="reboot()">
-            <span class="glyphicon glyphicon-off"></title>
-        </button>
+    <button class="btn btn-default btn-sm float-sm-right" data-toggle="tooltip" data-placement="top" title="Refresh" ng-click="monitoring()">
+        <i class="fas fa-sync-alt"></i>
+    </button>
 
-    </div>
-    <div ng-show="isLoading" class="loaderRow text-center">
+    <button class="btn btn-danger btn-sm float-sm-right" data-toggle="tooltip" data-placement="top" title="Reboot Pi" ng-click="reboot()">
+        <i class="fas fa-power-off"></i>
+    </button>
+
+  </div>
+  <ul class="list-group list-group-flush" ng-show="isLoading">
+    <li class="list-group-item text-center">
         <img src="/resources/img/loader.gif" />
-    </div>
-    <ul class="list-group" ng-show="!isLoading">
-        <li class="list-group-item">
-            <strong>Uptime:</strong>
-            <span ng-bind="Monitoring.uptime.days"></span>
-            <span ng-if="Monitoring.uptime.days === 1">day,</span>
-            <span ng-if="Monitoring.uptime.days > 1">days,</span>
+    </li>
+  </ul>
+  <ul class="list-group list-group-flush" ng-show="!isLoading">
+    <li class="list-group-item">
+        <strong>Uptime:</strong>
+        <span ng-bind="Monitoring.uptime.days"></span>
+        <span ng-if="Monitoring.uptime.days === 1">day,</span>
+        <span ng-if="Monitoring.uptime.days > 1">days,</span>
 
-            <span ng-bind="Monitoring.uptime.hours"></span>:<span ng-bind="Monitoring.uptime.minutes"></span>
-        </li>
-        <li class="list-group-item">
-            <sys-progress-bar value="Monitoring.cpu.usage" title="Cpu usage">
-                </progressbar>
-        </li>
-        <li class="list-group-item">
-            <sys-progress-bar value="Monitoring.memory.usage" title="Memory usage">
-                </progressbar>
-        </li>
-        <li class="list-group-item">
-            <sys-progress-bar value="Monitoring.disks.boot.usage" title="Disk usage (/boot)">
-                </progressbar>
-        </li>
-        <li class="list-group-item">
-            <sys-progress-bar value="Monitoring.disks.root.usage" title="Disk usage (/)">
-                </progressbar>
-        </li>
-    </ul>
+        <span ng-bind="Monitoring.uptime.hours"></span>:<span ng-bind="Monitoring.uptime.minutes"></span>
+    </li>
+    <li class="list-group-item">
+        <sys-progress-bar value="Monitoring.cpu.usage" title="Cpu usage">
+            </progressbar>
+    </li>
+    <li class="list-group-item">
+        <sys-progress-bar value="Monitoring.memory.usage" title="Memory usage">
+            </progressbar>
+    </li>
+    <li class="list-group-item">
+        <sys-progress-bar value="Monitoring.disks.boot.usage" title="Disk usage (/boot)">
+            </progressbar>
+    </li>
+    <li class="list-group-item">
+        <sys-progress-bar value="Monitoring.disks.root.usage" title="Disk usage (/)">
+            </progressbar>
+    </li>
+  </ul>
 </div>
-
-
-<div class="clearfix"></div>
