@@ -8,12 +8,10 @@ angular.module('Authentication')
             'use strict';
             $rootScope.title = TITLEPrefix + 'Login';
             $rootScope.bodyClass = 'text-center signin';
-            $rootScope.containerClass = 'flex-container';
             $scope.message = null;
 
             $scope.$on('$destroy', function() {
                 $rootScope.bodyClass = '';
-                $rootScope.containerClass = '';
             });
 
             $scope.username = '';

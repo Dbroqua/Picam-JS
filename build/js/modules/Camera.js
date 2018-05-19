@@ -10,16 +10,7 @@ angular.module('Camera')
             $scope.updatedValues = {};
             $scope.cameraId = null;
             $scope.remoteCameras = [];
-            $rootScope.containerClass = '';
             $scope.isLoading = true;
-
-            $scope.$watch('isLoading', function(newVal) {
-                $rootScope.containerClass = (newVal ? 'flex-container' : '');
-            });
-
-            $scope.$on('$destroy', function() {
-                $rootScope.containerClass = '';
-            });
 
             $scope.$watch('[updatedValues.type,updatedValues.definition.uri,updatedValues.definition.scheme,updatedValues.definition.port,updatedValues.definition.apikey]',
                 function() {
