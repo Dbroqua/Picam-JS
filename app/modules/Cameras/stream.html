@@ -3,4 +3,6 @@
         {{Camera.name}}
     </h1>
 </div>
-<img ng-src="{{SERVER_PATH + 'cameras/' + cameraId + '/stream?apikey=' + apikey}}" alt="Stream" ng-if="cameraId !== null && Camera.infos.state === 'Running'" class="img-fluid" />
+<div class="text-center">
+    <img ng-src="{{SERVER_PATH + 'cameras/' + cameraId + '/stream?apikey=' + apikey}}" alt="Stream" ng-if="cameraId !== null && Camera.infos.state === 'Running'" class="img-fluid" />
+</div>
