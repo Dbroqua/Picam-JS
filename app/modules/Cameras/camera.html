@@ -1,29 +1,19 @@
-<div class="flex-container" ng-if="isLoading">
+<div class="text-center ng-hide" ng-hide="!isLoading">
     <img src="/resources/img/loader.gif" />
 </div>
-<div class="col-xs-12 text-center" ng-if="!isLoading">
-    <h1 ng-if="Camera.name.length > 0 ">
-        {{Camera.name}}
-    </h1>
+<div class="text-center ng-hide" ng-hide="isLoading">
+    <h1 ng-if="Camera.name.length > 0 " ng-bind="Camera.name"></h1>
 </div>
-<form novalidate ng-if="!isLoading">
-    <table class="table table-striped table-bordered table-hover table-responsive">
-        <tfoot>
-            <tr>
-                <td colspan="2" class="text-center">
-                    <button type="submit" class="btn btn-primary" ng-click="updateCamera()" ng-bind="cameraId !== null ? 'Update' : 'Create'"></button>
-                    <button type="button" class="btn btn-danger" ng-click="deleteCamera()" ng-if="cameraId !== null">Delete</button>
-                </td>
-            </tr>
-        </tfoot>
+
+<form novalidate class="ng-hide" ng-hide="isLoading">
+    <table class="table table-striped table-bordered table-hover">
         <tbody>
             <tr ng-if="cameraId !== null">
                 <td>State</td>
                 <td>
                     <span class='btn' ng-class="{'btn-success': Camera.infos.state === 'Running', 'btn-danger': Camera.infos.state === 'Stop'}" ng-click="patchCamera(cameraId,{infos: {state: (Camera.infos.state === 'Running' ? 'Stop' : 'Running') }});">
-                     <span ng-if="Camera.infos.state === 'Running'" class="glyphicon glyphicon-ok"
-                           aria-hidden="true"></span>
-                    <span ng-if="Camera.infos.state === 'Stop'" class="glyphicon glyphicon-stop" aria-hidden="true"></span>
+                        <i class="fas fa-check" ng-if="Camera.infos.state === 'Running'"></i>
+                        <i class="fas fa-stop" ng-if="Camera.infos.state === 'Stop'"></i>
                     <span ng-bind="Camera.infos.state"></span>
                     </span>
                 </td>
@@ -32,9 +22,8 @@
                 <td>Detection state</td>
                 <td>
                     <span class='btn' ng-class="{'btn-success': Camera.infos.detectionState === 'Active', 'btn-warning': Camera.infos.detectionState === 'Pause'}" ng-click="patchCamera(cameraId,{infos: {detectionState: (Camera.infos.detectionState === 'Active' ? 'Pause' : 'Active') }});">
-                    <span ng-if="Camera.infos.detectionState === 'Active'" class="glyphicon glyphicon-play"
-                          aria-hidden="true"></span>
-                    <span ng-if="Camera.infos.detectionState === 'Pause'" class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+                        <i class="fas fa-play" ng-if="Camera.infos.detectionState === 'Active'"></i>
+                        <i class="fas fa-oause" ng-if="Camera.infos.detectionState === 'Pause'"></i>
                     <span ng-bind="Camera.infos.detectionState"></span>
                     </span>
                 </td>
@@ -61,7 +50,7 @@
             <tr>
                 <td><label for="type">Type</label></td>
                 <td>
-                    <select class="form-control" ng-model="updatedValues.type" id="type">
+                    <select class="custom-select" ng-model="updatedValues.type" id="type">
                         <option>Local</option>
                         <option>Net</option>
                     </select>
@@ -90,7 +79,7 @@
             <tr ng-if="updatedValues.type === 'Net'">
                 <td><label for="scheme">Scheme</label></td>
                 <td>
-                    <select class="form-control" ng-model="updatedValues.definition.scheme" id="scheme">
+                    <select class="custom-select" ng-model="updatedValues.definition.scheme" id="scheme">
                         <option>http</option>
                         <option>https</option>
                     </select>
@@ -112,11 +101,19 @@
             <tr ng-if="updatedValues.type === 'Net'">
                 <td><label for="cameraId">Camera id</label></td>
                 <td>
-                    <select class="form-control" ng-model="updatedValues.definition.cameraId" id="cameraId">
+                    <select class="custom-select" ng-model="updatedValues.definition.cameraId" id="cameraId">
                         <option ng-repeat="camera in remoteCameras" name="{{camera.name}}" value="{{camera._id}}">{{camera.name}}</option>
                     </select>
                 </td>
             </tr>
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2" class="text-center">
+                    <button type="submit" class="btn btn-primary" ng-click="updateCamera()" ng-bind="cameraId !== null ? 'Update' : 'Create'"></button>
+                    <button type="button" class="btn btn-danger" ng-click="deleteCamera()" ng-if="cameraId !== null">Delete</button>
+                </td>
+            </tr>
+        </tfoot>
     </table>
 </form>

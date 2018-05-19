@@ -121,6 +121,7 @@ let params = {
 app.use('/', require('./routes/')(params));
 app.use('/', require('./routes/v1/cameras')(params));
 app.use('/', require('./routes/v1/users')(params));
+app.use('/', require('./routes/v1/sys')(params));
 app.use('/', require('./routes/install')(params));
 //----------------------------------------------------------------------------------------------------------------------
 

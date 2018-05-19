@@ -5,145 +5,93 @@
     <meta charset="UTF-8">
     <title ng-bind="title"></title>
     <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/angular-toastr/dist/angular-toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-toastr/2.1.1/angular-toastr.min.css">
+    <link rel="stylesheet" href="css/main.min.css">
 
-    <link rel="stylesheet" href="css/main.css">
-
-    <style type="text/css">
-        html,
-        body {
-            height: 100%;
-        }
-
-        body {
-            margin: 0;
-        }
-
-        .flex-container {
-            height: 100%;
-            padding: 0;
-            margin: 0;
-            display: -webkit-box;
-            display: -moz-box;
-            display: -ms-flexbox;
-            display: -webkit-flex;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
 </head>
 
 <body ng-class="bodyClass">
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top" ng-if="isLogged">
-        <div style="padding:0 10px;">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark ng-hide" ng-hide="!isLogged">
+            <a class="navbar-brand" href="/home">
+                <i class="fas fa-video"></i>
+                PiCam
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
-                <a class="navbar-brand" href="/home">PiCam</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
 
-                    <li class="dropdown" ng-class="{'active': routeContains('cameras')}">
-                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <li class="nav-item dropdown" ng-class="{'active': routeContains('cameras')}">
+                        <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="nav-menu-cameras" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Cameras
-                            <span class="caret"></span>
                         </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/cameras/add"><i class="glyphicon glyphicon-plus"></i>Add</a></li>
-                            <li><a href="/cameras"><i class="glyphicon glyphicon-list"></i>View</a></li>
-                        </ul>
+                        <div class="dropdown-menu" aria-labelledby="nav-menu-cameras">
+                            <a class="dropdown-item" href="/cameras/add">
+                                <i class="fas fa-plus-square"></i>
+                                Add
+                            </a>
+                            <a class="dropdown-item" href="/cameras">
+                                <i class="fas fa-list-ul"></i>
+                                List
+                            </a>
+                        </div>
                     </li>
 
-                    <li class="dropdown" ng-class="{'active': routeContains('administration')}">
-                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <li class="nav-item dropdown" ng-class="{'active': routeContains('administration')}">
+                        <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="nav-menu-administration" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Administration
-                            <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li class="dropdown-header">Users</li>
-                            <li><a href="/administration/users/add"><i class="glyphicon glyphicon-plus"></i>Add</a></li>
-                            <li><a href="/administration/users"><i class="glyphicon glyphicon-list"></i>View</a></li>
-                        </ul>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="nav-menu-administration">
+                            <span class="dropdown-item">Users</span>
+                            <a class="dropdown-item" href="/administration/users/add">
+                                <i class="fas fa-plus-square"></i>
+                                Add
+                            </a>
+                            <a class="dropdown-item" href="/administration/users">
+                                <i class="fas fa-list-ul"></i>
+                                List
+                            </a>
+                        </div>
                     </li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="javascript:void(0)" ng-click="logOut()">
-                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                            Log out
-                        </a>
-                    </li>
+                <ul class="navbar-nav">
+                    <a class="nav-link" href="javascript:void(0)" ng-click="logOut()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Log out
+                    </a>
                 </ul>
             </div>
-            <!--/.nav-collapse -->
-        </div>
-    </nav>
+        </nav>
+    </header>
 
-    <div class="container view-animate">
-        <ol class="breadcrumb" ng-if="isLogged">
-            <li ng-repeat-start="breadcrumb in breadcrumbs.getAll()" ng-if="$last" class="active">
-                {{breadcrumb.name}}
-            </li>
-            <li ng-repeat-end ng-if="!$last">
-                <a href="{{breadcrumb.path}}">
-                    {{breadcrumb.name}}
-                </a>
-            </li>
-        </ol>
+    <main role="main" class="container view-animate">
+        <nav aria-label="breadcrumb ng-hide" ng-hide="!isLogged" bread-crumb items="breadcrumbs.items"></nav>
 
         <div ng-view></div>
-    </div>
-    <div class="clearfix"></div>
+    </main>
 
-    <footer class="navbar navbar-default navbar-fixed-bottom">
+    <footer class="footer">
         <div class="container">
-            <p class="text-muted text-center">
-                &copy; DBroqua -
-                <a href="https://github.com/Dbroqua/Picam-JS" target="_blank">
-                <i class="fa fa-github" aria-hidden="true"></i>
-                PiCam-JS
-            </a>
-            </p>
+            <span class="text-muted">
+           &copy; DBroqua -
+           <a href="https://github.com/Dbroqua/Picam-JS" target="_blank">
+               <i class="fab fa-github"></i>
+               PiCam-JS
+           </a>
+       </span>
         </div>
     </footer>
 
-    <script type="text/javascript" src="/static/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/static/bootbox/bootbox.js"></script>
-
-    <script type="text/javascript" src="/static/angular/angular.min.js"></script>
-    <script type="text/javascript" src="/static/angular-base64/angular-base64.min.js"></script>
-    <script type="text/javascript" src="/static/angular-cookies/angular-cookies.min.js"></script>
-    <script type="text/javascript" src="/static/angular-toastr/dist/angular-toastr.tpls.js"></script>
-    <script type="text/javascript" src="/static/angular-route/angular-route.min.js"></script>
-    <script type="text/javascript" src="/static/ngbootbox/dist/ngBootbox.min.js"></script>
-
-    <!-- APP Scripts -->
+    <script type="text/javascript" src="/js/libs.min.js"></script>
     <script src="js/env.js"></script>
-    <script src="js/app.js"></script>
-    <!-- Controller & Services -->
-
-    <script type="text/javascript" src="js/modules/HTTP.js"></script>
-    <script type="text/javascript" src="js/modules/Authentication.js"></script>
-    <script type="text/javascript" src="js/modules/HomePage.js"></script>
-    <script type="text/javascript" src="js/modules/Cameras.js"></script>
-    <script type="text/javascript" src="js/modules/Camera.js"></script>
-    <script type="text/javascript" src="js/modules/CameraStream.js"></script>
-    <script type="text/javascript" src="js/modules/CameraFiles.js"></script>
-    <script type="text/javascript" src="js/modules/Users.js"></script>
-    <script type="text/javascript" src="js/modules/User.js"></script>
-
+    <script src="js/app.min.js"></script>
 </body>
 
 </html>

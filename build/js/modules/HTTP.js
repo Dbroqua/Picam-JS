@@ -2,7 +2,7 @@
  * Created by dbroqua on 8/17/16.
  */
 
-angular.module("Network", [])
+angular.module('Network', [])
     .factory('HTTPService', ['$rootScope', '$http', '$base64', '$cookies', '$q', '$ngBootbox',
         function($rootScope, $http, $base64, $cookies, $q, $ngBootbox) {
             var http_service = {
@@ -34,7 +34,13 @@ angular.module("Network", [])
                 return canceler;
             };
             http_service.getRemote = function(url, data, callback, promise) {
-                var canceler = promise ? promise : $q.defer();
+                var canceler = promise ? promise : $q.defer(),
+                    req = {
+                        method: 'GET',
+                        url: url,
+                        data: null
+                    };
+
                 if (!data || data === null) {
                     data = {
                         timeout: canceler.promise
@@ -43,12 +49,7 @@ angular.module("Network", [])
                     data.timeout = canceler.promise;
                 }
 
-                var req = {
-                    method: 'GET',
-                    url: url,
-                    data: data
-                };
-
+                req.data = data;
                 $http(req).then(callback, callback);
                 return canceler;
             };
@@ -61,10 +62,15 @@ angular.module("Network", [])
                 $http.post(SERVER_PATH + url + '/', data).then(callback, callback);
             };
 
-            http_service.delete = function(url, id, data, callback) {
-                $ngBootbox.confirm('Are you sure to want delete this element ?')
+            http_service.delete = function(url, id, msg, callback) {
+                var _msg = msg;
+                if (callback === undefined) {
+                    callback = msg;
+                    _msg = 'Are you sure to want delete this element ?';
+                }
+                $ngBootbox.confirm(_msg)
                     .then(function() {
-                        $http.delete(SERVER_PATH + url + '/' + id, data).then(callback, callback);
+                        $http.delete(SERVER_PATH + url + '/' + id).then(callback, callback);
                     }, function() {
                         console.log('Confirm dismissed!');
                     });
@@ -74,9 +80,10 @@ angular.module("Network", [])
             /**
              * Retrieved from : https://github.com/xelita/angular-basic-auth
              * Generate a basic authorization header based on the given username and password.
-             * @param username the user name
-             * @param password the user password
-             * @return a basic authorization header (eg. 'Basic dGVzdA==')
+             *
+             * @param {String} username the user name
+             * @param {String} password the user password
+             * @returns {String} Basic authorization header (eg. 'Basic dGVzdA==')
              */
             http_service.generateAuthorizationHeader = function(username, password) {
                 return $base64.encode(username + ':' + password);
@@ -135,8 +142,10 @@ angular.module("Network", [])
             };
 
             http_service.parseFilters = function(filters) {
-                var urlAppendix = '';
-                for (var prop in filters) {
+                var urlAppendix = '',
+                    prop;
+
+                for (prop in filters) {
                     if (Array.isArray(filters[prop].values)) {
                         //Avoid passing an empty, this will produce a not acceptable request
                         if (filters[prop].values.length > 0) {
@@ -158,11 +167,13 @@ angular.module("Network", [])
             };
 
             http_service.getAll = function(route, extraRoute, limit, page, filters, sort, callback) {
+                var sorting = '',
+                    _route = route + extraRoute;
+
                 if (http_service.getAll_cancel[route]) {
                     http_service.getAll_cancel[route].resolve();
                     http_service.getAll_cancel[route] = undefined;
                 }
-                var sorting = '';
                 if (typeof sort === Object) {
                     sorting = sort.id;
                     if (!sort.asc) {
@@ -170,16 +181,19 @@ angular.module("Network", [])
                     }
                 }
 
-                http_service.getAll_cancel[route] = http_service.get(route + extraRoute + '?limit=' + limit + '&page=' + page + '&sort=' + sorting + '&' + http_service.parseFilters(
-                    filters), null, callback, http_service.getAll_cancel[route]);
+                _route += '?limit=' + limit + '&page=' + page + '&sort=' + sorting + '&';
+
+                http_service.getAll_cancel[route] = http_service.get(_route + http_service.parseFilters(filters), null, callback, http_service.getAll_cancel[route]);
             };
 
             http_service.getAllRemote = function(params, identifier, callback) {
+                var sorting = params.sort.col;
+
                 if (http_service.getAll_cancel[identifier]) {
                     http_service.getAll_cancel[identifier].resolve();
                     http_service.getAll_cancel[identifier] = undefined;
                 }
-                var sorting = params.sort.col;
+
                 if (!params.sort.dir) {
                     sorting = '-' + sorting;
                 }
@@ -198,14 +212,17 @@ angular.module("Network", [])
             };
 
             http_service.returnPagination = function(totalRows, limit, currentPage) {
-                var nbPages = Math.ceil(totalRows / (limit > 0 ? limit : 1));
-                var pagin = {
-                    list: [],
-                    nbPages: nbPages,
-                    currentPage: currentPage
-                };
-                for (var i = 0; i < nbPages; i++) {
-                    var currentIndex = (i + 1);
+                var nbPages = Math.ceil(totalRows / (limit > 0 ? limit : 1)),
+                    pagin = {
+                        list: [],
+                        nbPages: nbPages,
+                        currentPage: currentPage
+                    },
+                    i,
+                    currentIndex;
+
+                for (i = 0; i < nbPages; i++) {
+                    currentIndex = (i + 1);
                     pagin.list.push({
                         index: currentIndex,
                         active: (currentPage === currentIndex)
@@ -220,26 +237,10 @@ angular.module("Network", [])
     .directive('pagination', function() {
         return {
             restrict: 'E',
-            template: '<ul class="pagination">' +
-                '   <li ng-class="{disabled: pagination.currentPage === 1}">' +
-                '       <a href="javascript:void(0)" ng-click="pagination.currentPage > 1 && load( pagination.currentPage - 1 )" aria-label="Previous">' +
-                '           <span aria-hidden="true">&laquo;</span>' +
-                '       </a>' +
-                '   </li>' +
-                '   <li class="disabled" ng-repeat-start="p in pagination.list" ng-if="$index > 2 && $index === (pagination.currentPage - 5) ">' +
-                '       <a href="javascript:void(0)">...</a>' +
-                '   </li>' +
-                '   <li ng-class="{active : p.active}" ng-if="$index < 3 || ( $index > (pagination.currentPage - 5) && $index < (pagination.currentPage + 3) ) || $index > ( pagination.nbPages - 4 )">' +
-                '       <a href="javascript:void(0)" ng-click="load(p.index)">{{p.index}}</a>' +
-                '   </li>' +
-                '   <li class="disabled" ng-if="$index <= ( pagination.nbPages - 4 ) && $index === (pagination.currentPage + 3) " ng-repeat-end>' +
-                '       <a href="javascript:void(0)">...</a>' +
-                '   </li>' +
-                '   <li ng-class="{disabled: pagination.currentPage === pagination.nbPages}">' +
-                '       <a href="javascript:void(0)" ng-click="pagination.currentPage < pagination.nbPages && load(pagination.currentPage + 1)" aria-label="Next">' +
-                '           <span aria-hidden="true">&raquo;</span>' +
-                '       </a>' +
-                '   </li>' +
-                '</ul>'
+            scope: {
+                cta: '=cta',
+                pagination: '=pages'
+            },
+            templateUrl: 'templates/pagination.html'
         };
     });
