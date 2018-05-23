@@ -38,7 +38,7 @@ angular.module('Authentication')
                             }
                         });
                 } else {
-                    $scope.message = '<strong>Error !</strong> Malformated form';
+                    $scope.message = '<strong>Error !</strong> Malformed form';
                 }
             };
         }
