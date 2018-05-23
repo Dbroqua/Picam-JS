@@ -23,7 +23,7 @@
                 <td>
                     <span class='btn' ng-class="{'btn-success': Camera.infos.detectionState === 'Active', 'btn-warning': Camera.infos.detectionState === 'Pause'}" ng-click="patchCamera(cameraId,{infos: {detectionState: (Camera.infos.detectionState === 'Active' ? 'Pause' : 'Active') }});">
                         <i class="fas fa-play" ng-if="Camera.infos.detectionState === 'Active'"></i>
-                        <i class="fas fa-oause" ng-if="Camera.infos.detectionState === 'Pause'"></i>
+                        <i class="fas fa-pause" ng-if="Camera.infos.detectionState === 'Pause'"></i>
                     <span ng-bind="Camera.infos.detectionState"></span>
                     </span>
                 </td>
